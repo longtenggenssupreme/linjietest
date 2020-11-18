@@ -67,3 +67,4 @@ F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.EntityFrameworkCore.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.ManagedDataAccess.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.EntityFrameworkCore.MySql.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.JsonObject.dll
+F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.csprojAssemblyReference.cache

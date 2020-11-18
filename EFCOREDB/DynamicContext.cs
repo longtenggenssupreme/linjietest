@@ -22,7 +22,7 @@ namespace EFCOREDB
         //如果是oracle的话，Oracle连接字符串中并不包含数据名称，其实DefaultSchema就是数据库名称，音系需要下面的两个DefaultSchema，DbVersion字段
         public static string DefaultSchema = "ZY";//
         public static string DbVersion = "11";
-        DbType dbType = DbType.Oracle;
+        DbType dbType = DbType.SqlServer;
 
         #region OnConfiguring
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

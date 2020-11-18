@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EFCOREDB
 {
@@ -9,93 +11,110 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            DateTime datetime1 = DateTime.Now;
-            using (var context = new DynamicContext { CreateDateTime = datetime1 })
+
+            ConcurrentDictionary<int, int> cd = new ConcurrentDictionary<int, int>();
+            Parallel.For(1, 100, i =>
             {
-                Console.WriteLine("开始删除数据库");
-                context.Database.EnsureDeleted();
-                Console.WriteLine("删除成功");
-                Console.WriteLine("开始创建数据库");
-                context.Database.EnsureCreated();
-                Console.WriteLine("创建成功");
-                var tablename = context.Model.FindEntityType(typeof(Test)).GetTableName();
-                #region MyRegion
-                //context.Tests.Add(new Test { Title = "Great News One", Content = $"Hello World! I am the news of {datetime1}", CreateDateTime = datetime1 });
-                //更新实体的方式
-                //0、查询实体，修改实体字段，context.SaveChanges();
-                //1、创建实体，context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
-                //2、创建实体，context.Update(创建的实体); context.SaveChanges();
-                //3、创建实体，context.DbSet<Test>.Attach(创建的实体); context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
-                //3、创建实体，context.DbSet<Test>.Attach(创建的实体); context.ChangeTracker.DetectChanges(); context.SaveChanges();
-                //3、创建实体，context.Attach(创建的实体); context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
-                //4、context.ChangeTracker.TrackGraph(ss, e => {
-                //    if ((e.Entry.Entity as Test) != null)
-                //    {
-                //        e.Entry.State = EntityState.Unchanged;
-                //    }
-                //    else
-                //    {
-                //        e.Entry.State = EntityState.Modified;
-                //    }
-                //});
-                //context.SaveChanges(); 
-                #endregion
+                cd.AddOrUpdate(1, 1, (key, oldValue) => oldValue + 1);
+            });
+            Console.WriteLine("After 10000 AddOrUpdates, cd[1] = {0}, should be 10000", cd[1]);
+            // Should return 100, as key 2 is not yet in the dictionary
+            int value = cd.GetOrAdd(2, (key) => 100);
+            Console.WriteLine("After initial GetOrAdd, cd[2] = {0} (should be 100)", value);
 
-                var ss = new Test { Title = "11", Content = $"111 {datetime1}", CreateDateTime = datetime1 };
-                Console.WriteLine($"context.Entry(ss).State:{context.Entry(ss).State}");
-                //context.Attach(ss);//告诉EF Core开始跟踪person实体的更改，因为调用DbContext.Attach方法后，EF Core会将person实体的State值（可以通过testDBContext.Entry(ss).State查看到）更改回EntityState.Unchanged，所以这里testDBContext.Attach(ss)一定要放在下面一行testDBContext.Entry(ss).Property(p => p.Content).IsModified = true的前面，否者后面的testDBContext.SaveChanges方法调用后，数据库不会被更新
-                //context.Entry(ss).Property(p => p.Content).IsModified = true;//告诉EF Core实体ss的Content属性已经更改。将testDBContext.Entry(person).Property(p => p.Name).IsModified设置为true后，也会将ss实体的State值（可以通过testDBContext.Entry(ss).State查看到）更改为EntityState.Modified，这样就保证了下面SaveChanges的时候会将ss实体的Content属性值Update到数据库中。
-                //context.Entry(ss).Property(p => p.Content).IsModified = true;
-                //context.Tests.Attach(ss);
-                context.Attach(ss);
-                Console.WriteLine($"context.Entry(ss).State:{context.Entry(ss).State}");
-                //context.ChangeTracker.DetectChanges();
-                context.SaveChanges();
-            }
+            // Should return 100, as key 2 is already set to that value
+            value = cd.GetOrAdd(2, 10000);
+            Console.WriteLine("After second GetOrAdd, cd[2] = {0} (should be 100)", value);
 
-            //切换表
-            DateTime datetime2 = DateTime.Now.AddDays(-1);
-            using (var context = new DynamicContext { CreateDateTime = datetime2 })
-            {
-                var tablename = context.Model.FindEntityType(typeof(Test)).GetTableName();//查询实体映射道数据库中对应的表名称
-                if (!tablename.Equals("20201118"))
-                {
-                    //var str = GetMySQLSqls(datetime2);
-                    var str = GetSqlServerSqls(datetime2);
-                    
-                    //判断是否存在表，不存在则创建
-                    using var cmd = context.Database.GetDbConnection().CreateCommand();
-                    cmd.CommandText = str[0];
-                    if (cmd.Connection.State!= System.Data.ConnectionState.Open)
-                    {
-                        cmd.Connection.Open();
-                    }
-                   var result= cmd.ExecuteScalar();
-                    if (result.ToString()=="0")
-                    {
-                        //创建新表
-                        context.Database.ExecuteSqlRaw(str[1]);
-                    }                   
-                }
+            #region MyRegion
+            //DateTime datetime1 = DateTime.Now;
+            //using (var context = new DynamicContext { CreateDateTime = datetime1 })
+            //{
+            //    Console.WriteLine("开始删除数据库");
+            //    context.Database.EnsureDeleted();
+            //    Console.WriteLine("删除成功");
+            //    Console.WriteLine("开始创建数据库");
+            //    context.Database.EnsureCreated();
+            //    Console.WriteLine("创建成功");
+            //    var tablename = context.Model.FindEntityType(typeof(Test)).GetTableName();
+            //    #region MyRegion
+            //    //context.Tests.Add(new Test { Title = "Great News One", Content = $"Hello World! I am the news of {datetime1}", CreateDateTime = datetime1 });
+            //    //更新实体的方式
+            //    //0、查询实体，修改实体字段，context.SaveChanges();
+            //    //1、创建实体，context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
+            //    //2、创建实体，context.Update(创建的实体); context.SaveChanges();
+            //    //3、创建实体，context.DbSet<Test>.Attach(创建的实体); context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
+            //    //3、创建实体，context.DbSet<Test>.Attach(创建的实体); context.ChangeTracker.DetectChanges(); context.SaveChanges();
+            //    //3、创建实体，context.Attach(创建的实体); context.Entry(创建的实体).State=EntityState.Modified; context.SaveChanges();
+            //    //4、context.ChangeTracker.TrackGraph(ss, e => {
+            //    //    if ((e.Entry.Entity as Test) != null)
+            //    //    {
+            //    //        e.Entry.State = EntityState.Unchanged;
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        e.Entry.State = EntityState.Modified;
+            //    //    }
+            //    //});
+            //    //context.SaveChanges(); 
+            //    #endregion
 
-                //context.Database.EnsureCreated();
-                context.Tests.Add(new Test { Title = "22", Content = $"222 {datetime2}", CreateDateTime = datetime2 });
-                context.SaveChanges();
-            }
+            //    var ss = new Test { Title = "11", Content = $"111 {datetime1}", CreateDateTime = datetime1 };
+            //    Console.WriteLine($"context.Entry(ss).State:{context.Entry(ss).State}");
+            //    //context.Attach(ss);//告诉EF Core开始跟踪person实体的更改，因为调用DbContext.Attach方法后，EF Core会将person实体的State值（可以通过testDBContext.Entry(ss).State查看到）更改回EntityState.Unchanged，所以这里testDBContext.Attach(ss)一定要放在下面一行testDBContext.Entry(ss).Property(p => p.Content).IsModified = true的前面，否者后面的testDBContext.SaveChanges方法调用后，数据库不会被更新
+            //    //context.Entry(ss).Property(p => p.Content).IsModified = true;//告诉EF Core实体ss的Content属性已经更改。将testDBContext.Entry(person).Property(p => p.Name).IsModified设置为true后，也会将ss实体的State值（可以通过testDBContext.Entry(ss).State查看到）更改为EntityState.Modified，这样就保证了下面SaveChanges的时候会将ss实体的Content属性值Update到数据库中。
+            //    //context.Entry(ss).Property(p => p.Content).IsModified = true;
+            //    //context.Tests.Attach(ss);
+            //    context.Attach(ss);
+            //    Console.WriteLine($"context.Entry(ss).State:{context.Entry(ss).State}");
+            //    //context.ChangeTracker.DetectChanges();
+            //    context.SaveChanges();
+            //}
 
-            using (var context = new DynamicContext { CreateDateTime = datetime1 })
-            {
-                var entity = context.Tests.Single();
-                // Writes news of today
-                Console.WriteLine($"{entity.Title} {entity.Content} {entity.CreateDateTime}");
-            }
+            ////切换表
+            //DateTime datetime2 = DateTime.Now.AddDays(-1);
+            //using (var context = new DynamicContext { CreateDateTime = datetime2 })
+            //{
+            //    var tablename = context.Model.FindEntityType(typeof(Test)).GetTableName();//查询实体映射到数据库中对应的表名称
+            //    if (!tablename.Equals("20201118"))
+            //    {
+            //        //var str = GetMySQLSqls(datetime2);
+            //        var str = GetSqlServerSqls(datetime2);
 
-            using (var context = new DynamicContext { CreateDateTime = datetime2 })
-            {
-                var entity = context.Tests.Single();
-                // Writes news of yesterday
-                Console.WriteLine($"{entity.Title} {entity.Content} {entity.CreateDateTime}");
-            }
+            //        //判断是否存在表，不存在则创建
+            //        using var cmd = context.Database.GetDbConnection().CreateCommand();
+            //        cmd.CommandText = str[0];
+            //        if (cmd.Connection.State != System.Data.ConnectionState.Open)
+            //        {
+            //            cmd.Connection.Open();
+            //        }
+            //        var result = cmd.ExecuteScalar();
+            //        if (result.ToString() == "0")
+            //        {
+            //            //创建新表
+            //            context.Database.ExecuteSqlRaw(str[1]);
+            //        }
+            //    }
+
+            //    //context.Database.EnsureCreated();
+            //    context.Tests.Add(new Test { Title = "22", Content = $"222 {datetime2}", CreateDateTime = datetime2 });
+            //    context.SaveChanges();
+            //}
+
+            //using (var context = new DynamicContext { CreateDateTime = datetime1 })
+            //{
+            //    var entity = context.Tests.Single();
+            //    // Writes news of today
+            //    Console.WriteLine($"{entity.Title} {entity.Content} {entity.CreateDateTime}");
+            //}
+
+            //using (var context = new DynamicContext { CreateDateTime = datetime2 })
+            //{
+            //    var entity = context.Tests.Single();
+            //    // Writes news of yesterday
+            //    Console.WriteLine($"{entity.Title} {entity.Content} {entity.CreateDateTime}");
+            //} 
+            #endregion
             Console.Read();
         }
         private static string[] GetMySQLSqls(DateTime time)
