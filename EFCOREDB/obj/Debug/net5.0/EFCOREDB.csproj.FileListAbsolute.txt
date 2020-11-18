@@ -62,3 +62,4 @@ F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.dll
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\ref\EFCOREDB.dll
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.pdb
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.genruntimeconfig.cache
+F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.csprojAssemblyReference.cache
