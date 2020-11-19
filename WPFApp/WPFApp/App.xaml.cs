@@ -15,7 +15,7 @@ namespace WPFApp
     {
         private string globalatom;//原子 AppDomain.CurrentDomain.FriendlyName=>"WPFApp.exe" 
         public App()
-        {           
+        {
             globalatom = AppDomain.CurrentDomain.FriendlyName;
             RunOneApplication();
         }
@@ -39,17 +39,20 @@ namespace WPFApp
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            throw new NotImplementedException();
+            //MessageBox.Show("CurrentDomain_UnhandledException捕获异常");
+            DeleteAtom();
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            throw new NotImplementedException();
+            //MessageBox.Show("TaskScheduler_UnobservedTaskException捕获异常");
+            DeleteAtom();
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-
+            //MessageBox.Show("App_DispatcherUnhandledException捕获异常");
+            DeleteAtom();
         }
 
         private void RunOneApplication()
@@ -72,6 +75,14 @@ namespace WPFApp
                 //}
                 Environment.Exit(0);
             }
+        }
+
+        /// <summary>
+        /// 删除原子标记
+        /// </summary>
+        private void DeleteAtom()
+        {
+            GlobalDeleteAtom(GlobalFindAtom(globalatom));//删除原子
         }
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]

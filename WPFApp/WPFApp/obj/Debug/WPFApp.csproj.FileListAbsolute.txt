@@ -1,3 +1,9 @@
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\MainWindow.g.cs
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\Window1.g.cs
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\App.g.cs
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\GeneratedInternalTypeHelper.g.cs
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\WPFApp_MarkupCompile.cache
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\WPFApp_MarkupCompile.lref
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\WPFApp.exe.config
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\WPFApp.exe
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\WPFApp.pdb
@@ -12,12 +18,6 @@ F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\GalaSoft.MvvmLight.Extras.pdb
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\GalaSoft.MvvmLight.Extras.xml
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\GalaSoft.MvvmLight.Platform.pdb
 F:\Person\aaa\LJTest\WPFApp\WPFApp\bin\Debug\GalaSoft.MvvmLight.Platform.xml
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\MainWindow.g.cs
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\Window1.g.cs
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\App.g.cs
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\GeneratedInternalTypeHelper.g.cs
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\WPFApp_MarkupCompile.cache
-F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\WPFApp_MarkupCompile.lref
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\App.baml
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\MainWindow.baml
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Debug\Window1.baml

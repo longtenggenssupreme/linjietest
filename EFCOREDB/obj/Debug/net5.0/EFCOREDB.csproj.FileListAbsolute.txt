@@ -29,7 +29,12 @@ F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Microsoft.Win32.SystemEvents.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\MySqlConnector.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Newtonsoft.Json.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.EntityFrameworkCore.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.ManagedDataAccess.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.EntityFrameworkCore.MySql.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.JsonObject.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\System.Drawing.Common.dll
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
@@ -62,9 +67,4 @@ F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.dll
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\ref\EFCOREDB.dll
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.pdb
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.genruntimeconfig.cache
-F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\MySqlConnector.dll
-F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.EntityFrameworkCore.dll
-F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Oracle.ManagedDataAccess.dll
-F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.EntityFrameworkCore.MySql.dll
-F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Pomelo.JsonObject.dll
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.csprojAssemblyReference.cache

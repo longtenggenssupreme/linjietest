@@ -48,7 +48,7 @@ namespace WPFApp.ViewModel
         }
 
         //以前是在xaml文件的cs代码中直接 DataContext = new MainViewModel();来使用viewmodel，现在统一进行管理和使用
-        //现在使用，只要在xaml前端添加即可Main，
+        //现在使用，只要在xaml前端添加即可Main
         public MainViewModel Main
         {
             get
