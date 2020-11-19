@@ -28,3 +28,4 @@ F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Release\WPFApp.csproj.CoreCompileInputs.c
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Release\WPFApp.csproj.CopyComplete
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Release\WPFApp.exe
 F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Release\WPFApp.pdb
+F:\Person\aaa\LJTest\WPFApp\WPFApp\obj\Release\WPFApp.csprojAssemblyReference.cache
