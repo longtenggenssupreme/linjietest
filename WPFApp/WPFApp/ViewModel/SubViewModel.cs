@@ -30,24 +30,21 @@ namespace WPFApp.ViewModel
             BtnCommand = new RelayCommand(SetTitle);
             //Messenger.Default.Register<string>(this, m => Title = m);
             //Messenger.Default.Register<string>(this,"123", m => Title = m);
-            //Messenger.Default.Register<NotificationMessageAction<string>>(this, "123",
-            //    m =>
-            //    {
-            //        Title = m.Notification;
-            //        ActionCallBack = m;
-            //    });
-
-            //MessengerInstance.Register<string>(this, m => Title = m);
-            //MessengerInstance.Register<string>(this,"123", m => Title = m);
-            MessengerInstance.Register<NotificationMessageAction<string>>(this, "123",
+            Messenger.Default.Register<NotificationMessageAction<string>>(this, "123",
                 m =>
                 {
                     Title = m.Notification;
                     ActionCallBack = m;
                 });
 
-
-            
+            //MessengerInstance.Register<string>(this, m => Title = m);
+            //MessengerInstance.Register<string>(this,"123", m => Title = m);
+            //MessengerInstance.Register<NotificationMessageAction<string>>(this, "123",
+            //    m =>
+            //    {
+            //        Title = m.Notification;
+            //        ActionCallBack = m;
+            //    });            
         }
 
         public void SetTitle()

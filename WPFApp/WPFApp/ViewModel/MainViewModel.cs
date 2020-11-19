@@ -68,13 +68,11 @@ namespace WPFApp.ViewModel
             //发送给消息
             //Messenger.Default.Send<string>("随即消息");
             //Messenger.Default.Send<string>("a哈哈哈", "123");
-            //Messenger.Default.Send<NotificationMessageAction<string>>(new NotificationMessageAction<string>("这是父传给子的消息", m => Title = m), "123");
+            Messenger.Default.Send<NotificationMessageAction<string>>(new NotificationMessageAction<string>("这是父传给子的消息", m => Title = m), "123");
 
             //MessengerInstance.Send<string>("随即消息");
             //MessengerInstance.Send<string>("a哈哈哈", "123");
-            MessengerInstance.Send<NotificationMessageAction<string>>(new NotificationMessageAction<string>("这是父传给子的消息", m => Title = m), "123");
-
-            
+            //MessengerInstance.Send<NotificationMessageAction<string>>(new NotificationMessageAction<string>("这是父传给子的消息", m => Title = m), "123");            
         }
     }
 }
