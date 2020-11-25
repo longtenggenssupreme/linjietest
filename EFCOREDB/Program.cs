@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +14,110 @@ namespace EFCOREDB
         {
             Console.WriteLine("Hello World!");
 
+            GetAsync();
+
+            //var iterator = GetEnumerator();
+            //while (iterator.MoveNext())
+            //{
+            //    Console.WriteLine($"输出{iterator.Current}");
+            //}
+            #region 测试
+            //TestConcurrentDictionary();
+            //TestDBContext(); 
+            #endregion
+
+
+            Console.Read();
+        }
+
+        /// <summary>
+        /// 迭代器--异步
+        /// </summary>
+        /// <returns></returns>
+        static async void GetAsync()
+        {
+            var iterator = GetEnumeratorAsyncFor();
+            while (await iterator.MoveNextAsync())
+            {
+                Console.WriteLine($"输出{iterator.Current}");
+            }
+            #region MyRegion
+            //var iterator = GetEnumeratorAsync();
+            //    var result = await iterator.MoveNextAsync();
+            //    while (result)
+            //    {
+            //        Console.WriteLine($"输出{iterator.Current}");
+            //        result = await iterator.MoveNextAsync();
+            //    }
+
+            //    //while (await iterator.MoveNextAsync())
+            //    //{
+            //    //    Console.WriteLine($"输出{iterator.Current}");
+            //    //} 
+            #endregion
+            Console.WriteLine("GetAsync---结束。。。。");
+        }
+
+        /// <summary>
+        /// 迭代器--异步
+        /// </summary>
+        /// <returns></returns>
+        static async IAsyncEnumerator<string> GetEnumeratorAsyncFor()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                //await Task.Delay(1000);
+                //yield return i.ToString();
+
+                await Task.Delay(1000).ContinueWith((_) =>
+                {
+                    Console.WriteLine($"迭代器--异步--{i}");
+                });
+                yield return i.ToString();
+            }
+            Console.WriteLine("GetEnumeratorAsync---结束。。。。");
+        }
+
+        /// <summary>
+        /// 迭代器--异步
+        /// </summary>
+        /// <returns></returns>
+        static async IAsyncEnumerator<string> GetEnumeratorAsync()
+        {
+            await Task.Delay(1000);
+            //Console.WriteLine("输出A");
+            yield return "B";
+            await Task.Delay(1000);
+            //Console.WriteLine("输出A");
+            yield return "C";
+            await Task.Delay(1000);
+            //Console.WriteLine("输出A");
+            yield return "D";
+            Console.WriteLine("GetEnumeratorAsync---结束。。。。");
+        }
+
+        /// <summary>
+        /// 迭代器
+        /// </summary>
+        /// <returns></returns>
+        static IEnumerator<string> GetEnumerator()
+        {
+            yield return "A";
+            //Console.WriteLine("输出A");
+            yield return "B";
+            //Console.WriteLine("输出A");
+            yield return "C";
+            //Console.WriteLine("输出A");
+            yield return "D";
+            Console.WriteLine("结束。。。。");
+        }
+
+        /// <summary>
+        /// 测试并发字典ConcurrentDictionary
+        /// </summary>
+        static void TestConcurrentDictionary()
+        {
+            #region MyRegion
             ConcurrentDictionary<int, int> cd = new ConcurrentDictionary<int, int>();
             Parallel.For(1, 100, i =>
             {
@@ -25,8 +131,16 @@ namespace EFCOREDB
             // Should return 100, as key 2 is already set to that value
             value = cd.GetOrAdd(2, 10000);
             Console.WriteLine("After second GetOrAdd, cd[2] = {0} (should be 100)", value);
+            //Console.WriteLine("After initial GetOrAdd, cd[2] = {0} (should be 100)", value);
+            #endregion
+        }
 
-            #region MyRegion
+        /// <summary>
+        /// 测试数据库的分库分表，表映射，切换表
+        /// </summary>
+        static void TestDBContext()
+        {
+            #region DBContext
             //DateTime datetime1 = DateTime.Now;
             //using (var context = new DynamicContext { CreateDateTime = datetime1 })
             //{
@@ -115,8 +229,10 @@ namespace EFCOREDB
             //    Console.WriteLine($"{entity.Title} {entity.Content} {entity.CreateDateTime}");
             //} 
             #endregion
-            Console.Read();
         }
+
+
+        #region Database数据库操作
         private static string[] GetMySQLSqls(DateTime time)
         {
             string tableName = time.ToString("yyyyMMdd");
@@ -136,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `{tableName}` (
         private static string[] GetSqlServerSqls(DateTime time)
         {
             //注意：[Id] int NOT NULL IDENTITY(1,1)中的 IDENTITY(1,1) 表示自增
-            string tableName = time.ToString("yyyyMMdd");          
+            string tableName = time.ToString("yyyyMMdd");
             //-- 判断要创建的表名是否存在 select * from dbo.sysobjects where id=object_id(N'[dbo].[{0}]') and xtype='U'
             string decide = $"SELECT COUNT(1) FROM dbo.sysobjects WHERE id = object_id(N'[dbo].[{tableName}]') and OBJECTPROPERTY(id, N'IsUserTable') = 1";
             string sqlRaw = $@"IF NOT EXISTS ( SELECT * FROM dbo.sysobjects WHERE id=object_id(N'[dbo].[{tableName}]') AND xtype='U')
@@ -184,5 +300,11 @@ BEGIN
             END; ";
             return new string[] { decide, sqlRaw };
         }
+        #endregion
     }
 }
+
+//顶级程序
+
+//System.Console.WriteLine("After initial GetOrAdd");
+//System.Console.Read();
