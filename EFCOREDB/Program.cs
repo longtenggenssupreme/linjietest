@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EFCOREDB
@@ -13,8 +14,10 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-            GetAsync();
+            TestThreadCancel();
+            //TestTaskCancel();
+            //TestTaskCancel1();
+            //GetAsync();
 
             //var iterator = GetEnumerator();
             //while (iterator.MoveNext())
@@ -28,6 +31,264 @@ namespace EFCOREDB
 
 
             Console.Read();
+        }
+
+        public static void TestThreadCancel()
+        {
+            SpinLock spinLock = new SpinLock(false);
+            object obj = new object();
+            int sun1 = 0;
+            int sun2 = 0;
+            int sun3 = 0;
+
+            //不加锁
+            Parallel.For(1, 10000, i =>
+                    {
+                        sun1 += i;
+                    });
+
+            //不加锁
+            Parallel.For(1, 10000, i =>
+            {
+                bool islock = false;
+                try
+                {
+                    spinLock.Enter(ref islock);
+                    sun2 += i;
+                }
+                finally
+                {
+                    if (islock)
+                    {
+                        spinLock.Exit(false);
+                    }                    
+                }
+            });
+            //不加锁
+            Parallel.For(1, 10000, i =>
+            {
+                lock (obj)
+                {
+                    sun3 += i;
+                }
+
+            });
+
+            Console.WriteLine($"sun1={sun1}");
+            Console.WriteLine($"sun2={sun2}");
+            Console.WriteLine($"sun3={sun3}");
+        }
+
+        /// <summary>
+        /// 测试取消
+        /// </summary>
+        public static void TestTaskThreadCancel()
+        {
+            #region MyRegion
+            //var tokenSource = new CancellationTokenSource();//创建取消task实例
+            //var testTask = new Task(() =>
+            //{
+            //    for (int i = 0; i < 6; i++)
+            //    {
+            //        System.Threading.Thread.Sleep(1000);
+            //    }
+            //}, tokenSource.Token);
+            //Console.WriteLine(testTask.Status);
+            //testTask.Start();
+            //Console.WriteLine(testTask.Status);
+            //tokenSource.Token.Register(() =>
+            //{
+            //    Console.WriteLine("task is to cancel");
+            //});
+            //tokenSource.Cancel();
+            //Console.WriteLine(testTask.Status);
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    System.Threading.Thread.Sleep(1000);
+            //    Console.WriteLine(testTask.Status);
+            //} 
+            #endregion
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            CancellationToken token = tokenSource.Token;
+            try
+            {
+                var task = new Task(() =>
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(1));
+                    }
+                }, token);
+                token.Register(() => { Console.WriteLine($"任务取消了。。。。"); });
+                Console.WriteLine($"task 状态 :{task.Status}");
+
+                task.Start();
+                Console.WriteLine($"task 状态 :{task.Status}");
+                tokenSource.Cancel();
+                Console.WriteLine($"task 状态 :{task.Status}");
+                Console.WriteLine($"task是否取消看下面的 状态 ");
+                for (int i = 0; i < 10; i++)
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    Console.WriteLine($"task 状态 :{task.Status}");
+                }
+            }
+            catch (AggregateException agg)
+            {
+                foreach (var item in agg.InnerExceptions)
+                {
+                    if (item is TaskCanceledException ex)
+                        Console.WriteLine($"任务取消:{ex.Message}");
+                    else
+                        Console.WriteLine($"任务取消:{item.GetType().Name}");
+                }
+            }
+            finally
+            {
+                tokenSource.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 测试取消
+        /// </summary>
+        public static void TestTaskCancel()
+        {
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            CancellationToken token = tokenSource.Token;
+            TaskFactory factory = new TaskFactory(token);
+            List<Task<int[]>> list = new List<Task<int[]>>();
+            Random random = new Random();
+            object lockObj = new object();
+            for (int i = 0; i <= 10; i++)
+            {
+                list.Add(factory.StartNew(() =>
+                {
+                    int[] vs = new int[10];
+                    int randomNum;
+                    for (int j = 0; j < 10; j++)
+                    {
+                        lock (lockObj)
+                        {
+                            randomNum = random.Next(0, 101);
+                        }
+
+                        if (randomNum == 0)
+                        {
+                            tokenSource.Cancel();
+                            Console.WriteLine($"当前任务是:{i + 1}");
+                            break;
+                        }
+                        vs[j] = randomNum;
+                    }
+                    return vs;
+                }, token));
+            }
+
+            try
+            {
+                var ts = factory.ContinueWhenAll(list.ToArray(), (taskList) =>
+                {
+                    long sum = 0;
+                    int accumulate = 0;
+                    foreach (var item in taskList)
+                    {
+                        foreach (var subitem in item.Result)
+                        {
+                            sum = +subitem;
+                            accumulate++;
+                        }
+                    }
+                    return sum / (double)accumulate;
+                }, token);
+                Console.WriteLine($"所有任务累加的结果:{ts.Result}");
+            }
+            catch (AggregateException agg)
+            {
+                foreach (var item in agg.InnerExceptions)
+                {
+                    if (item is TaskCanceledException ex)
+                        Console.WriteLine($"任务取消:{ex.Message}");
+                    else
+                        Console.WriteLine($"任务取消:{item.GetType().Name}");
+                }
+            }
+            finally
+            {
+                tokenSource.Dispose();
+            }
+        }
+
+        public static void TestTaskCancel1()
+        {
+            // Define the cancellation token.
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+
+            Random rnd = new Random();
+            Object lockObj = new Object();
+
+            List<Task<int[]>> tasks = new List<Task<int[]>>();
+            TaskFactory factory = new TaskFactory(token);
+            for (int taskCtr = 0; taskCtr <= 10; taskCtr++)
+            {
+                int iteration = taskCtr + 1;
+                tasks.Add(factory.StartNew(() =>
+                {
+                    int value;
+                    int[] values = new int[10];
+                    for (int ctr = 1; ctr <= 10; ctr++)
+                    {
+                        lock (lockObj)
+                        {
+                            value = rnd.Next(0, 101);
+                        }
+                        if (value == 0)
+                        {
+                            source.Cancel();
+                            Console.WriteLine("Cancelling at task {0}", iteration);
+                            break;
+                        }
+                        values[ctr - 1] = value;
+                    }
+                    return values;
+                }, token));
+            }
+            try
+            {
+                Task<double> fTask = factory.ContinueWhenAll(tasks.ToArray(),
+                                                             (results) =>
+                                                             {
+                                                                 Console.WriteLine("Calculating overall mean...");
+                                                                 long sum = 0;
+                                                                 int n = 0;
+                                                                 foreach (var t in results)
+                                                                 {
+                                                                     foreach (var r in t.Result)
+                                                                     {
+                                                                         sum += r;
+                                                                         n++;
+                                                                     }
+                                                                 }
+                                                                 return sum / (double)n;
+                                                             }, token);
+                Console.WriteLine("The mean is {0}.", fTask.Result);
+            }
+            catch (AggregateException ae)
+            {
+                foreach (Exception e in ae.InnerExceptions)
+                {
+                    if (e is TaskCanceledException)
+                        Console.WriteLine("Unable to compute mean: {0}",
+                                          ((TaskCanceledException)e).Message);
+                    else
+                        Console.WriteLine("Exception: " + e.GetType().Name);
+                }
+            }
+            finally
+            {
+                source.Dispose();
+            }
         }
 
         /// <summary>
