@@ -14,9 +14,17 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            TestThreadCancel();
+            #region 线程取消
+            TestThreancancel();
+            #endregion
+
+            #region task任务取消
+            //TestTaskLinkedCancel();
+            //TestTaskSync();
+            //TestThreadCancel();
             //TestTaskCancel();
-            //TestTaskCancel1();
+            //TestTaskCancel1(); 
+            #endregion
             //GetAsync();
 
             //var iterator = GetEnumerator();
@@ -31,6 +39,145 @@ namespace EFCOREDB
 
 
             Console.Read();
+        }
+        #region 线程取消
+        /// <summary>
+        /// 线程取消
+        /// </summary>
+        public static void TestThreancancel()
+        {
+            using CancellationTokenSource source = new CancellationTokenSource();
+            ThreadPool.QueueUserWorkItem(_ => TestThreancancel1(source.Token));
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            source.Cancel();
+
+            using CancellationTokenSource source1 = new CancellationTokenSource();
+            ThreadPool.QueueUserWorkItem((_) => { TestThreancancel2(source1.Token); });
+            //source1.CancelAfter(TimeSpan.FromSeconds(3));
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            source1.Cancel();
+
+            using CancellationTokenSource source2 = new CancellationTokenSource();
+            ThreadPool.QueueUserWorkItem((_) => { TestThreancancel3(source2.Token); });
+            //source2.CancelAfter(TimeSpan.FromSeconds(3));
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            source2.Cancel();
+        }
+
+        /// <summary>
+        /// 线程取消
+        /// </summary>
+        public static void TestThreancancel1(CancellationToken token)
+        {
+            Console.WriteLine($"第一个线程开始执行");
+            for (int i = 0; i < 10; i++)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    Console.WriteLine($"第一个线程已经取消了。。。");
+                    return;
+                }
+                Console.WriteLine($"第一个线程TestThreancancel 输出值：{i}");
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                //Console.WriteLine($"第一个线程TestThreancancel 输出值：{i}");
+            }
+            Console.WriteLine($"第一个线程成功执行");
+        }
+
+        /// <summary>
+        /// 线程取消
+        /// </summary>
+        public static void TestThreancancel2(CancellationToken token)
+        {
+            Console.WriteLine($"第二个线程开始执行");
+            bool isCanceled = false;
+            token.Register(() => { isCanceled = true; });
+            for (int i = 0; i < 10; i++)
+            {
+                if (isCanceled)
+                {
+                    Console.WriteLine($"第二个线程已经取消了。。。");
+                    return;
+                }
+                Console.WriteLine($"第二个线程TestThreancancel 输出值：{i}");
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                //Console.WriteLine($"第二个线程TestThreancancel 输出值：{i}");
+            }
+            Console.WriteLine($"第二个线程成功执行");
+        }
+
+        /// <summary>
+        /// 线程取消
+        /// </summary>
+        public static void TestThreancancel3(CancellationToken token)
+        {
+            Console.WriteLine($"第三个线程开始执行");
+            try
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.WriteLine($"第三个线程TestThreancancel 输出值：{i}");
+                    token.ThrowIfCancellationRequested();
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    //Console.WriteLine($"第三个线程TestThreancancel 输出值：{i}");
+                }
+                Console.WriteLine($"第三个线程成功执行");
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine($"第三个线程已经取消了。。。");
+            }
+        }
+        #endregion
+
+        #region Task and CancellationTokenSource
+
+        /// <summary>
+        /// 任务的链式取消
+        /// </summary>
+        public async static void TestTaskLinkedCancel()
+        {
+            Console.WriteLine($"链接取消任务开始。。。。");
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            CancellationTokenSource source1 = new CancellationTokenSource();
+            var token1 = source1.Token;
+            token1.Register(() => { Console.WriteLine($"任务--1--取消回调"); });
+            CancellationTokenSource source2 = new CancellationTokenSource();
+            var token2 = source2.Token;
+            token2.Register(() => { Console.WriteLine($"任务--2--取消回调"); });
+            CancellationTokenSource source3 = CancellationTokenSource.CreateLinkedTokenSource(token1, token2);
+            var token3 = source3.Token;
+            token3.Register(() => { Console.WriteLine($"任务--3--取消回调"); });
+            source1.CancelAfter(TimeSpan.FromSeconds(3));
+        }
+
+        /// <summary>
+        /// 同步任务和异步任务的对比
+        /// </summary>
+        public static void TestTaskSync()
+        {
+            Console.WriteLine($"当前线程:{ Thread.CurrentThread.ManagedThreadId}");
+            //创建异步任务
+            var taskAsync = Task.Run(() =>
+            {
+                Console.WriteLine($"异步任务：{Task.CurrentId}，运行的线程:{ Thread.CurrentThread.ManagedThreadId}");
+                int sum = 0;
+                Parallel.For(1, 10000, (i) => { Interlocked.Add(ref sum, i); });
+                return sum;
+            });
+
+            //创建同步任务
+            var taskSync = new Task<long>(() =>
+           {
+               Console.WriteLine($"同步任务：{Task.CurrentId}，运行的线程:{ Thread.CurrentThread.ManagedThreadId}");
+               int sum2 = 0;
+               Parallel.For(1, 10000, (i) => { Interlocked.Add(ref sum2, i); });
+               return sum2;
+           });
+
+            taskSync.RunSynchronously();
+            Console.WriteLine($"同步任务：{taskSync.Id}，运行的线程的结果:{ taskSync.Result}");
+            Console.WriteLine($"异步任务：{taskAsync.Id}，运行的线程的结果:{ taskAsync.Result}");
         }
 
         public static void TestThreadCancel()
@@ -61,7 +208,7 @@ namespace EFCOREDB
                     if (islock)
                     {
                         spinLock.Exit(false);
-                    }                    
+                    }
                 }
             });
             //不加锁
@@ -118,7 +265,7 @@ namespace EFCOREDB
                     {
                         Thread.Sleep(TimeSpan.FromSeconds(1));
                     }
-                }, token);
+                }, token);//TaskCreationOptions.LongRunning
                 token.Register(() => { Console.WriteLine($"任务取消了。。。。"); });
                 Console.WriteLine($"task 状态 :{task.Status}");
 
@@ -290,7 +437,9 @@ namespace EFCOREDB
                 source.Dispose();
             }
         }
+        #endregion
 
+        #region 测试并发字典ConcurrentDictionary
         /// <summary>
         /// 迭代器--异步
         /// </summary>
@@ -395,7 +544,9 @@ namespace EFCOREDB
             //Console.WriteLine("After initial GetOrAdd, cd[2] = {0} (should be 100)", value);
             #endregion
         }
+        #endregion
 
+        #region Database数据库操作
         /// <summary>
         /// 测试数据库的分库分表，表映射，切换表
         /// </summary>
@@ -492,7 +643,6 @@ namespace EFCOREDB
             #endregion
         }
 
-
         #region Database数据库操作
         private static string[] GetMySQLSqls(DateTime time)
         {
@@ -561,6 +711,7 @@ BEGIN
             END; ";
             return new string[] { decide, sqlRaw };
         }
+        #endregion
         #endregion
     }
 }
