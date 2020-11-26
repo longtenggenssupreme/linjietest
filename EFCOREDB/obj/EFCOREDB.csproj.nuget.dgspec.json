@@ -45,6 +45,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.7.18, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -63,13 +67,25 @@
               "target": "Package",
               "version": "[5.0.0, )"
             },
+            "Microsoft.Owin": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
             "Oracle.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.19.80, )"
             },
+            "Owin": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[3.2.4, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.2.3, )"
             }
           },
           "imports": [
@@ -83,6 +99,9 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }

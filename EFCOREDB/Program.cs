@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
+using Quartz;
+using Quartz.Impl;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -14,8 +17,13 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            #region QuartZ定时任务
+            TestQuartZ();
+            #endregion
+
             #region 线程取消
-            TestThreancancel();
+            //TestThreancancel();
             #endregion
 
             #region task任务取消
@@ -25,21 +33,70 @@ namespace EFCOREDB
             //TestTaskCancel();
             //TestTaskCancel1(); 
             #endregion
-            //GetAsync();
 
+            #region MyRegion
+            //GetAsync();
             //var iterator = GetEnumerator();
             //while (iterator.MoveNext())
             //{
             //    Console.WriteLine($"输出{iterator.Current}");
-            //}
+            //} 
+            #endregion
+
             #region 测试
             //TestConcurrentDictionary();
             //TestDBContext(); 
             #endregion
 
-
             Console.Read();
         }
+
+        #region Hangfire定时任务
+        /// <summary>
+        /// Hangfire定时任务
+        /// </summary>
+        public static void TestHangfire()
+        {
+            var queueStr = BackgroundJob.Enqueue(() => WriteLog("任务添加到队列之中"));
+            string v = BackgroundJob.Schedule(() => WriteLog("延时任务"), TimeSpan.FromSeconds(2));
+            string v1 = BackgroundJob.ContinueJobWith(queueStr, () => WriteLog("queueStr任务执行之后的任务。。。。"));
+            RecurringJob.AddOrUpdate(() => WriteLog("RecurringJob"), Cron.Minutely);
+        }
+
+        public static void WriteLog(string str)
+        {
+            Console.WriteLine($"queueStr任务执行{str}");
+        }
+
+        #endregion
+
+        #region QuartZ定时任务
+        /// <summary>
+        /// QuartZ定时任务
+        /// </summary>
+        public static async void TestQuartZ()
+        {
+            var factory = new StdSchedulerFactory();
+            var scheduler = await factory.GetScheduler();
+            await scheduler.Start();
+            var job = JobBuilder.Create<MyJob>().WithIdentity("job1", "group1").Build();
+            var triger = TriggerBuilder.Create().WithIdentity("job1", "group1")
+                .StartNow()
+                .WithSimpleSchedule(sc => sc.WithInterval(TimeSpan.FromSeconds(5)).RepeatForever())
+                .Build();
+            await scheduler.ScheduleJob(job, triger);
+        }
+        public class MyJob : IJob
+        {
+            public Task Execute(IJobExecutionContext context)
+            {
+                return Task.Run(() => { Console.WriteLine($"{DateTime.Now}:执行任务"); });
+                //return Console.Out.WriteLineAsync($"{DateTime.Now}:执行任务");
+            }
+        }
+
+        #endregion
+
         #region 线程取消
         /// <summary>
         /// 线程取消
