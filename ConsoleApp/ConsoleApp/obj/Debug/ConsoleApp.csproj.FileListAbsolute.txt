@@ -29,3 +29,5 @@ F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.csproj.CopyCompl
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.exe
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.pdb
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\Microsoft.Owin.Host.HttpListener.dll
+F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\Microsoft.Owin.Host.HttpListener.xml

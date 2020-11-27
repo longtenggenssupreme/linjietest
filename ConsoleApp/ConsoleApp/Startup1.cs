@@ -12,7 +12,7 @@ namespace ConsoleApp
         {
             // 有关如何配置应用程序的详细信息，请访问 https://go.microsoft.com/fwlink/?LinkID=316888
             //GlobalConfiguration.Configuration.UseSqlServerStorage("Data Source =localhost;Initial Catalog=mynetcore;Persist Security Info=True;User Id=sa;Password=sa123;");
-            GlobalConfiguration.Configuration.UseSqlServerStorage("Data Source=localhost;Initial Catalog=mydb;Integrated Security=True;");
+            GlobalConfiguration.Configuration.UseSqlServerStorage("Data Source=localhost;Initial Catalog=myhangfire;User Id=sa;Password=sa123;");
             app.UseHangfireServer();
             app.UseHangfireDashboard();
         }
