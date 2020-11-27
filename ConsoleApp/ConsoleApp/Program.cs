@@ -8,7 +8,7 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"开始启动。。。");
+            Console.WriteLine($"{DateTime.Now}:启动服务器。。。");
             WebApp.Start<Startup1>("http://*:5533/");
             var enstr = BackgroundJob.Enqueue(() => Writelog("添加任务到队列"));
             BackgroundJob.Schedule(() => Writelog("延迟任务。。。"), TimeSpan.FromSeconds(10));
@@ -19,7 +19,7 @@ namespace ConsoleApp
 
         public static void Writelog(string str)
         {
-            Console.WriteLine($"{str}");
+            Console.WriteLine($"{DateTime.Now}:{str}");
         }
     }
 }
