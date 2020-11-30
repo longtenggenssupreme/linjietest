@@ -35,6 +35,11 @@ namespace EFCOREDB
                     DbConnectStringSqlServer = "server=127.0.0.1;database=DynamicContext;user=sa;password=sa123;";
                     optionsBuilder.UseSqlServer(DbConnectStringSqlServer)
                         .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
+
+                    //SQL SERVER 2012/ 2014 分页，用 OFFSET，FETCH NEXT改写ROW_NUMBER的用法
+                    //从 SQL SERVER 2000 那个大家还在写TOP的年代，到2005的ROW_NUMBER，再到2012的OFFSET  FETCH 
+                    //optionsBuilder.UseSqlServer(DbConnectStringSqlServer,b=>b.UseRowNumberForPaging())
+                    //  .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
                     break;
                 case DbType.MySql:
                     string DbConnectStringMySql = "server=127.0.0.1;database=DynamicContext;user=zy;password=zy;";
