@@ -9,17 +9,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace EFCOREDB
 {
-    class Program
+    public class Program
     {
+        public static int y = 5;
+        public static int x = y;
+        //static int y = 5;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            #region TestExpression
+            TestExpression();
+            #endregion
+            #region 全部
+
+            #region TestHashSet
+            //TestHashSet();
+            #endregion
+
+            #region static
+            //Console.WriteLine("Hello World!");
+            //Console.WriteLine(Program.x);
+            //Console.WriteLine(Program.y);
+            ////Console.WriteLine(Program.x);
+            //Program.x = 99;
+            //Program.y = 66;
+            //Console.WriteLine(Program.x); 
+
+            //TestStatic();
+            #endregion
 
             #region QuartZ定时任务
-            TestQuartZ();
+            //TestQuartZ();
             #endregion
 
             #region 线程取消
@@ -46,10 +71,115 @@ namespace EFCOREDB
             #region 测试
             //TestConcurrentDictionary();
             //TestDBContext(); 
+            #endregion 
             #endregion
 
             Console.Read();
         }
+
+        #region Expression
+
+        public static void TestExpression()
+        {
+            #region Expression simple
+            //Expression<Func<int, int>> expressionFunc = x => x + 1;
+            //var func = expressionFunc.Compile();
+            //var result = func(22);
+            //Console.WriteLine($"Expression<Func<int, int>>执行结果：{result}");
+            #endregion
+
+            #region Expression complex
+            //Expression<Func<MyClass, int>> expressionFunc = x => x.Age + 1;
+            //x => x.Age + 1 lambda表达式的具体构造过程，如下，
+            //lambda表达式 等号 左边的参数parameter
+            ParameterExpression paramLeft = Expression.Parameter(typeof(MyClass));
+
+            //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 x.Age 
+            MemberExpression memberRight = Expression.PropertyOrField(paramLeft, "Age"); //MyClass的Age属性，可以再构造lambda表达式的时候传入，这样就可以根据需要来构造表达式了
+           
+            //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 1 常量 
+            ConstantExpression constantRight = Expression.Constant(1, typeof(int));
+           
+            //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 + 加号
+            BinaryExpression binaryRight = Expression.Add(memberRight, constantRight);
+
+            //lambda表达式 等号 两边的参数parameter  x => x.Age + 1;中的 => goto符号 x => x + 1;
+            Expression<Func<MyClass, int>> expressionFunc = Expression.Lambda<Func<MyClass, int>>(binaryRight, paramLeft);
+
+            //Expression<Func<int, int>> expressionFunc = x => x + 1;
+            var func = expressionFunc.Compile();
+            MyClass myClass = new() {Age=11 };
+            var result = func(myClass);
+            Console.WriteLine($"自定义构造lambda表达式树，产生Expression<Func<MyClass, int>>执行结果：{result}");
+            #endregion
+        }
+
+        #endregion
+        #region HashSet
+
+        public static void TestHashSet() {
+            HashSet<string> hs = new HashSet<string>();
+            hs.Add("123");
+            hs.Add("456");
+            hs.Add("789");
+            //if (hs.Contains("123"))
+            //{
+            //    Console.WriteLine($"HashSet的长度：{hs.Count}");
+            //    if (hs.Remove("123"))
+            //    {
+            //        Console.WriteLine($"HashSet删除元素之后的长度：{hs.Count}");
+            //    }
+            //    Console.WriteLine($"HashSet的长度：{hs.Count}");
+            //}
+            hs.Add("1");
+            hs.Add("2");
+            hs.Add("3");
+            //foreach (var item in hs)
+            //{
+            //    Console.WriteLine($"{item}");
+            //}
+
+            HashSet<string> hs1 = new HashSet<string>(Enumerable.Range(1,10).Select(x=>x.ToString()));
+           var result= hs.Intersect(hs1);
+            Console.WriteLine($"----------------------");
+            foreach (var item in hs)
+            {
+                Console.WriteLine($"{item}");
+            }
+            hs.IntersectWith(hs1);
+            Console.WriteLine($"####################");
+            foreach (var item in hs)
+            {
+                Console.WriteLine($"{item}");
+            }
+            Console.WriteLine($"----------------------");
+            foreach (var item in result)
+            {
+                Console.WriteLine($"{item}");
+            }
+        }
+
+        #endregion
+
+        #region static
+        public static void TestStatic()
+        {
+            List<MyClass> myClasses = new();
+            for (int i = 0; i < 10; i++)
+            {
+                //myClasses.Add(new MyClass { ClassName = "一班", Name = i.ToString(), Age = i });
+
+                var c = new MyClass { Name = i.ToString(), Age = i };
+                MyClass.ClassName = i.ToString();
+                myClasses.Add(c);
+            }
+            foreach (var item in myClasses)
+            {
+                //Console.WriteLine($"输出信息：班级：{item.ClassName}，姓名：{item.Name}，年龄：{item.Age}");
+                Console.WriteLine($"输出信息：班级：{MyClass.ClassName}，姓名：{item.Name}，年龄：{item.Age}");
+            }
+        }
+        #endregion
 
         #region Hangfire定时任务
         /// <summary>
@@ -770,6 +900,18 @@ BEGIN
         }
         #endregion
         #endregion
+    }
+
+    class MyClass
+    {
+        //public MyClass()
+        //{
+        //    ClassName = "一般";
+        //}
+        public int Age { get; set; }
+        public string Name { get; set; }
+        public static string ClassName { get; set; } = "一般";
+
     }
 }
 
