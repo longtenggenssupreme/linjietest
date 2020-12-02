@@ -99,10 +99,10 @@ namespace EFCOREDB
             //Expression<Func<int, int, int>> predicate3 = (m, n) => { return m * n + 2; };//不能使用大括号，来写表达式树
             #region #region 区分IEnuable与IQueryable 测试lambda expression 动态拼接方式2
 
-            List<int> grades1 = new List<int> { 78, 92, 100, 37, 81 };
+            List<int> grades1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             Expression<Func<int, bool>> expression = t => true;
-            expression = expression.And1(t => t == 92);
-            expression = expression.And1(t => t > 78);
+            expression = expression.And1(t => t >2);
+            expression = expression.And1(t => t <8);
             var ds = grades1.AsQueryable().Where(expression).ToList();
             foreach (var item in ds)
             {
@@ -1032,7 +1032,7 @@ BEGIN
         }
 
         /// <summary>
-        /// 访问表达式树参数，如果字典中包含，则取出
+        /// 重载参数访问的方法，访问表达式树参数，如果字典中包含，则取出
         /// </summary>
         /// <param name="node">表达式树参数</param>
         /// <returns></returns>
@@ -1106,30 +1106,62 @@ BEGIN
     #endregion
 
     #region lambda expression 拼接方式2
+    /// <summary>
+    /// 表达式数的lambda参数的拼接扩展方法扩展类
+    /// </summary>
     public class LambdaExpressionParameter : ExpressionVisitor
     {
-        public ParameterExpression parameterExpression { get;private set; }
+        /// <summary>
+        /// 表达式数的lambda参数
+        /// </summary>
+        public ParameterExpression parameterExpression { get; private set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="parameterExpression"></param>
         public LambdaExpressionParameter(ParameterExpression parameterExpression)
         {
             this.parameterExpression = parameterExpression;
         }
 
+        /// <summary>
+        /// 替代方法
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public Expression Replace(Expression expression)
         {
             return base.Visit(expression);
         }
 
+        /// <summary>
+        /// 重载参数访问的方法，处理参数表达式
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         protected override Expression VisitParameter(ParameterExpression node)
         {
             return this.parameterExpression;
         }
-
     }
+
+    /// <summary>
+    /// 表达式数的lambda参数的拼接扩展方法
+    /// </summary>
     public static class LambdaExpressionExtend
     {
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--and
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static Expression<Func<T, bool>> And1<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
         {
-            var param = first.Parameters[0];
+            //var param = first.Parameters[0];
+            var param = Expression.Parameter(typeof(T), "w");//指定参数和参数名称
             LambdaExpressionParameter lambdaExpression = new LambdaExpressionParameter(param);
             var left = lambdaExpression.Replace(first.Body);
             var right = lambdaExpression.Replace(second.Body);
@@ -1137,10 +1169,17 @@ BEGIN
             return Expression.Lambda<Func<T, bool>>(body, param);
         }
 
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--or
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static Expression<Func<T, bool>> Or1<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
         {
             //var param = first.Parameters[0];
-            var param = Expression.Parameter(typeof(T), "w");
+            var param = Expression.Parameter(typeof(T), "w");//指定参数和参数名称
             LambdaExpressionParameter lambdaExpression = new LambdaExpressionParameter(param);
             var left = lambdaExpression.Replace(first.Body);
             var right = lambdaExpression.Replace(second.Body);
@@ -1148,9 +1187,15 @@ BEGIN
             return Expression.Lambda<Func<T, bool>>(body, param);
         }
 
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--not
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public static Expression<Func<T, bool>> Not1<T>(this Expression<Func<T, bool>> expression)
         {
-            var param = expression.Parameters[0];
+            var param = expression.Parameters[0];//指定参数和参数名称
             //var param = Expression.Parameter(typeof(T), "w");
             var body = Expression.Not(expression.Body);
             return Expression.Lambda<Func<T, bool>>(body, param);
