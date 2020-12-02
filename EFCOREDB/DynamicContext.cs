@@ -53,7 +53,7 @@ namespace EFCOREDB
                         .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();
                     break;
                 default:
-                    throw new Exception("数据库不匹配。。。");
+                    throw new Exception("未查询到对应的数据库。。。");
             }
         }
         //=> optionsBuilder.UseMySql(DbConnectString).ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>();

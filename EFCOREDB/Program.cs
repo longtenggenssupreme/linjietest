@@ -23,7 +23,8 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             #region TestExpression
-            TestExpression();
+            TestDynamicExpression();
+            //TestExpression();
             #endregion
             #region 全部
 
@@ -78,6 +79,97 @@ namespace EFCOREDB
         }
 
         #region Expression
+        public static void TestDynamicExpression()
+        {
+            //IEnuable与IQueryable
+            //var list = new List<int>().AsQueryable();
+            //list = list.Where(c => c > 1);//参数：Expression<Func<TSource, bool>> predicate，如：Expression<Func<int, bool>> predicate = c => c > 1;
+            Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
+            Expression<Func<int, int, int>> predicate2 = (m, n) => m * n + 2;
+
+
+            //var list1 = new List<int>();
+            //var list2 = list1.Where(c => c > 1);//参数：Func<TSource, bool> predicate，如：Func<int, bool> predicate1 = c => c > 1;
+            Func<int, bool> predicate6 = c => c > 1;
+            Func<int, bool> predicate7 = delegate (int c)
+            {
+                return c > 1;
+            };
+
+            //Expression<Func<int, int, int>> predicate3 = (m, n) => { return m * n + 2; };//不能使用大括号，来写表达式树
+            #region #region 区分IEnuable与IQueryable 测试lambda expression 动态拼接方式2
+
+            List<int> grades1 = new List<int> { 78, 92, 100, 37, 81 };
+            Expression<Func<int, bool>> expression = t => true;
+            expression = expression.And1(t => t == 92);
+            expression = expression.And1(t => t > 78);
+            var ds = grades1.AsQueryable().Where(expression).ToList();
+            foreach (var item in ds)
+            {
+                Console.WriteLine($"IQueryable:{item}");
+            }
+            #endregion
+
+
+            //Console.WriteLine($"###########");
+            #region 区分IEnuable与IQueryable 测试lambda expression 动态拼接方式1
+            //var list0 = new List<MyClass>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    list0.Add(new MyClass { Age = i, Name = i.ToString() });
+            //}
+
+            ////IEnuable
+            //var result = list0.Where(a => a.Age > 5).ToList();
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine($"IEnuable Age:{item.Age},Name:{item.Name}");
+            //}
+            //Console.WriteLine($"###########");
+
+            ////IQueryable
+            //Expression<Func<MyClass, bool>> exp = a => a.Age > 5;
+            //Expression<Func<MyClass, bool>> exp2 = a => a.Name == "8";
+            //exp = exp.And(exp2);
+            //result = list0.AsQueryable<MyClass>().Where(exp).ToList();
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine($"IQueryable:Age:{item.Age},Name:{item.Name}");
+            //} 
+            #endregion
+
+            //Console.WriteLine($"###########");
+            #region 测试lambda expression 的查询条件拼接
+            //List<int> grades = new List<int> { 78, 92, 100, 37, 81 };
+            //// Convert the List to an IQueryable<int>.
+            //IQueryable<int> iqueryable = grades.AsQueryable();
+            //Expression<Func<int, bool>> exp3 = a => a > 81;
+            //Expression<Func<int, bool>> exp4 = a => a < 101;
+            //exp3 = exp3.And(exp4);
+            //var result3 = iqueryable.Where(exp3).ToList();
+            //foreach (var item in result3)
+            //{
+            //    Console.WriteLine($"IQueryable:{item}");
+            //}
+
+            //Console.WriteLine($"###########");
+            //List<int> grades1 = new List<int> { 78, 92, 100, 37, 81 };
+            //Expression<Func<int, bool>> expression = t => true;
+            //expression = expression.And(t => t == 92);
+            //expression = expression.And(t => t > 78);
+            //var ds = grades1.AsQueryable().Where(expression).ToList();
+            //foreach (var item in ds)
+            //{
+            //    Console.WriteLine($"IQueryable:{item}");
+            //} 
+            #endregion
+
+            //expression_t => false;
+            //expression_t = expression_t.Or(x => x.AAA == 1);
+            //expression_t = expression_t.Or(x => x.BBB == 2);
+            //expression = expression.And(expression_t);
+
+        }
 
         public static void TestExpression()
         {
@@ -96,10 +188,10 @@ namespace EFCOREDB
 
             //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 x.Age 
             MemberExpression memberRight = Expression.PropertyOrField(paramLeft, "Age"); //MyClass的Age属性，可以再构造lambda表达式的时候传入，这样就可以根据需要来构造表达式了
-           
+            //MemberExpression memberRight2 = Expression.Field(paramLeft, "Age"); 
             //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 1 常量 
             ConstantExpression constantRight = Expression.Constant(1, typeof(int));
-           
+
             //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 + 加号
             BinaryExpression binaryRight = Expression.Add(memberRight, constantRight);
 
@@ -108,8 +200,9 @@ namespace EFCOREDB
 
             //Expression<Func<int, int>> expressionFunc = x => x + 1;
             var func = expressionFunc.Compile();
-            MyClass myClass = new() {Age=11 };
+            MyClass myClass = new() { Age = 11 };
             var result = func(myClass);
+            //result = func.Invoke(myClass);
             Console.WriteLine($"自定义构造lambda表达式树，产生Expression<Func<MyClass, int>>执行结果：{result}");
             #endregion
         }
@@ -117,7 +210,8 @@ namespace EFCOREDB
         #endregion
         #region HashSet
 
-        public static void TestHashSet() {
+        public static void TestHashSet()
+        {
             HashSet<string> hs = new HashSet<string>();
             hs.Add("123");
             hs.Add("456");
@@ -139,8 +233,8 @@ namespace EFCOREDB
             //    Console.WriteLine($"{item}");
             //}
 
-            HashSet<string> hs1 = new HashSet<string>(Enumerable.Range(1,10).Select(x=>x.ToString()));
-           var result= hs.Intersect(hs1);
+            HashSet<string> hs1 = new HashSet<string>(Enumerable.Range(1, 10).Select(x => x.ToString()));
+            var result = hs.Intersect(hs1);
             Console.WriteLine($"----------------------");
             foreach (var item in hs)
             {
@@ -902,7 +996,10 @@ BEGIN
         #endregion
     }
 
-    class MyClass
+    /// <summary>
+    /// 测试类
+    /// </summary>
+    public class MyClass
     {
         //public MyClass()
         //{
@@ -913,6 +1010,405 @@ BEGIN
         public static string ClassName { get; set; } = "一般";
 
     }
+
+    #region lambda expression 拼接方式1
+    /// <summary>
+    /// Expression表达式树
+    /// </summary>
+    public class LambdaParameteRebinder : ExpressionVisitor
+    {
+        /// <summary>
+        /// 存放表达式树的参数的字典
+        /// </summary>
+        private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="map"></param>
+        public LambdaParameteRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+        {
+            this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+        }
+
+        /// <summary>
+        /// 访问表达式树参数，如果字典中包含，则取出
+        /// </summary>
+        /// <param name="node">表达式树参数</param>
+        /// <returns></returns>
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            if (map.TryGetValue(node, out ParameterExpression expression))
+            {
+                node = expression;
+            }
+            return base.VisitParameter(node);
+        }
+
+        public static Expression ReplaceParameter(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
+        {
+            return new LambdaParameteRebinder(map).Visit(exp);
+        }
+    }
+
+    /// <summary>
+    /// 表达式数的lambda参数的拼接扩展方法
+    /// </summary>
+    public static class LambdaExtension
+    {
+        /// <summary>
+        /// Expression表达式树lambda参数拼接组合
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <param name="merge"></param>
+        /// <returns></returns>
+        public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+        {
+            var parameterMap = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
+            var secondBody = LambdaParameteRebinder.ReplaceParameter(parameterMap, second.Body);
+            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+        }
+
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--false
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> False<T>() => f => false;
+
+        /// <summary>
+        /// Expression表达式树lambda参数拼接-true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> True<T>() => f => true;
+
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--and
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) => first.Compose(second, Expression.And);
+
+        /// <summary>
+        /// Expression表达式树lambda参数拼接--or
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) => first.Compose(second, Expression.Or);
+    }
+    #endregion
+
+    #region lambda expression 拼接方式2
+    public class LambdaExpressionParameter : ExpressionVisitor
+    {
+        public ParameterExpression parameterExpression { get;private set; }
+        public LambdaExpressionParameter(ParameterExpression parameterExpression)
+        {
+            this.parameterExpression = parameterExpression;
+        }
+
+        public Expression Replace(Expression expression)
+        {
+            return base.Visit(expression);
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return this.parameterExpression;
+        }
+
+    }
+    public static class LambdaExpressionExtend
+    {
+        public static Expression<Func<T, bool>> And1<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+        {
+            var param = first.Parameters[0];
+            LambdaExpressionParameter lambdaExpression = new LambdaExpressionParameter(param);
+            var left = lambdaExpression.Replace(first.Body);
+            var right = lambdaExpression.Replace(second.Body);
+            var body = Expression.And(left, right);
+            return Expression.Lambda<Func<T, bool>>(body, param);
+        }
+
+        public static Expression<Func<T, bool>> Or1<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+        {
+            //var param = first.Parameters[0];
+            var param = Expression.Parameter(typeof(T), "w");
+            LambdaExpressionParameter lambdaExpression = new LambdaExpressionParameter(param);
+            var left = lambdaExpression.Replace(first.Body);
+            var right = lambdaExpression.Replace(second.Body);
+            var body = Expression.Or(left, right);
+            return Expression.Lambda<Func<T, bool>>(body, param);
+        }
+
+        public static Expression<Func<T, bool>> Not1<T>(this Expression<Func<T, bool>> expression)
+        {
+            var param = expression.Parameters[0];
+            //var param = Expression.Parameter(typeof(T), "w");
+            var body = Expression.Not(expression.Body);
+            return Expression.Lambda<Func<T, bool>>(body, param);
+        }
+    }
+    #endregion
+
+    #region 源码
+    //public class ParameterRebinder : ExpressionVisitor
+    //{
+    //    private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+
+    //    public ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+    //    {
+    //        this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+    //    }
+
+    //    public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
+    //    {
+    //        return new ParameterRebinder(map).Visit(exp);
+    //    }
+
+    //    protected override Expression VisitParameter(ParameterExpression p)
+    //    {
+    //        ParameterExpression replacement;
+    //        if (map.TryGetValue(p, out replacement))
+    //        {
+    //            p = replacement;
+    //        }
+    //        return base.VisitParameter(p);
+    //    }
+    //}
+
+    //public static class PredicateBuilder
+    //{
+
+    //    public static Expression<Func<T, bool>> True<T>() { return f => true; }
+    //    public static Expression<Func<T, bool>> False<T>() { return f => false; }
+    //    public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+    //    {
+    //        // build parameter map (from parameters of second to parameters of first)  
+    //        var map = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
+
+    //        // replace parameters in the second lambda expression with parameters from the first  
+    //        var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
+
+    //        // apply composition of lambda expression bodies to parameters from the first expression   
+    //        return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+    //    }
+
+    //    public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+    //    {
+    //        return first.Compose(second, Expression.And);
+    //    }
+
+    //    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+    //    {
+    //        return first.Compose(second, Expression.Or);
+    //    }
+
+    //} 
+    #endregion
+
+    #region MyRegion
+    ///// <summary>
+    ///// Expression表达式树
+    ///// </summary>
+    //public class ParameterRebinder : ExpressionVisitor
+    //{
+    //    /// <summary>
+    //    /// 存放表达式树的参数的字典
+    //    /// </summary>
+    //    private readonly Dictionary<ParameterExpression, ParameterExpression> map;
+
+    //    /// <summary>
+    //    /// 构造函数
+    //    /// </summary>
+    //    /// <param name="map"></param>
+    //    public ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+    //    {
+    //        this.map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+    //    }
+
+    //    public static Expression ReplaceParameter(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp) => new ParameterRebinder(map).Visit(exp);
+    //    //{
+    //    //    return new ParameterRebinder(map).Visit(exp);
+    //    //}
+
+    //    /// <summary>
+    //    /// 访问表达式树参数，如果字典中包含，则取出
+    //    /// </summary>
+    //    /// <param name="node">表达式树参数</param>
+    //    /// <returns></returns>
+    //    protected override Expression VisitParameter(ParameterExpression node)
+    //    {
+    //        if (map.TryGetValue(node, out ParameterExpression replace))
+    //        {
+    //            node = replace;
+    //        }
+    //        return base.VisitParameter(node);
+    //    }
+
+    //}
+
+    ///// <summary>
+    ///// 表达式数的lambda参数的拼接扩展方法
+    ///// </summary>
+    //public static class ExpressionExtension
+    //{
+
+    //    //public static Expression<Func<T, bool>> True<T>() { return f => true; }
+    //    //public static Expression<Func<T, bool>> False<T>() { return f => false; }
+    //    //public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+    //    //{
+    //    //    // build parameter map (from parameters of second to parameters of first)  
+    //    //    var map = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
+
+    //    //    // replace parameters in the second lambda expression with parameters from the first  
+    //    //    var secondBody = ParameterRebinder.ReplaceParameter(map, second.Body);
+
+    //    //    // apply composition of lambda expression bodies to parameters from the first expression   
+    //    //    return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+    //    //}
+    //    public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+    //    {
+    //        var dict = first.Parameters.Select((f, index) => new { f, s = second.Parameters[index] }).ToDictionary(a => a.s, a => a.f);
+    //        var secondBody = ParameterRebinder.ReplaceParameter(dict, second.Body);
+    //        return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+    //    }
+
+    //    /// <summary>
+    //    /// Expression表达式树lambda参数拼接--or
+    //    /// </summary>
+    //    /// <typeparam name="T"></typeparam>
+    //    /// <param name="first"></param>
+    //    /// <param name="second"></param>
+    //    /// <returns></returns>
+
+    //    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) => first.Compose(second, Expression.Or);
+    //    //{
+    //    //    return first.Compose(second, Expression.Or);
+    //    //}
+
+    //    /// <summary>
+    //    /// Expression表达式树lambda参数拼接--and
+    //    /// </summary>
+    //    /// <typeparam name="T"></typeparam>
+    //    /// <param name="first"></param>
+    //    /// <param name="second"></param>
+    //    /// <returns></returns>
+    //    public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) => first.Compose(second, Expression.And);
+    //    //{
+    //    //    return first.Compose(second, Expression.And);
+    //    //}
+
+
+    //    public static Expression<Func<T, bool>> True<T>() => f => true;
+    //    //{
+    //    //    return f => true;
+    //    //}
+
+    //    public static Expression<Func<T, bool>> False<T>() => f => false;
+    //    //{
+    //    //    return f => false;
+    //    //}
+    //}
+    #endregion
+
+    //#region MyRegion
+    ///// <summary>
+    ///// Expression表达式树
+    ///// </summary>
+    //public class ParameterRebinder : ExpressionVisitor
+    //{
+    //    /// <summary>
+    //    /// 存放表达式树的参数的字典
+    //    /// </summary>
+    //    private readonly Dictionary<ParameterExpression, ParameterExpression> Map;
+
+    //    /// <summary>
+    //    /// 构造函数
+    //    /// </summary>
+    //    /// <param name="map"></param>
+    //    public ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+    //    {
+    //        this.Map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+    //    }
+
+    //    public static Expression ReplaceParameter(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp) /*=> new ParameterRebinder(map).Visit(exp);*/
+    //    {
+    //        return new ParameterRebinder(map).Visit(exp);
+    //    }
+
+    //    /// <summary>
+    //    /// 访问表达式树参数，如果字典中包含，则取出
+    //    /// </summary>
+    //    /// <param name="node">表达式树参数</param>
+    //    /// <returns></returns>
+    //    protected override Expression VisitParameter(ParameterExpression node)
+    //    {
+    //        if (Map.TryGetValue(node, out ParameterExpression replace))
+    //        {
+    //            node = replace;
+    //        }
+    //        return base.VisitParameter(node);
+    //    }
+
+    //}
+
+    ///// <summary>
+    ///// 表达式数的lambda参数的拼接扩展方法
+    ///// </summary>
+    //public static class ExpressionExtension
+    //{
+    //    public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+    //    {
+    //        var dict = first.Parameters.Select((f, index) => new { f, s = second.Parameters[index] }).ToDictionary(a => a.f, a => a.s);
+    //        var secondBody = ParameterRebinder.ReplaceParameter(dict, second.Body);
+    //        return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+    //    }
+
+    //    /// <summary>
+    //    /// Expression表达式树lambda参数拼接--or
+    //    /// </summary>
+    //    /// <typeparam name="T"></typeparam>
+    //    /// <param name="first"></param>
+    //    /// <param name="second"></param>
+    //    /// <returns></returns>
+
+    //    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) /*=> first.Compose(second, Expression.Or);*/
+    //    {
+    //        return first.Compose(second, Expression.Or);
+    //    }
+
+    //    /// <summary>
+    //    /// Expression表达式树lambda参数拼接--and
+    //    /// </summary>
+    //    /// <typeparam name="T"></typeparam>
+    //    /// <param name="first"></param>
+    //    /// <param name="second"></param>
+    //    /// <returns></returns>
+    //    public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second) /*=> first.Compose(second, Expression.And);*/
+    //    {
+    //        return first.Compose(second, Expression.And);
+    //    }
+
+
+    //    public static Expression<Func<T, bool>> True<T>() /*=> f => true;*/
+    //    {
+    //        return f => true;
+    //    }
+
+    //    public static Expression<Func<T, bool>> False<T>() /*=> f => false;*/
+    //    {
+    //        return f => false;
+    //    }
+    //}
+    //#endregion
 }
 
 //顶级程序
