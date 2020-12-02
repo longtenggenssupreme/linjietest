@@ -23,7 +23,8 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             #region TestExpression
-            TestDynamicExpression();
+            TestDynamicExpressionVisitor();
+            //TestDynamicExpression();
             //TestExpression();
             #endregion
             #region 全部
@@ -78,38 +79,139 @@ namespace EFCOREDB
             Console.Read();
         }
 
-        #region Expression
+        #region Expression表达式树
+
+        /// <summary>
+        /// 访问 表达式树 Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
+        /// (m, n) => m * n + 2;改成(m, n) => m * n - 2;
+        /// </summary>
+        public class OperatorExpressionVisitor : ExpressionVisitor
+        {
+            /// <summary>
+            /// 修改表达式树的形式
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <returns></returns>
+            public Expression Modify(Expression expression)
+            {
+                //base.Visit(expression);
+                if (expression is BinaryExpression binary)
+                {
+                    if (binary.NodeType == ExpressionType.Add)
+                    {
+                        var left = base.Visit(binary.Left); ;
+                        var right = base.Visit( binary.Right);
+                        var result = Expression.Subtract(left, right);
+                        return result;
+                    }
+                }
+                return expression;
+            }
+
+            /// <summary>
+            /// 表达式树的二元操作
+            /// </summary>
+            /// <param name="node"></param>
+            /// <returns></returns>
+            protected override Expression VisitBinary(BinaryExpression node)
+            {
+                return base.VisitBinary(node);
+            }
+
+            /// <summary>
+            /// 表达式树的常量操作
+            /// </summary>
+            /// <param name="node"></param>
+            /// <returns></returns>
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                return base.VisitConstant(node);
+            }
+        }
+
+        /// <summary>
+        /// 测试表达式树的访问过程
+        /// </summary>
+        public static void TestDynamicExpressionVisitor()
+        {
+            Expression<Func<int, int, int>> predicate = (m, n) => m * n + 2;
+            //修改之前
+            var func1 = predicate.Compile();
+            var result1 = func1.Invoke(2, 3);
+            Console.WriteLine($"参数2，3");
+            Console.WriteLine($"修改---前");
+            Console.WriteLine($"body：{predicate.Body}");
+            Console.WriteLine($"结果：{result1}");
+            OperatorExpressionVisitor visitor = new OperatorExpressionVisitor();
+            var expression = visitor.Modify(predicate.Body);
+            Expression<Func<int, int, int>> lam = Expression.Lambda<Func<int, int, int>>(expression, predicate.Parameters); 
+            var func = lam.Compile();
+            var result = func.Invoke(2, 3);
+            Console.WriteLine($"修改---后");
+            Console.WriteLine($"body：{lam.Body}");
+            Console.WriteLine($"结果：{result}");
+        }
+
+        /// <summary>
+        /// 测试动态表达式树一般拼接Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
+        /// </summary>
         public static void TestDynamicExpression()
         {
             //IEnuable与IQueryable
             //var list = new List<int>().AsQueryable();
             //list = list.Where(c => c > 1);//参数：Expression<Func<TSource, bool>> predicate，如：Expression<Func<int, bool>> predicate = c => c > 1;
             Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
-            Expression<Func<int, int, int>> predicate2 = (m, n) => m * n + 2;
+            //注意：Expression不能使用大括号，来写lambda表达式，如下写法，会报错
+            //Expression<Func<int, int, int>> predicate2 = delegate (m, n) { return m* n +2};
 
 
             //var list1 = new List<int>();
             //var list2 = list1.Where(c => c > 1);//参数：Func<TSource, bool> predicate，如：Func<int, bool> predicate1 = c => c > 1;
             Func<int, bool> predicate6 = c => c > 1;
-            Func<int, bool> predicate7 = delegate (int c)
+            Func<int, bool> predicate7 = delegate (int c)//delegate可以使用大括号，来写lambda表达式
             {
                 return c > 1;
             };
 
-            //Expression<Func<int, int, int>> predicate3 = (m, n) => { return m * n + 2; };//不能使用大括号，来写表达式树
+            if (predicate7.Invoke(3))
+            {
+                Console.WriteLine("调用 Func<int, bool> predicate7 predicate7.Invoke(3) 成功。。。");
+            }
+
+            //构造=====》Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
+            //(m, n) => m * n + 2;
+            //1、左边的参数 (m, n)
+            var paramM = Expression.Parameter(typeof(int));
+            var paramN = Expression.Parameter(typeof(int));
+            //2、m * n + 2;
+            //2.1 右边的成员字段 m, n
+            //var fieldM = Expression.Field(typeof(int),"m");
+            //var fieldN = Expression.Variable(typeof(int), "n");
+            //2.2 右边的成员字段 m * n
+            var fieldMN = Expression.Multiply(paramM, paramN);
+            //2.3 右边的成员常量字段 2
+            var fieldConstant = Expression.Constant(2, typeof(int));
+            //2.4 右边的成员m * n + 2;
+            var memberField = Expression.Add(fieldMN, fieldConstant);
+            //2.5 右边的成员常量字段 2
+            Expression<Func<int, int, int>> lam = Expression.Lambda<Func<int, int, int>>(memberField, new ParameterExpression[] { paramM, paramN });
+            var func = lam.Compile();
+
+            var result = func.Invoke(2, 3);
+            Console.WriteLine($"构造=====》Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2 输出结果：{result}");
+
             #region #region 区分IEnuable与IQueryable 测试lambda expression 动态拼接方式2
 
-            List<int> grades1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            Expression<Func<int, bool>> expression = t => true;
-            expression = expression.And1(t => t >2);
-            expression = expression.And1(t => t <8);
-            var ds = grades1.AsQueryable().Where(expression).ToList();
-            foreach (var item in ds)
-            {
-                Console.WriteLine($"IQueryable:{item}");
-            }
+            //List<int> grades1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            //Expression<Func<int, bool>> expression = t => true;
+            //expression = expression.And1(t => t >2);
+            //expression = expression.And1(t => t <8);
+            //var ds = grades1.AsQueryable().Where(expression).ToList();
+            //foreach (var item in ds)
+            //{
+            //    Console.WriteLine($"IQueryable:{item}");
+            //}
             #endregion
-
 
             //Console.WriteLine($"###########");
             #region 区分IEnuable与IQueryable 测试lambda expression 动态拼接方式1
@@ -171,6 +273,9 @@ namespace EFCOREDB
 
         }
 
+        /// <summary>
+        /// 测试动态表达式树一般拼接Expression<Func<MyClass, int>> expressionFunc = x => x.Age + 1;
+        /// </summary>
         public static void TestExpression()
         {
             #region Expression simple
@@ -208,6 +313,7 @@ namespace EFCOREDB
         }
 
         #endregion
+
         #region HashSet
 
         public static void TestHashSet()
