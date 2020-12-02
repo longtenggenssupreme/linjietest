@@ -23,7 +23,8 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             #region TestExpression
-            TestDynamicExpressionVisitor();
+            TestDynamicExpressionToSql();
+            //TestDynamicExpressionVisitor();
             //TestDynamicExpression();
             //TestExpression();
             #endregion
@@ -81,12 +82,135 @@ namespace EFCOREDB
 
         #region Expression表达式树
 
+        #region 表达式树的访问过程，并转化成sql语句
+        /// <summary>
+        /// 访问 表达式树 Expression<Func<MyClass, bool>> expressionFunc = x => x.Age > 5 &&  x.Id == 8;
+        /// 并转化成sql语句 select * from MyClass where age > 5 and id = 8
+        /// </summary>
+        public class OperatorExpressionToSql : ExpressionVisitor
+        {
+            /// <summary>
+            /// 存放Expression表达式树的内容
+            /// </summary>
+            public Stack<string> StackSet { get; set; }
+
+
+            public OperatorExpressionToSql()
+            {
+                StackSet = new Stack<string>();
+                StackSet.Push("(");
+            }
+            /// <summary>
+            /// 修改表达式树的形式
+            /// </summary>
+            /// <param name="expression"></param>
+            /// <returns></returns>
+            public Expression Modify(Expression expression)
+            {
+                //base.Visit(expression);
+                //if (expression is BinaryExpression binary)
+                //{
+                //    if (binary.NodeType == ExpressionType.Add)
+                //    {
+                //        var left = base.Visit(binary.Left); ;
+                //        var right = base.Visit(binary.Right);
+                //        var result = Expression.Subtract(left, right);
+                //        return result;
+                //    }
+                //}
+                return base.Visit(expression);
+            }
+
+            /// <summary>
+            /// 表达式树的二元操作
+            /// </summary>
+            /// <param name="node"></param>
+            /// <returns></returns>
+            protected override Expression VisitBinary(BinaryExpression node)
+            {
+                if (node.NodeType == ExpressionType.AndAlso)
+                {
+                    base.Visit(node.Left);
+                    StackSet.Push("and");
+                    base.Visit(node.Right);
+                    //var result = Expression.Subtract(left, right);
+                    //return result;
+                    StackSet.Push(")");
+                }
+                else if (node.NodeType == ExpressionType.GreaterThan)
+                {
+                    if (node.Left is MemberExpression member)
+                    {
+                        StackSet.Push(member.Member.Name);
+                    }
+                    StackSet.Push(">");
+                    if (node.Right is ConstantExpression constant)
+                    {
+                        StackSet.Push(constant.Value.ToString());
+                    }
+                }
+                else if (node.NodeType == ExpressionType.Equal)
+                {
+                    if (node.Left is MemberExpression member)
+                    {
+                        StackSet.Push(member.Member.Name);
+                    }
+                    StackSet.Push("=");
+                    if (node.Right is ConstantExpression constant)
+                    {
+                        StackSet.Push(constant.Value.ToString());
+                    }
+                }
+
+                //StackSet.Push(node.Value.ToString());
+                return node;
+                //return base.VisitBinary(node);
+            }
+
+            /// <summary>
+            /// 表达式树的常量操作
+            /// </summary>
+            /// <param name="node"></param>
+            /// <returns></returns>
+            protected override Expression VisitConstant(ConstantExpression node)
+            {
+                StackSet.Push(node.Value.ToString());
+                return base.VisitConstant(node);
+            }
+        }
+
+        /// <summary>
+        /// 测试表达式树的访问过程，并转化成sql语句
+        /// </summary>
+        public static void TestDynamicExpressionToSql()
+        {
+            //访问 表达式树 
+            Expression<Func<MyClass, bool>> expressionFunc = x => x.Age > 5 && x.Name == "8";
+            /// 并转化成sql语句 select * from MyClass where age > 5 and id = 8
+            OperatorExpressionToSql visitor = new OperatorExpressionToSql();
+            var expression = visitor.Modify(expressionFunc.Body);
+            var d = string.Join(' ', visitor.StackSet.Reverse().ToArray());
+            //while (visitor.StackSet.Count > 0)
+            //{
+            //    Console.WriteLine($"结果：{visitor.StackSet.Pop()}");
+            //}
+            Console.WriteLine($"结果：{d}");
+        }
+        #endregion
+
+        #region 访问 表达式树
         /// <summary>
         /// 访问 表达式树 Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
         /// (m, n) => m * n + 2;改成(m, n) => m * n - 2;
         /// </summary>
         public class OperatorExpressionVisitor : ExpressionVisitor
         {
+            /// <summary>
+            /// 存放Expression表达式树的内容
+            /// </summary>
+            public Stack<string> StackSet { get; set; }
+
+
             /// <summary>
             /// 修改表达式树的形式
             /// </summary>
@@ -100,7 +224,7 @@ namespace EFCOREDB
                     if (binary.NodeType == ExpressionType.Add)
                     {
                         var left = base.Visit(binary.Left); ;
-                        var right = base.Visit( binary.Right);
+                        var right = base.Visit(binary.Right);
                         var result = Expression.Subtract(left, right);
                         return result;
                     }
@@ -144,13 +268,14 @@ namespace EFCOREDB
             Console.WriteLine($"结果：{result1}");
             OperatorExpressionVisitor visitor = new OperatorExpressionVisitor();
             var expression = visitor.Modify(predicate.Body);
-            Expression<Func<int, int, int>> lam = Expression.Lambda<Func<int, int, int>>(expression, predicate.Parameters); 
+            Expression<Func<int, int, int>> lam = Expression.Lambda<Func<int, int, int>>(expression, predicate.Parameters);
             var func = lam.Compile();
             var result = func.Invoke(2, 3);
             Console.WriteLine($"修改---后");
             Console.WriteLine($"body：{lam.Body}");
             Console.WriteLine($"结果：{result}");
         }
+        #endregion
 
         /// <summary>
         /// 测试动态表达式树一般拼接Expression<Func<int, int, int>> predicate1 = (m, n) => m * n + 2;
