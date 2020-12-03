@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace EFCOREDB
 {
@@ -22,13 +23,17 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
+            #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
+
+            #endregion
+
+            #region 全部
             #region TestExpression
-            TestDynamicExpressionToSql();
+            //TestDynamicExpressionToSql();
             //TestDynamicExpressionVisitor();
             //TestDynamicExpression();
             //TestExpression();
             #endregion
-            #region 全部
 
             #region TestHashSet
             //TestHashSet();
@@ -74,11 +79,509 @@ namespace EFCOREDB
             #region 测试
             //TestConcurrentDictionary();
             //TestDBContext(); 
-            #endregion 
+            #endregion
             #endregion
 
             Console.Read();
         }
+
+        #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
+
+        #region 开始处理思路--出现情况1、创建A对象的实例时候遇到属性赋值》A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        ///// <summary>
+        ///// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        ///// </summary>
+        //public class ContainerFactory
+        //{
+        //    /// <summary>
+        //    /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+        //    public ContainerFactory()
+        //    {
+        //        //加载指定程序集
+        //        Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+        //        //获取程序集中已经定义的类型
+        //        var types = assembly.GetTypes();
+        //        foreach (var type in types)
+        //        {
+        //            //创建对象实例
+        //            var typeInstant = Activator.CreateInstance(type);
+        //            //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //            var properties = type.GetProperties();
+        //            foreach (var property in properties)
+        //            {
+        //                //情况1 A对象中有属性B
+        //                foreach (var subtype in types)
+        //                {
+        //                    if (property.PropertyType.Name.Equals(subtype.Name))
+        //                    {
+        //                        var subPropertyType = Activator.CreateInstance(subtype);
+        //                        property.SetValue(typeInstant, subPropertyType);
+
+        //                        //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }            
+        //}
+        #endregion
+
+        #region 问题1
+        //使用递归方法 解决出现情况1、创建A对象的实例时候遇到属性赋值》A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A，又出现新问题，创建对象以及属性赋值的时候foreach嵌套2次循环会有性能问题
+
+        ///// <summary>
+        ///// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        ///// </summary>
+        //public class ContainerFactory
+        //{
+        //    /// <summary>
+        //    /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+        //    public ContainerFactory()
+        //    {
+        //        //加载指定程序集
+        //        Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+        //        //获取程序集中已经定义的类型
+        //        var types = assembly.GetTypes();
+        //        foreach (var type in types)
+        //        {
+        //            //创建对象实例
+        //            var typeInstant = Activator.CreateInstance(type);
+        //            //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //            var properties = type.GetProperties();
+        //            foreach (var property in properties)
+        //            {
+        //                //情况1 A对象中有属性B
+        //                foreach (var subtype in types)
+        //                {
+        //                    if (property.PropertyType.Name.Equals(subtype.Name))
+        //                    {
+        //                        //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                        property.SetValue(typeInstant, CreateObject(subtype, types));                               
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    /// <summary>
+        //    /// 创建对象的实例，包括对象中的所有属性的实例化等
+        //    /// </summary>
+        //    /// <param name="type"></param>
+        //    /// <param name="types"></param>
+        //    /// <returns></returns>
+        //    public object CreateObject(Type type, Type[] types)
+        //    {
+        //        //创建对象实例
+        //        var typeInstant = Activator.CreateInstance(type);
+        //        //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //        var properties = type.GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            //情况1 A对象中有属性B
+        //            foreach (var subtype in types)
+        //            {
+        //                if (property.PropertyType.Name.Equals(subtype.Name))
+        //                {
+        //                    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                    property.SetValue(typeInstant, CreateObject(subtype, types));
+        //                }
+        //            }
+        //        }
+        //        //添加待哈希字典中，供以后DI使用
+        //        iocContainerDict.Add(type.Name, typeInstant);
+        //        return typeInstant;
+        //    }
+        //}
+        #endregion
+
+        #region 解决问题1，出现问题2
+        //使用哈希字典 把foreach嵌套2次循环改成分开的2次foreach循环 解决出现问题：创建对象以及属性赋值的时候2次foreach循环会有性能问题，又出现新问题，如果都在构造函数里面创建的话，会有性能问题，会导致初始化会很慢，如果程序集中有成千上百个类的话，很大可能初始化要十几分钟，这么长时间的初始化，肯定是不能容忍和接受的
+
+        ///// <summary>
+        ///// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        ///// </summary>
+        //public class ContainerFactory
+        //{
+        //    /// <summary>
+        //    /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+        //    /// <summary>
+        //    /// 容器，哈希字典存储程序集中的所有的类对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, Type> typesDict = new Dictionary<string, Type>();
+
+        //    public ContainerFactory()
+        //    {
+        //        //加载指定程序集
+        //        Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+        //        //获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
+        //        //第一次循环
+        //        var types = assembly.GetTypes();
+        //        foreach (var type in types)
+        //        {
+        //            typesDict.Add(type.Name, type);
+        //        }
+
+        //        //第一次循环 创建对象实例
+        //        foreach (var type in types)
+        //        {
+        //            var typeInstant = Activator.CreateInstance(type);
+        //            //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //            var properties = type.GetProperties();
+        //            foreach (var property in properties)
+        //            {
+        //                //情况1 A对象中有属性B
+        //                foreach (var subtype in types)
+        //                {
+        //                    if (property.PropertyType.Name.Equals(subtype.Name))
+        //                    {
+        //                        //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                        property.SetValue(typeInstant, CreateObject(subtype, types));
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    /// <summary>
+        //    /// 创建对象的实例，包括对象中的所有属性的实例化等
+        //    /// </summary>
+        //    /// <param name="type"></param>
+        //    /// <param name="types"></param>
+        //    /// <returns></returns>
+        //    public object CreateObject(Type type, Type[] types)
+        //    {
+        //        //创建对象实例
+        //        var typeInstant = Activator.CreateInstance(type);
+        //        //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //        var properties = type.GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            //情况1 A对象中有属性B
+        //            foreach (var subtype in types)
+        //            {
+        //                if (property.PropertyType.Name.Equals(subtype.Name))
+        //                {
+        //                    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                    property.SetValue(typeInstant, CreateObject(subtype, types));
+        //                }
+        //            }
+        //        }
+        //        //添加待哈希字典中，供以后DI使用
+        //        iocContainerDict.Add(type.Name, typeInstant);
+        //        return typeInstant;
+        //    }
+        //}
+        #endregion
+
+        #region 解决问题2，出新问题3
+        //构造函数中的2次foreach循环拆分一下，构造函数只做一次循环，目的就是把程序集中的类添加到哈希字典中即可，而创建对象的实例化的循环放到需要的时候在去创建和添加容器 
+        //解决出现问题：如果都在构造函数里面创建的话，会有性能问题，会导致初始化会很慢，如果程序集中有成千上百个类的话，很大可能初始化要十几分钟，这么长时间的初始化，肯定是不能容忍和接受的
+        //出现新问题现在有好多类是不需要容器创建的，只需要根据需要来使用容器创建，属性也是同样的
+
+        ///// <summary>
+        ///// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        ///// </summary>
+        //public class ContainerFactory
+        //{
+        //    /// <summary>
+        //    /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+        //    /// <summary>
+        //    /// 容器，哈希字典存储程序集中的所有的类对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, Type> typesDict = new Dictionary<string, Type>();
+
+        //    public ContainerFactory()
+        //    {
+        //        //加载指定程序集
+        //        Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+        //        //获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
+        //        //第一次循环
+        //        var types = assembly.GetTypes();
+        //        foreach (var type in types)
+        //        {
+        //            typesDict.Add(type.Name, type);
+        //        }
+        //    }
+
+        //    /// <summary>
+        //    /// 创建对象的实例，包括对象中的所有属性的实例化等
+        //    /// </summary>
+        //    /// <param name="type"></param>
+        //    /// <param name="types"></param>
+        //    /// <returns></returns>
+        //    public object CreateObject(string typeName)
+        //    {
+        //        //从哈希字典存储程序集中的所有的类对象查询对应类名的类
+        //        Type type = typesDict[typeName];
+
+        //        //判断容器冲是否包含类的实例对象，如果有直接取出返回，没有则创建并添加到容器中
+        //        if (iocContainerDict.ContainsKey(typeName))
+        //        {
+        //            return iocContainerDict[typeName];
+        //        }
+
+        //        //第一次循环 创建对象实例
+        //        var typeInstant = Activator.CreateInstance(type);
+        //        //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //        var properties = type.GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            //情况1 A对象中有属性B
+        //            if (typesDict.ContainsKey(property.PropertyType.Name))
+        //            {
+        //                //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+        //            }
+
+        //        }
+        //        //添加待哈希字典中，供以后DI使用
+        //        iocContainerDict.Add(type.Name, typeInstant);
+        //        return typeInstant;
+        //    }
+
+        //    /// <summary>
+        //    /// 根据需要传入需要创建的类名称，创建对应类的实例化对象，返回该实例化对象
+        //    /// </summary>
+        //    /// <param name="typeName">需要创建的类名称</param>
+        //    /// <returns>创建对应类的实例化对象</returns>
+        //    public object GetCreateObject(string typeName)
+        //    {
+        //        if (typeName is null)
+        //        {
+        //            return null;
+        //        }
+        //        return CreateObject(typeName);
+        //    }
+        //}
+        #endregion
+
+        #region 解决问题3 出现问题4
+        ////出现新问题现在有好多类是不需要容器创建的，只需要根据需要来使用容器创建，属性也是同样的
+        ////使用attribute 特性标记需要的类和属性，那么就需要自定义标记需要的类的特性类和标记属性的特性类，
+        ////自定义标记需要的类的特性类 ==》和标记属性的特性类
+        ////构造函数中的2次foreach循环拆分一下，构造函数只做一次循环，目的就是把程序集中的类添加到哈希字典中即可，而创建对象的实例化的循环放到需要的时候在去创建和添加容器 解决出现问题：如果都在构造函数里面创建的话，会有性能问题，会导致初始化会很慢，如果程序集中有成千上百个类的话，很大可能初始化要十几分钟，这么长时间的初始化，肯定是不能容忍和接受的
+        ////出现新问题 ：创建A对象的实例时候遇到属性赋值--A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
+
+        ///// <summary>
+        ///// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        ///// </summary>
+        //public class ContainerFactory
+        //{
+        //    /// <summary>
+        //    /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+        //    /// <summary>
+        //    /// 容器，哈希字典存储程序集中的所有的类对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+        //    /// </summary>
+        //    private Dictionary<string, Type> typesDict = new Dictionary<string, Type>();
+
+        //    public ContainerFactory()
+        //    {
+        //        //加载指定程序集
+        //        Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+        //        //获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
+        //        //第一次循环
+        //        var types = assembly.GetTypes();
+        //        foreach (var type in types)
+        //        {
+        //            //获取带有[CustomPropertyAttribute]特性标记的类，只有带有自定义特性类的类型才可以通过容器来创建
+        //            var customAttr = type.GetCustomAttribute(typeof(CustomTypeAttribute));
+        //            if (customAttr is not null)
+        //            {
+        //                typesDict.Add(type.Name, type);
+        //            }
+        //            //typesDict.Add(type.Name, type);
+        //        }
+        //    }
+
+        //    /// <summary>
+        //    /// 创建对象的实例，包括对象中的所有属性的实例化等
+        //    /// </summary>
+        //    /// <param name="type"></param>
+        //    /// <param name="types"></param>
+        //    /// <returns></returns>
+        //    public object CreateObject(string typeName)
+        //    {
+        //        //从哈希字典存储程序集中的所有的类对象查询对应类名的类
+        //        Type type = typesDict[typeName];
+
+        //        //判断容器冲是否包含类的实例对象，如果有直接取出返回，没有则创建并添加到容器中
+        //        if (iocContainerDict.ContainsKey(typeName))
+        //        {
+        //            return iocContainerDict[typeName];
+        //        }
+
+        //        //第一次循环 创建对象实例
+        //        var typeInstant = Activator.CreateInstance(type);
+        //        //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+        //        var properties = type.GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            //获取带有[CustomPropertyAttribute]特性标记的属性，只有带有自定义特性类的属性才可以通过容器来创建
+        //            var customAttr = property.GetCustomAttribute(typeof(CustomPropertyAttribute));
+        //            if (customAttr is not null)
+        //            {
+        //                if (typesDict.ContainsKey(property.PropertyType.Name))
+        //                {
+        //                    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //                    property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+        //                }
+        //            }
+        //            ////情况1 A对象中有属性B
+        //            //if (typesDict.ContainsKey(property.PropertyType.Name))
+        //            //{
+        //            //    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+        //            //    property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+        //            //}
+
+        //        }
+        //        //添加待哈希字典中，供以后DI使用
+        //        iocContainerDict.Add(type.Name, typeInstant);
+        //        return typeInstant;
+        //    }
+
+        //    /// <summary>
+        //    /// 根据需要传入需要创建的类名称，创建对应类的实例化对象，返回该实例化对象
+        //    /// </summary>
+        //    /// <param name="typeName">需要创建的类名称</param>
+        //    /// <returns>创建对应类的实例化对象</returns>
+        //    public object GetCreateObject(string typeName)
+        //    {
+        //        if (typeName is null)
+        //        {
+        //            return null;
+        //        }
+        //        return CreateObject(typeName);
+        //    }
+        //}
+        #endregion
+
+        #region 解决问题4 创建A对象的实例时候遇到属性赋值--A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
+        //出现新问题现在有好多类是不需要容器创建的，只需要根据需要来使用容器创建，属性也是同样的
+        //使用attribute 特性标记需要的类和属性，那么就需要自定义标记需要的类的特性类和标记属性的特性类，
+        //自定义标记需要的类的特性类 ==》和标记属性的特性类
+        //构造函数中的2次foreach循环拆分一下，构造函数只做一次循环，目的就是把程序集中的类添加到哈希字典中即可，而创建对象的实例化的循环放到需要的时候在去创建和添加容器 解决出现问题：如果都在构造函数里面创建的话，会有性能问题，会导致初始化会很慢，如果程序集中有成千上百个类的话，很大可能初始化要十几分钟，这么长时间的初始化，肯定是不能容忍和接受的
+        //出现新问题 ：创建A对象的实例时候遇到属性赋值--A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
+
+        /// <summary>
+        /// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
+        /// </summary>
+        public class ContainerFactory
+        {
+            /// <summary>
+            /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+            /// </summary>
+            private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+
+            /// <summary>
+            /// 容器，哈希字典存储程序集中的所有的类对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+            /// </summary>
+            private Dictionary<string, Type> typesDict = new Dictionary<string, Type>();
+
+            /// <summary>
+            /// 临时容器 解决死锁问题，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
+            /// </summary>
+            private Dictionary<string, object> iocTempContainerDict = new Dictionary<string, object>();
+
+            public ContainerFactory()
+            {
+                //加载指定程序集
+                Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+                //获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
+                //第一次循环
+                var types = assembly.GetTypes();
+                foreach (var type in types)
+                {
+                    //获取带有[CustomPropertyAttribute]特性标记的类，只有带有自定义特性类的类型才可以通过容器来创建
+                    var customAttr = type.GetCustomAttribute(typeof(CustomTypeAttribute));
+                    if (customAttr is not null)
+                    {
+                        typesDict.Add(type.Name, type);
+                    }
+                    //typesDict.Add(type.Name, type);
+                }
+            }
+
+            /// <summary>
+            /// 创建对象的实例，包括对象中的所有属性的实例化等
+            /// </summary>
+            /// <param name="typeName">创建对象的名称</param>
+            /// <returns>创建对象的实例</returns>
+            public object CreateObject(string typeName)
+            {
+                //iocTempContainerDict 先取值 解决死锁问题
+
+                //从哈希字典存储程序集中的所有的类对象查询对应类名的类
+                Type type = typesDict[typeName];
+
+                //判断容器冲是否包含类的实例对象，如果有直接取出返回，没有则创建并添加到容器中
+                if (iocContainerDict.ContainsKey(typeName))
+                {
+                    return iocContainerDict[typeName];
+                }
+
+                //第一次循环 创建对象实例
+                var typeInstant = Activator.CreateInstance(type);
+
+                //iocTempContainerDict 存值 解决死锁问题
+
+                //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
+                var properties = type.GetProperties();
+                foreach (var property in properties)
+                {
+                    //获取带有[CustomPropertyAttribute]特性标记的属性，只有带有自定义特性类的属性才可以通过容器来创建
+                    var customAttr = property.GetCustomAttribute(typeof(CustomPropertyAttribute));
+                    if (customAttr is not null)
+                    {
+                        if (typesDict.ContainsKey(property.PropertyType.Name))
+                        {
+                            //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+                            property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+                        }
+                    }
+                    ////情况1 A对象中有属性B
+                    //if (typesDict.ContainsKey(property.PropertyType.Name))
+                    //{
+                    //    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+                    //    property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+                    //}
+
+                }
+                //添加待哈希字典中，供以后DI使用
+                iocContainerDict.Add(type.Name, typeInstant);
+                return typeInstant;
+            }
+
+            /// <summary>
+            /// 根据需要传入需要创建的类名称，创建对应类的实例化对象，返回该实例化对象
+            /// </summary>
+            /// <param name="typeName">需要创建的类名称</param>
+            /// <returns>创建对应类的实例化对象</returns>
+            public object GetCreateObject(string typeName)
+            {
+                if (typeName is null)
+                {
+                    return null;
+                }
+                return CreateObject(typeName);
+            }
+        }
+        #endregion
+        #endregion
 
         #region Expression表达式树
 
