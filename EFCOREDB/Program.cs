@@ -1,5 +1,4 @@
 ﻿using Hangfire;
-using Microsoft.EntityFrameworkCore;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -23,11 +21,15 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
 
+            #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
+            TestIOCcontainerFactory();
             #endregion
 
             #region 全部
+
+            //TestBitarry();
+
             #region TestExpression
             //TestDynamicExpressionToSql();
             //TestDynamicExpressionVisitor();
@@ -85,7 +87,99 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region 测试 bitarry 位压缩
+        static void TestBitarry()
+        {// Creates and initializes several BitArrays.
+            BitArray myBA1 = new BitArray(5);
+
+            BitArray myBA2 = new BitArray(5, false);
+
+            byte[] myBytes = new byte[5] { 1, 2, 3, 4, 5 };
+            BitArray myBA3 = new BitArray(myBytes);
+
+            bool[] myBools = new bool[5] { true, false, true, true, false };
+            BitArray myBA4 = new BitArray(myBools);
+
+            int[] myInts = new int[5] { 6, 7, 8, 9, 10 };
+            BitArray myBA5 = new BitArray(myInts);
+
+            // Displays the properties and values of the BitArrays.
+            Console.WriteLine("myBA1");
+            Console.WriteLine("   Count:    {0}", myBA1.Count);
+            Console.WriteLine("   Length:   {0}", myBA1.Length);
+            Console.WriteLine("   Values:");
+            PrintValues(myBA1, 8);
+
+            Console.WriteLine("myBA2");
+            Console.WriteLine("   Count:    {0}", myBA2.Count);
+            Console.WriteLine("   Length:   {0}", myBA2.Length);
+            Console.WriteLine("   Values:");
+            PrintValues(myBA2, 8);
+
+            Console.WriteLine("myBA3");
+            Console.WriteLine("   Count:    {0}", myBA3.Count);
+            Console.WriteLine("   Length:   {0}", myBA3.Length);
+            Console.WriteLine("   Values:");
+            PrintValues(myBA3, 8);
+
+            Console.WriteLine("myBA4");
+            Console.WriteLine("   Count:    {0}", myBA4.Count);
+            Console.WriteLine("   Length:   {0}", myBA4.Length);
+            Console.WriteLine("   Values:");
+            PrintValues(myBA4, 8);
+
+            Console.WriteLine("myBA5");
+            Console.WriteLine("   Count:    {0}", myBA5.Count);
+            Console.WriteLine("   Length:   {0}", myBA5.Length);
+            Console.WriteLine("   Values:");
+            PrintValues(myBA5, 8);
+        }
+
+        public static void PrintValues(IEnumerable myList, int myWidth)
+        {
+            int i = myWidth;
+            foreach (Object obj in myList)
+            {
+                if (i <= 0)
+                {
+                    i = myWidth;
+                    Console.WriteLine();
+                }
+                i--;
+                Console.Write("{0,8}", obj);
+            }
+            Console.WriteLine();
+        }
+
+        #endregion
+
+
         #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
+
+        /// <summary>
+        ///  测试自定义容器IOC(控制反转)
+        /// </summary>
+        public static void TestIOCcontainerFactory()
+        {
+            ContainerFactory containerFactory = new ContainerFactory();
+            if (containerFactory.GetCreateObject("SquareShape") is SquareShape squareShape)
+            {
+                squareShape.Show();
+                var ishape = squareShape.RectangleShape;
+                ishape.Show();
+                Console.WriteLine("自定义容器创建实例完成。。。");
+            }
+
+            if (containerFactory.GetCreateObject("SquareShape") is SquareShape squareShape1)
+            {
+                squareShape1.Show();
+                var ishape = squareShape1.RectangleShape;
+                ishape.Show();
+                Console.WriteLine("自定义容器创建实例完成。。。");
+            }
+
+            Console.WriteLine("自定义容器创建实例完成。。。");
+        }
 
         #region 开始处理思路--出现情况1、创建A对象的实例时候遇到属性赋值》A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
         ///// <summary>
@@ -499,21 +593,43 @@ namespace EFCOREDB
 
             public ContainerFactory()
             {
+                #region MyRegion
                 //加载指定程序集
-                Assembly assembly = Assembly.Load(@"F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\EFCOREDB.dll");
+                //Assembly assembly = Assembly.LoadFile(@"F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\NetCoreClassLibrary.dll");
+                Assembly assembly = Assembly.GetExecutingAssembly();
                 //获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
                 //第一次循环
-                var types = assembly.GetTypes();
+                var types = assembly.GetTypes().Where(t => t.GetCustomAttribute(typeof(CustomTypeAttribute)) is not null);//获取具有标记的类
                 foreach (var type in types)
                 {
+                    typesDict.Add(type.Name, type);
+                    #region 获取具有标记的类
                     //获取带有[CustomPropertyAttribute]特性标记的类，只有带有自定义特性类的类型才可以通过容器来创建
-                    var customAttr = type.GetCustomAttribute(typeof(CustomTypeAttribute));
-                    if (customAttr is not null)
-                    {
-                        typesDict.Add(type.Name, type);
-                    }
-                    //typesDict.Add(type.Name, type);
+                    //var customAttr = type.GetCustomAttribute(typeof(CustomTypeAttribute));                  
+                    //if (customAttr is not null)
+                    //{
+                    //    typesDict.Add(type.Name, type);
+                    //} 
+                    #endregion
                 }
+                #endregion
+
+                #region MyRegion
+                ////加载指定程序集
+                ////Assembly assembly = Assembly.LoadFile(@"F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\NetCoreClassLibrary.dll");                
+                ////获取程序集中已经定义的类型,然后添加到哈希字典中，来提提高性能
+                ////第一次循环
+                //var types = assembly.GetTypes();
+                //foreach (var type in types)
+                //{
+                //    //获取带有[CustomPropertyAttribute]特性标记的类，只有带有自定义特性类的类型才可以通过容器来创建
+                //    var customAttr = type.GetCustomAttribute(typeof(CustomTypeAttribute));                   
+                //    if (customAttr is not null)
+                //    {
+                //        typesDict.Add(type.Name, type);
+                //    }
+                //}
+                #endregion
             }
 
             /// <summary>
@@ -523,7 +639,7 @@ namespace EFCOREDB
             /// <returns>创建对象的实例</returns>
             public object CreateObject(string typeName)
             {
-                //iocTempContainerDict 先取值 解决死锁问题
+                //iocTempContainerDict 先取值 解决死锁问题-----A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
 
                 //从哈希字典存储程序集中的所有的类对象查询对应类名的类
                 Type type = typesDict[typeName];
@@ -537,28 +653,39 @@ namespace EFCOREDB
                 //第一次循环 创建对象实例
                 var typeInstant = Activator.CreateInstance(type);
 
-                //iocTempContainerDict 存值 解决死锁问题
+                //iocTempContainerDict 存值 解决死锁问题-----A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
 
                 //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
-                var properties = type.GetProperties();
+                var properties = type.GetProperties().Where(t => t.GetCustomAttribute(typeof(CustomPropertyAttribute)) is not null);//获取具有标记的属性;
                 foreach (var property in properties)
                 {
-                    //获取带有[CustomPropertyAttribute]特性标记的属性，只有带有自定义特性类的属性才可以通过容器来创建
-                    var customAttr = property.GetCustomAttribute(typeof(CustomPropertyAttribute));
-                    if (customAttr is not null)
+                    if (typesDict.ContainsKey(property.PropertyType.Name))
                     {
-                        if (typesDict.ContainsKey(property.PropertyType.Name))
-                        {
-                            //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
-                            property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
-                        }
+                        //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+                        property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
                     }
+
+                    #region 获取具有标记的属性
+                    ////获取带有[CustomPropertyAttribute]特性标记的属性，只有带有自定义特性类的属性才可以通过容器来创建
+                    //var customAttr = property.GetCustomAttribute(typeof(CustomPropertyAttribute));
+                    //if (customAttr is not null)
+                    //{
+                    //    if (typesDict.ContainsKey(property.PropertyType.Name))
+                    //    {
+                    //        //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
+                    //        property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
+                    //    }
+                    //} 
+                    #endregion
+
+                    #region MyRegion
                     ////情况1 A对象中有属性B
                     //if (typesDict.ContainsKey(property.PropertyType.Name))
                     //{
                     //    //情况 2、A对象中有属性B，B对象中有属性C 这样又要嵌套一次，如果C里面还有的话，又要嵌套，因此可以使用递归来处理
                     //    property.SetValue(typeInstant, CreateObject(property.PropertyType.Name));
-                    //}
+                    //} 
+                    #endregion
 
                 }
                 //添加待哈希字典中，供以后DI使用
@@ -596,7 +723,6 @@ namespace EFCOREDB
             /// 存放Expression表达式树的内容
             /// </summary>
             public Stack<string> StackSet { get; set; }
-
 
             public OperatorExpressionToSql()
             {
@@ -921,8 +1047,8 @@ namespace EFCOREDB
 
             //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 x.Age 
             MemberExpression memberRight = Expression.PropertyOrField(paramLeft, "Age"); //MyClass的Age属性，可以再构造lambda表达式的时候传入，这样就可以根据需要来构造表达式了
-            //MemberExpression memberRight2 = Expression.Field(paramLeft, "Age"); 
-            //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 1 常量 
+                                                                                         //MemberExpression memberRight2 = Expression.Field(paramLeft, "Age"); 
+                                                                                         //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 1 常量 
             ConstantExpression constantRight = Expression.Constant(1, typeof(int));
 
             //lambda表达式 等号 右边的参数parameter  x.Age + 1中的 + 加号
@@ -1183,12 +1309,12 @@ namespace EFCOREDB
 
             //创建同步任务
             var taskSync = new Task<long>(() =>
-           {
-               Console.WriteLine($"同步任务：{Task.CurrentId}，运行的线程:{ Thread.CurrentThread.ManagedThreadId}");
-               int sum2 = 0;
-               Parallel.For(1, 10000, (i) => { Interlocked.Add(ref sum2, i); });
-               return sum2;
-           });
+            {
+                Console.WriteLine($"同步任务：{Task.CurrentId}，运行的线程:{ Thread.CurrentThread.ManagedThreadId}");
+                int sum2 = 0;
+                Parallel.For(1, 10000, (i) => { Interlocked.Add(ref sum2, i); });
+                return sum2;
+            });
 
             taskSync.RunSynchronously();
             Console.WriteLine($"同步任务：{taskSync.Id}，运行的线程的结果:{ taskSync.Result}");
@@ -1205,9 +1331,9 @@ namespace EFCOREDB
 
             //不加锁
             Parallel.For(1, 10000, i =>
-                    {
-                        sun1 += i;
-                    });
+            {
+                sun1 += i;
+            });
 
             //不加锁
             Parallel.For(1, 10000, i =>
@@ -1702,7 +1828,7 @@ END";
             var pk = $"PK_{tableName}";
             string decide = $"SELECT COUNT(1) FROM all_tables WHERE TABLE_NAME='{tableName}' AND OWNER='{schema}'";
             string sqlRaw =
-$@"DECLARE num NUMBER;
+    $@"DECLARE num NUMBER;
 BEGIN
 	SELECT
 		COUNT(1) INTO num 
@@ -1930,7 +2056,7 @@ BEGIN
         public static Expression<Func<T, bool>> Not1<T>(this Expression<Func<T, bool>> expression)
         {
             var param = expression.Parameters[0];//指定参数和参数名称
-            //var param = Expression.Parameter(typeof(T), "w");
+                                                 //var param = Expression.Parameter(typeof(T), "w");
             var body = Expression.Not(expression.Body);
             return Expression.Lambda<Func<T, bool>>(body, param);
         }

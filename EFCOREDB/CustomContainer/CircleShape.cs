@@ -9,7 +9,7 @@ namespace EFCOREDB
     /// <summary>
     /// 圆型
     /// </summary>
-    class CircleShape : IShape
+    public class CircleShape : IShape
     {
         public void Show()
         {

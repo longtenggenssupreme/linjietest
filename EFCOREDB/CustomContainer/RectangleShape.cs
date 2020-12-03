@@ -9,7 +9,8 @@ namespace EFCOREDB
     /// <summary>
     /// 长方形
     /// </summary>
-    class RectangleShape : IShape
+    [CustomType]
+    public class RectangleShape : IShape
     {
         public void Show()
         {

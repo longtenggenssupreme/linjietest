@@ -9,7 +9,7 @@ namespace EFCOREDB
     /// <summary>
     /// 正方形
     /// </summary>
-    [CustomType]
+    [CustomTypeAttribute]
     public class SquareShape : IShape
     {
         [CustomProperty]

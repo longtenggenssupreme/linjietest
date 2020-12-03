@@ -1,0 +1,11 @@
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\NetCoreClassLibrary.deps.json
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\ref\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\net5.0\NetCoreClassLibrary.pdb
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.GeneratedMSBuildEditorConfig.editorconfig
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.AssemblyInfoInputs.cache
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.AssemblyInfo.cs
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.csproj.CoreCompileInputs.cache
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\ref\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\net5.0\NetCoreClassLibrary.pdb

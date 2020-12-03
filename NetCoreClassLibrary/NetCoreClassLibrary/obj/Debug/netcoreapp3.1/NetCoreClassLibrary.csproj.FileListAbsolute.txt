@@ -1,0 +1,8 @@
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\netcoreapp3.1\NetCoreClassLibrary.deps.json
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\netcoreapp3.1\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\bin\Debug\netcoreapp3.1\NetCoreClassLibrary.pdb
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\netcoreapp3.1\NetCoreClassLibrary.AssemblyInfoInputs.cache
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\netcoreapp3.1\NetCoreClassLibrary.AssemblyInfo.cs
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\netcoreapp3.1\NetCoreClassLibrary.csproj.CoreCompileInputs.cache
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\netcoreapp3.1\NetCoreClassLibrary.dll
+F:\Person\aaa\LJTest\NetCoreClassLibrary\NetCoreClassLibrary\obj\Debug\netcoreapp3.1\NetCoreClassLibrary.pdb

@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 namespace EFCOREDB
 {
     /// <summary>
-    /// 正方形
+    /// 圆型
     /// </summary>
-    [CustomType]
-    public class SquareShape : IShape
+    [CustomTypeAttribute]
+    public class CircleShape : IShape
     {
-        [CustomProperty]
-        public RectangleShape RectangleShape { get; set; }
         public void Show()
         {
-            Console.WriteLine("SquareShape");
+            Console.WriteLine("CircleShape");
         }
     }
 }
