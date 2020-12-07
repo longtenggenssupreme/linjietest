@@ -24,11 +24,12 @@ namespace CommonTools
             TestInstanceDestructor();
             //TestSingleInstance();
             //TestLambda();
-            Console.Read();
+            Console.ReadLine();
         }
 
         /// <summary>
-        /// 测试析构函数
+        /// 测试析构函数程序员无法控制解构器何时被执行因为这是由垃圾搜集器决定的。
+        /// 但程序退出时解构器被调用了。你能通过日志输出文件来确认析构函数是否别调用。这里将它输出在文本文件中，可以看到解构器被调用了，因为在背后base.Finalize()被调用了。
         /// </summary>
         public static void TestInstanceDestructor()
         {
@@ -36,10 +37,15 @@ namespace CommonTools
             //var sanBox = new CurrentDomainSandbox();
             //var instance = sanBox.CreateInstance<Program>();
 
-            using (var test = new TestDestructor())
-            {
-                test.InvokeExampleMethod();
-            }            
+            //using (var test = new TestDestructor())
+            //{
+            //    test.InvokeExampleMethod();
+            //}
+            //GC.Collect();
+
+            var test = new TestDestructor();
+            test = null;
+            //GC.Collect();
         }
 
         /// <summary>
