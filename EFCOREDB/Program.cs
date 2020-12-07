@@ -731,7 +731,7 @@ namespace EFCOREDB
             public object GetCreateObject(string typeName);
 
             /// <summary>
-            /// 创建对象的实例，包括对象中的所有属性的实例化等
+            /// 创建对象的实例，包括对象中的所有属性的实例化等，c# 8.0 以后接口可以定义接口和方法实现了，
             /// </summary>
             /// <param name="typeName">创建对象的名称</param>
             /// <returns>创建对象的实例</returns>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleTest;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,13 +10,36 @@ using System.Threading.Tasks;
 
 namespace CommonTools
 {
-    class Program
+
+    //System.Runtime.Serialization.SerializationException:
+    //“程序集“ConsoleTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null”
+    //中的类型“CommonTools.Program”未标记为可序列化。”
+    //处理方式1，添加[Serializable]特性
+    //处理方式2，继承MarshalByRefObject
+    //[Serializable]
+    class Program : MarshalByRefObject
     {
         static void Main(string[] args)
         {
+            TestInstanceDestructor();
             //TestSingleInstance();
-            TestLambda();
+            //TestLambda();
             Console.Read();
+        }
+
+        /// <summary>
+        /// 测试析构函数
+        /// </summary>
+        public static void TestInstanceDestructor()
+        {
+            Console.WriteLine("测试析构函数");
+            //var sanBox = new CurrentDomainSandbox();
+            //var instance = sanBox.CreateInstance<Program>();
+
+            using (var test = new TestDestructor())
+            {
+                test.InvokeExampleMethod();
+            }            
         }
 
         /// <summary>
