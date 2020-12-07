@@ -574,7 +574,7 @@ namespace EFCOREDB
         /// <summary>
         /// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
         /// </summary>
-        public class ContainerFactory
+        public class ContainerFactory: IContainerFactory
         {
             /// <summary>
             /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
@@ -705,6 +705,40 @@ namespace EFCOREDB
                     return null;
                 }
                 return CreateObject(typeName);
+            }
+        }
+
+        public class ContainerFactory2 : IContainerFactory
+        {
+            public object GetCreateObject(string typeName)
+            {
+                throw new NotImplementedException();
+            }
+
+              
+        }
+
+        /// <summary>
+        /// 容器工厂接口
+        /// </summary>
+        public interface IContainerFactory {
+
+            /// <summary>
+            /// 根据需要传入需要创建的类名称，创建对应类的实例化对象，返回该实例化对象
+            /// </summary>
+            /// <param name="typeName">需要创建的类名称</param>
+            /// <returns>创建对应类的实例化对象</returns>
+            public object GetCreateObject(string typeName);
+
+            /// <summary>
+            /// 创建对象的实例，包括对象中的所有属性的实例化等
+            /// </summary>
+            /// <param name="typeName">创建对象的名称</param>
+            /// <returns>创建对象的实例</returns>
+            public object CreateObject22(string typeName)
+            {
+                Type type = null;
+                return type;
             }
         }
         #endregion
