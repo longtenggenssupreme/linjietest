@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +26,17 @@ namespace WebAppNet5
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the Autofac container.
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            //原生的服务容器，会自动注册到当前Autofac container容器中去，不需要使用containerBuilder.Populate(services);
+
+            containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+            containerBuilder.RegisterType<TestB>().As<ITestB>().InstancePerDependency();
+            containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerDependency();
+            containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerDependency();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

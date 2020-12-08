@@ -38,11 +38,17 @@ namespace EFCOREDB
             #region 测试 容器
             //TestServiceCollection();
             //TestServiceCollectionWithAutofac();
-            TestAutofacWithServiceCollection();
+            //TestAutofacWithServiceCollection();
             #endregion
 
 
             #region 全部
+
+            #region 测试 容器
+            //TestServiceCollection();
+            //TestServiceCollectionWithAutofac();
+            //TestAutofacWithServiceCollection();
+            #endregion
 
             #region 测试 批量插入 EntityFramework Core 5.0 VS SQLBulkCopy区别
             //EntityFramework Core 5.0

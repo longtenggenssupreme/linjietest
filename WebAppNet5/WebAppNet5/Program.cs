@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace WebAppNet5
 {
@@ -21,6 +23,6 @@ namespace WebAppNet5
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).UseServiceProviderFactory(new AutofacServiceProviderFactory());//ÃÌº”AutofacServiceProviderFactory“¿¿µ◊¢»Î»›∆˜
     }
 }
