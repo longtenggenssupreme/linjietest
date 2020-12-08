@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net5.0": {
+      "Bogus/32.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Bogus.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Bogus.dll": {}
+        }
+      },
       "Hangfire/1.7.18": {
         "type": "package",
         "dependencies": {
@@ -1619,6 +1628,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
+          "Bogus": "32.0.1",
           "Hangfire": "1.7.18",
           "Microsoft.EntityFrameworkCore.InMemory": "5.0.0",
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0",
@@ -1642,6 +1652,23 @@
     }
   },
   "libraries": {
+    "Bogus/32.0.1": {
+      "sha512": "z8ujkVbpeWsbMby8y1l4g57zYGbTs1VYdaKxyDmaIemOHfoBn+DF57rHu/tNpbZfubRGAqeU/o9tAx02yOaDDw==",
+      "type": "package",
+      "path": "bogus/32.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bogus.32.0.1.nupkg.sha512",
+        "bogus.nuspec",
+        "lib/net40/Bogus.dll",
+        "lib/net40/Bogus.xml",
+        "lib/netstandard1.3/Bogus.dll",
+        "lib/netstandard1.3/Bogus.xml",
+        "lib/netstandard2.0/Bogus.dll",
+        "lib/netstandard2.0/Bogus.xml"
+      ]
+    },
     "Hangfire/1.7.18": {
       "sha512": "xNwlGgY2pW5NJoREwHABw9Lm8vPScvBqsEmo34sQe2iw+KpaKERRX5F0RjXwXKhX8jxi4OCIPOIOnLwSXtlHXw==",
       "type": "package",

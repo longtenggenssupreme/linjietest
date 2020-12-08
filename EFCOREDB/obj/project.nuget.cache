@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "rB3ShwUH3AfEVFadvhw58As1hdkcwYdcW8psqJr5luxfwBo4enwsmW0zn3K8G3+MUNHL96YG/WiH22fgQ5Acfw==",
+  "dgSpecHash": "H7qaXoamrQIzQM1fHCxwgCNeA++ssrU6H8J6TSZY1MtcHBiIvXrANjFOhbnzMcOosNjheauXlh4+3VoHYjVXEg==",
   "success": true,
   "projectFilePath": "F:\\Person\\aaa\\LJTest\\EFCOREDB\\EFCOREDB.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\bogus\\32.0.1\\bogus.32.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire\\1.7.18\\hangfire.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.aspnetcore\\1.7.18\\hangfire.aspnetcore.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.core\\1.7.18\\hangfire.core.1.7.18.nupkg.sha512",

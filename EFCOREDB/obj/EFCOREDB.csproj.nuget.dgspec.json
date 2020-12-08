@@ -45,6 +45,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Bogus": {
+              "target": "Package",
+              "version": "[32.0.1, )"
+            },
             "Hangfire": {
               "target": "Package",
               "version": "[1.7.18, )"

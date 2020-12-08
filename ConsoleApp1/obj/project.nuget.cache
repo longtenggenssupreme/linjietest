@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "0Aj2qAn/HHF8fUduqp/xbFdyOpjvKuZAbXlFEU1K7Ckq8SZBjRLmDpqW7phcqSGxJDX4uSHPAWbNMR2gojzovw==",
+  "dgSpecHash": "U3PLJ6a3Q6sG4Up7U+ClZMkRLfvZ/FSxfXamKFDoR190LBa4thwo/MwxbSF1Ja20iKK+fsWRy2N8LtbOl2UB0Q==",
   "success": true,
   "projectFilePath": "F:\\Person\\aaa\\LJTest\\ConsoleApp1\\ConsoleStaticRenference.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\bogus\\32.0.1\\bogus.32.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire\\1.7.18\\hangfire.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.aspnetcore\\1.7.18\\hangfire.aspnetcore.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.core\\1.7.18\\hangfire.core.1.7.18.nupkg.sha512",

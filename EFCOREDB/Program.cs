@@ -10,6 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Diagnostics;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace EFCOREDB
 {
@@ -28,24 +31,30 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试析构函数
-            TestInstanceDestructor();
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            while (true)
-            {
-                System.Threading.Thread.Sleep(100);
-            }
+            #region 测试 批量插入 EntityFramework Core 5.0 VS SQLBulkCopy区别，
+            //TestGenerateInsertAndInsertWithEFCoreData();
+            TestGenerateAndInsertWithSqlBulkCopyData();
             #endregion
 
+
             #region 全部
+
+            #region 测试析构函数
+            //TestInstanceDestructor();
+
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
+            //GC.Collect();
+            //while (true)
+            //{
+            //    System.Threading.Thread.Sleep(100);
+            //}
+            #endregion
 
             #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
             //TestIOCcontainerFactory();
             #endregion
-
 
             //TestBitarry();
 
@@ -105,6 +114,80 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region EntityFramework Core 5.0 VS SQLBulkCopy
+        /// <summary>
+        /// EntityFramework Core 5.0 上下文去新增数据，然后分别打印伪造数据和新增成功所耗费时间
+        /// </summary>
+        public static async void TestGenerateInsertAndInsertWithEFCoreData()
+        {
+            Console.WriteLine("产生模拟数据");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var data = GenerateMockData.GetTests(10000);
+            //产生10条模拟数据
+            //产生模拟数据, 花费时间：0.2591446 秒
+            //产生模拟数据, 花费时间：0.2591446 秒,插入数据的数据数量: 10，插入数据花费时间: 0.2411458
+
+            //产生10000条模拟数据
+            //产生模拟数据,花费时间：0.9874856 秒
+            //产生模拟数据,花费时间：0.9874856 秒,插入数据的数据数量: 10000，插入数据花费时间: 1.4542355
+
+            var TotalSeconds = stopwatch.Elapsed.TotalSeconds;
+            Console.WriteLine($"产生模拟数据,花费时间：{TotalSeconds} 秒");
+            //上下文去新增数据，然后分别打印伪造数据和新增成功所耗费时间
+            var datetime1 = DateTime.Now;
+            using var EFCoreVSSqlBulkCopyContext = new EFCoreVSSqlBulkCopyContext() { CreateDateTime = datetime1 };
+            EFCoreVSSqlBulkCopyContext.Database.EnsureCreated();
+            stopwatch.Restart();
+            EFCoreVSSqlBulkCopyContext.Tests.AddRange(data);
+            await EFCoreVSSqlBulkCopyContext.AddRangeAsync(data);
+            var result = await EFCoreVSSqlBulkCopyContext.SaveChangesAsync();
+
+            Console.WriteLine($"产生模拟数据,花费时间：{TotalSeconds} 秒,插入数据的数据数量:{result}，插入数据花费时间:{stopwatch.Elapsed.TotalSeconds}");
+        }
+
+        /// <summary>
+        /// SQLBulkCopy 上下文去新增数据，然后分别打印伪造数据和新增成功所耗费时间
+        /// </summary>
+        public static async void TestGenerateAndInsertWithSqlBulkCopyData()
+        {
+            Console.WriteLine("产生模拟数据");
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var data = GenerateMockData.GetTests(10000);
+
+            //产生10000条模拟数据
+            //产生模拟数据,花费时间：1.0126009 秒
+            //产生模拟数据, 花费时间：1.0126009 秒,插入数据的数据数量: 10000，插入数据花费时间: 0.3210853
+
+            var TotalSeconds = stopwatch.Elapsed.TotalSeconds;
+            Console.WriteLine($"产生模拟数据,花费时间：{TotalSeconds} 秒");
+            //上下文去新增数据，然后分别打印伪造数据和新增成功所耗费时间
+            var datetime1 = DateTime.Now;
+            using (var EFCoreVSSqlBulkCopyContext = new EFCoreVSSqlBulkCopyContext() { CreateDateTime = datetime1 })
+            {
+                EFCoreVSSqlBulkCopyContext.Database.EnsureCreated();
+            }
+            stopwatch.Restart();
+
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Title");
+            dt.Columns.Add("Content");
+            dt.Columns.Add("CreateDateTime");
+            foreach (var item in data)
+            {
+                dt.Rows.Add(item.Id, item.Title, item.Content, item.CreateDateTime);
+            }
+            //注意DestinationTableName 必须是全路径即 数据库名称.架构名称.表名称
+            using var sqlbulkcopy = new SqlBulkCopy("server=127.0.0.1;database=EFCoreVSSqlBulkCopyContext;user=sa;password=sa123;") { DestinationTableName = "EFCoreVSSqlBulkCopyContext.dbo.[20201208]" };
+            await sqlbulkcopy.WriteToServerAsync(dt);
+
+            Console.WriteLine($"产生模拟数据,花费时间：{TotalSeconds} 秒,插入数据的数据数量:{10000}，插入数据花费时间:{stopwatch.Elapsed.TotalSeconds}");
+        }
+        #endregion
+
 
         #region 测试析构函数
         /// <summary>
