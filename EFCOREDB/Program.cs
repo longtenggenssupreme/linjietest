@@ -13,6 +13,9 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace EFCOREDB
 {
@@ -32,13 +35,21 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
 
-            #region 测试 批量插入 EntityFramework Core 5.0 VS SQLBulkCopy区别，
-            //TestGenerateInsertAndInsertWithEFCoreData();
-            TestGenerateAndInsertWithSqlBulkCopyData();
+            #region 测试 容器
+            //TestServiceCollection();
+            //TestServiceCollectionWithAutofac();
+            TestAutofacWithServiceCollection();
             #endregion
 
 
             #region 全部
+
+            #region 测试 批量插入 EntityFramework Core 5.0 VS SQLBulkCopy区别
+            //EntityFramework Core 5.0
+            //TestGenerateInsertAndInsertWithEFCoreData();
+            //SQLBulkCopy
+            //TestGenerateAndInsertWithSqlBulkCopyData();
+            #endregion
 
             #region 测试析构函数
             //TestInstanceDestructor();
@@ -110,10 +121,308 @@ namespace EFCOREDB
             //TestConcurrentDictionary();
             //TestDBContext(); 
             #endregion
+
             #endregion
 
             Console.Read();
         }
+        #region 测试 容器
+        /// <summary>
+        /// 测试自带的IOC容器的DI依赖注入单独使用
+        /// </summary>
+        public static void TestServiceCollection()
+        {
+            IServiceCollection services = new ServiceCollection();
+            services.AddTransient<ITestA, TestA>();//瞬态，每次使用的时候容器都会创建一个新的实例对象
+            services.AddSingleton<ITestB, TestB>();//单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            services.AddScoped<ITestC, TestC>();//作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //根容器下保留容器创建的单例实例对象，
+            //根容器下的子容器中的公用根容器的容器创建的单例实例对象，子容器中容器创建的单例实例对象也是存储到根容器的容器中的
+            //根容器下不同子容器中使用的对象实例是相同的
+            services.AddTransient<ITestD, TestD>();
+
+            var seviceProvider = services.BuildServiceProvider();
+
+            #region Transient 瞬态，每次使用的时候容器都会创建一个新的实例对象
+            Console.WriteLine("---瞬态，每次使用的时候容器都会创建一个新的实例对象---");
+            ITestA testA = seviceProvider.GetRequiredService<ITestA>();
+            ITestA testA1 = seviceProvider.GetRequiredService<ITestA>();
+            testA.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testA.Equals(testA1)}");
+            Console.WriteLine();
+            #endregion
+
+            #region Singleton 单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            Console.WriteLine("---单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中---");
+            ITestB testB = seviceProvider.GetRequiredService<ITestB>();
+            ITestB testB1 = seviceProvider.GetRequiredService<ITestB>();
+            testB.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testB.Equals(testB1)}");
+            Console.WriteLine();
+            #endregion
+
+            #region Scoped 作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下---");
+            ITestC testC = seviceProvider.GetRequiredService<ITestC>();
+            ITestC testC1 = seviceProvider.GetRequiredService<ITestC>();
+            testC.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testC.Equals(testC1)}");
+            Console.WriteLine();
+
+            Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象 作用域1和作用域2---");
+            ITestC testC2 = seviceProvider.CreateScope().ServiceProvider.GetRequiredService<ITestC>();
+            ITestC testC3 = seviceProvider.CreateScope().ServiceProvider.GetRequiredService<ITestC>();
+            testC2.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testC2.Equals(testC3)}");
+            Console.WriteLine();
+
+
+            Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象 作用域1和作用域2---BuildServiceProvider");
+            var seviceProvider1 = services.BuildServiceProvider();
+            ITestC testC4 = seviceProvider.GetRequiredService<ITestC>();
+            ITestC testC5 = seviceProvider1.GetRequiredService<ITestC>();
+            testC4.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testC4.Equals(testC5)}");
+            Console.WriteLine();
+
+
+            Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象 作用域1和作用域2---BuildServiceProvider");
+            var seviceProvider2 = services.BuildServiceProvider();
+            var seviceProvider3 = services.BuildServiceProvider();
+            ITestC testC7 = seviceProvider2.GetRequiredService<ITestC>();
+            ITestC testC8 = seviceProvider3.GetRequiredService<ITestC>();
+            testC7.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testC7.Equals(testC7)}");
+            Console.WriteLine();
+
+            #endregion
+        }
+
+        /// <summary>
+        /// 测试Autofac的IOC容器的DI依赖注入的使用
+        /// </summary>
+        public static void TestServiceCollectionWithAutofac()
+        {
+            ContainerBuilder containerBuilder = new ContainerBuilder();
+            //瞬态，每次使用的时候容器都会创建一个新的实例对象
+            containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+            //单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();
+            //作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();
+            //作用域--指定名称，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("作用域名称1");
+
+            var container = containerBuilder.Build();
+            #region Autofac
+            #region Transient 瞬态，每次使用的时候容器都会创建一个新的实例对象
+            Console.WriteLine("---瞬态---");
+            ITestA testA = container.Resolve<ITestA>();
+            ITestA testA1 = container.Resolve<ITestA>();
+            //testA.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testA.Equals(testA1)}");
+            Console.WriteLine();
+            #endregion
+
+            #region Singleton 单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            //Console.WriteLine("---单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中---");
+            //ITestB testB = container.Resolve<ITestB>();
+            //ITestB testB1 = container.Resolve<ITestB>();
+            ////testB.Show();
+            //Console.WriteLine($"是否为同一个对象实例：{testB.Equals(testB1)}");
+            //Console.WriteLine();
+            #endregion
+
+            #region Scoped 作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下---");
+            //ITestC testC = container.Resolve<ITestC>();
+            //ITestC testC1 = container.Resolve<ITestC>();
+            ////testC.Show();
+            //Console.WriteLine($"是否为同一个对象实例：{testC.Equals(testC1)}");
+            //Console.WriteLine();
+            #endregion
+
+            #region Scoped 作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下---BeginLifetimeScope");
+            //using var lifetimeScope = container.BeginLifetimeScope();
+            //ITestC testC2 = lifetimeScope.Resolve<ITestC>();
+            //ITestC testC3 = lifetimeScope.Resolve<ITestC>();
+            ////testC.Show();
+            //Console.WriteLine($"是否为同一个对象实例：{testC2.Equals(testC3)}");
+            //Console.WriteLine();
+
+            //using var lifetimeScope1 = container.BeginLifetimeScope();
+            //ITestC testC5 = lifetimeScope1.Resolve<ITestC>();
+            //using var lifetimeScope2 = container.BeginLifetimeScope();
+            //ITestC testC6 = lifetimeScope2.Resolve<ITestC>();
+            ////testC.Show();
+            //Console.WriteLine($"是否为同一个对象实例：{testC5.Equals(testC6)}");
+            //Console.WriteLine();
+            #endregion
+            //ITestC testC323; ITestC testC353;
+            #region Scoped 作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下---BeginLifetimeScope lifetimeScope33");
+            //using var lifetimeScope30 = lifetimeScope.BeginLifetimeScope();
+            //testC323 = lifetimeScope30.Resolve<ITestC>();
+
+            //using var lifetimeScope31 = lifetimeScope.BeginLifetimeScope();
+            //testC353 = lifetimeScope31.Resolve<ITestC>();
+            //Console.WriteLine($"是否为同一个对象实例：{testC323.Equals(testC353)}");
+            //Console.WriteLine();
+            #endregion
+
+            #region Scoped 作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //using var lifetimeScopeTag = container.BeginLifetimeScope("作用域名称1");
+            //ITestC testC2Tag = lifetimeScopeTag.Resolve<ITestC>();
+            //ITestC testC3Tag = lifetimeScopeTag.Resolve<ITestC>();
+            //Console.WriteLine($"是否为同一个对象实例：{testC2Tag.Equals(testC3Tag)}");
+            //Console.WriteLine(); 
+            //ITestC testC323Tag; ITestC testC353Tag;          
+            //Console.WriteLine("---作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下---BeginLifetimeScope 作用域名称1");
+            //using var lifetimeScope30Tag = lifetimeScopeTag.BeginLifetimeScope();
+            //testC323Tag = lifetimeScope30Tag.Resolve<ITestC>();
+
+            //using var lifetimeScope31Tag = lifetimeScopeTag.BeginLifetimeScope();
+            //testC353Tag = lifetimeScope31Tag.Resolve<ITestC>();
+            //Console.WriteLine($"是否为同一个对象实例：{testC323Tag.Equals(testC353Tag)}");
+            //Console.WriteLine();
+            #endregion 
+            #endregion
+
+            #region 原生依赖注入的扩展 Scrutor----》 Register services using assembly scanning and a fluent API.
+            //Console.WriteLine("---瞬态，每次使用的时候容器都会创建一个新的实例对象---");
+            //ITestA testA = seviceProvider.GetRequiredService<ITestA>();
+            //ITestA testA1 = seviceProvider.GetRequiredService<ITestA>();
+            //testA.Show();
+            //Console.WriteLine($"是否为同一个对象实例：{testA.Equals(testA1)}");
+            //Console.WriteLine();
+            #endregion
+        }
+
+
+        /// <summary>
+        /// 测试Autofac的IOC容器的DI依赖注入和原生IOC容器的DI依赖注入的使用
+        /// </summary>
+        public static void TestAutofacWithServiceCollection()
+        {
+            #region Autofac
+            //IServiceCollection services = new ServiceCollection();
+            //services.AddTransient<ITestA, TestA>();//瞬态，每次使用的时候容器都会创建一个新的实例对象
+            //services.AddSingleton<ITestB, TestB>();//单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            ////services.AddScoped<ITestC, TestC>();//作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            ////根容器下保留容器创建的单例实例对象，
+            ////根容器下的子容器中的公用根容器的容器创建的单例实例对象，子容器中容器创建的单例实例对象也是存储到根容器的容器中的
+            ////根容器下不同子容器中使用的对象实例是相同的
+            ////services.AddTransient<ITestD, TestD>();
+
+            ////var seviceProvider = services.BuildServiceProvider();
+
+            //ContainerBuilder containerBuilder = new ContainerBuilder();
+            ////瞬态，每次使用的时候容器都会创建一个新的实例对象
+            ////containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+            ////单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            ////containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();
+            ////作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();
+            ////作用域--指定名称，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("作用域名称1");
+            //containerBuilder.Populate(services);//IServiceCollection 原生的服务容器注册到Autofac容器中            
+            //var container = containerBuilder.Build();
+            ////使用Autofac容器创建对象实例
+            //ITestB testB = container.Resolve<ITestB>();
+            //ITestB testB1 = container.Resolve<ITestB>();
+            //Console.WriteLine($"是否为同一个对象实例：{testB.Equals(testB1)}");
+
+            //var seviceProvider= new AutofacServiceProvider(container);
+            //ITestA testA = seviceProvider.GetRequiredService<ITestA>();
+            //ITestA testA1 = seviceProvider.GetRequiredService<ITestA>();
+            //Console.WriteLine($"是否为同一个对象实例：{testA.Equals(testA1)}");
+            #endregion
+
+            #region 原生IServiceCollection依赖注入的扩展 Scrutor----》 Register services using assembly scanning and a fluent API.
+            IServiceCollection services = new ServiceCollection();
+            //services.AddTransient<ITestA, TestA>();//瞬态，每次使用的时候容器都会创建一个新的实例对象
+            //services.AddSingleton<ITestB, TestB>();//单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
+            //services.AddScoped<ITestC, TestC>();//作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
+            //根容器下保留容器创建的单例实例对象，
+            //根容器下的子容器中的公用根容器的容器创建的单例实例对象，子容器中容器创建的单例实例对象也是存储到根容器的容器中的
+            //根容器下不同子容器中使用的对象实例是相同的
+            //services.AddTransient<ITestD, TestD>();
+
+            //Scrutor其实是IServiceCollection的扩展
+            //Scrutor使用Scan和Decorate批量注册服务和接口
+            //我们写一些接口和实现类的时候，都会根据这样的习惯来命名，定义一个接口IClass，它的实现类就是Class。
+            //services.Scan(scan =>
+            //scan.FromAssemblyOf<TestD>()
+            //.AddClasses()
+            //.AsMatchingInterface()
+            //.WithTransientLifetime());
+            //AsMatchingInterface 针对（接口IClass和它的实现类就是Class）。
+            //这种处理方式很方便，但仅限于同一种生命周期，如果不同的类和接口想要不同的生命周期的话，该方式就不适合了
+
+            //Scrutor使用Scan和Decorate批量注册服务和接口
+            //services.Scan(scan =>
+            //scan.FromAssemblyOf<TestD>()
+            //.AddClasses(classes => classes.Where(c => c.Name.Contains("Test")))//类型名称中包含Test的都会被注册
+            //.AsImplementedInterfaces()
+            //.WithTransientLifetime());
+
+
+
+            //Scrutor使用Scan和Decorate批量注册单个服务
+            services.Scan(scan =>
+            scan.AddTypes(typeof(MyScrutorTest)).AsSelf().WithSingletonLifetime());
+
+
+            //var listarr = services.Where(s => s.ServiceType.Namespace.Contains("", StringComparison.OrdinalIgnoreCase)).ToList();
+            //foreach (var item in listarr)
+            //{
+            //    Console.WriteLine($"容器中的服务:ServiceType:{item.ServiceType},ImplementationType:{item.ImplementationType},Lifetime:{item.Lifetime}");
+            //}
+
+            #region Test 类型名称中包含Test的都会被注册 上面的foreach循环输出的内容
+            //容器中的服务: ServiceType: System.IDisposable,ImplementationType: EFCOREDB.TestDestructor,Lifetime: Transient
+            //容器中的服务:ServiceType: EFCOREDB.ITestA,ImplementationType: EFCOREDB.TestA,Lifetime: Transient
+            //容器中的服务:ServiceType: EFCOREDB.ITestB,ImplementationType: EFCOREDB.TestB,Lifetime: Transient
+            //容器中的服务:ServiceType: EFCOREDB.ITestC,ImplementationType: EFCOREDB.TestC,Lifetime: Transient
+            //容器中的服务:ServiceType: EFCOREDB.ITestD,ImplementationType: EFCOREDB.TestD,Lifetime: Transient
+            //容器中的服务:ServiceType: EFCOREDB.ITestA,ImplementationType: EFCOREDB.TestF,Lifetime: Transient 
+
+            //可以看出 TestF TestA都实现了ITestA接口，结果查询的时候都显示了，那么如果想要去掉，即只显示一个接口和一个实现该怎么处理
+            //重复注册处理策略
+            //还有一个比较常见的情形是，重复注册，即同一个接口，有多个不同的实现。
+            //Scrutor提供了三大策略，Append、Skip和Replace。 Append是默认行为，就是叠加，也就是出现上述 TestF TestA都实现了ITestA接口的情况
+            //下面使用Scrutor提供Skip策略
+            services.Scan(scan =>
+            scan.FromAssemblyOf<TestD>()
+            .AddClasses(classes => classes.AssignableTo<ITestA>())//类型名称中实现ITestA的类都会被注册
+            .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)//解决 TestF TestA都实现了ITestA接口的情况，之注册一个接口和实现
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
+            var listarr = services.Where(s => s.ServiceType.Namespace.Contains("", StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var item in listarr)
+            {
+                Console.WriteLine($"容器中的服务:ServiceType:{item.ServiceType},ImplementationType:{item.ImplementationType},Lifetime:{item.Lifetime}");
+            }
+            //容器中的服务:ServiceType:EFCOREDB.MyScrutorTest,ImplementationType:EFCOREDB.MyScrutorTest,Lifetime:Singleton
+            //容器中的服务: ServiceType: EFCOREDB.ITestA,ImplementationType: EFCOREDB.TestA,Lifetime: Transient
+            //可以看出 TestF TestA都实现了ITestA接口，结果查询的时候只显示一个接口和一个实现了
+            #endregion
+
+            var seviceProvider = services.BuildServiceProvider();
+            MyScrutorTest myScrutorTest = seviceProvider.GetRequiredService<MyScrutorTest>();
+            myScrutorTest.Show();
+            #region Transient 瞬态，每次使用的时候容器都会创建一个新的实例对象
+            Console.WriteLine("---瞬态，每次使用的时候容器都会创建一个新的实例对象---");
+            ITestA testA = seviceProvider.GetRequiredService<ITestA>();
+            ITestA testA1 = seviceProvider.GetRequiredService<ITestA>();
+            testA.Show();
+            Console.WriteLine($"是否为同一个对象实例：{testA.Equals(testA1)}");
+            Console.WriteLine();
+            #endregion
+            #endregion
+        }
+        #endregion
 
         #region EntityFramework Core 5.0 VS SQLBulkCopy
         /// <summary>
@@ -188,7 +497,6 @@ namespace EFCOREDB
         }
         #endregion
 
-
         #region 测试析构函数
         /// <summary>
         /// 测试析构函数程序员无法控制解构器何时被执行因为这是由垃圾搜集器决定的。
@@ -218,7 +526,8 @@ namespace EFCOREDB
 
         #region 测试 bitarry 位压缩
         static void TestBitarry()
-        {// Creates and initializes several BitArrays.
+        {
+            // Creates and initializes several BitArrays.
             BitArray myBA1 = new BitArray(5);
 
             BitArray myBA2 = new BitArray(5, false);
@@ -281,7 +590,6 @@ namespace EFCOREDB
         }
 
         #endregion
-
 
         #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
 

@@ -74,3 +74,7 @@ F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.pdb
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.genruntimeconfig.cache
 F:\Person\aaa\LJTest\EFCOREDB\obj\Debug\net5.0\EFCOREDB.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Bogus.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Autofac.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Autofac.Extensions.DependencyInjection.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+F:\Person\aaa\LJTest\EFCOREDB\bin\Debug\net5.0\Scrutor.dll
