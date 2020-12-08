@@ -30,3 +30,4 @@ F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csproj.Core
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csproj.CopyComplete
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.exe
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.pdb
+F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csprojAssemblyReference.cache

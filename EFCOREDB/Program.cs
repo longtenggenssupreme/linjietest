@@ -13,7 +13,14 @@ using System.Reflection;
 
 namespace EFCOREDB
 {
-    public class Program
+
+    //System.Runtime.Serialization.SerializationException:
+    //“程序集“ConsoleTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null”
+    //中的类型“CommonTools.Program”未标记为可序列化。”
+    //处理方式1，添加[Serializable]特性
+    //处理方式2，继承MarshalByRefObject
+    //[Serializable]
+    public class Program /*: MarshalByRefObject*/
     {
         public static int y = 5;
         public static int x = y;
@@ -21,12 +28,24 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
+            #region 测试析构函数
+            TestInstanceDestructor();
 
-            #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
-            TestIOCcontainerFactory();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            while (true)
+            {
+                System.Threading.Thread.Sleep(100);
+            }
             #endregion
 
             #region 全部
+
+            #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
+            //TestIOCcontainerFactory();
+            #endregion
+
 
             //TestBitarry();
 
@@ -86,6 +105,33 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region 测试析构函数
+        /// <summary>
+        /// 测试析构函数程序员无法控制解构器何时被执行因为这是由垃圾搜集器决定的。
+        /// 但程序退出时解构器被调用了。你能通过日志输出文件来确认析构函数是否别调用。这里将它输出在文本文件中，可以看到解构器被调用了，因为在背后base.Finalize()被调用了。
+        /// </summary>
+        public static void TestInstanceDestructor()
+        {
+            Console.WriteLine("测试析构函数");
+            //var sanBox = new CurrentDomainSandbox();
+            //var instance = sanBox.CreateInstance<Program>();
+
+            //using (var test = new TestDestructor())
+            //{
+            //    test.InvokeExampleMethod();
+            //}
+            //GC.Collect();
+
+            //var test = new TestDestructor();
+            //test = null;
+            //GC.Collect();
+
+
+            TestDesttructor1 testDesttructor1 = new TestDesttructor1();
+            testDesttructor1.InvokeMethod1();
+        }
+        #endregion
 
         #region 测试 bitarry 位压缩
         static void TestBitarry()
@@ -574,7 +620,7 @@ namespace EFCOREDB
         /// <summary>
         /// 容器工厂,加载指定程序集，然后根据程序集中的类创建类的对象实例，使用的时候直接通过DI来依赖注入使用即可
         /// </summary>
-        public class ContainerFactory: IContainerFactory
+        public class ContainerFactory : IContainerFactory
         {
             /// <summary>
             /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
@@ -715,13 +761,14 @@ namespace EFCOREDB
                 throw new NotImplementedException();
             }
 
-              
+
         }
 
         /// <summary>
         /// 容器工厂接口
         /// </summary>
-        public interface IContainerFactory {
+        public interface IContainerFactory
+        {
 
             /// <summary>
             /// 根据需要传入需要创建的类名称，创建对应类的实例化对象，返回该实例化对象

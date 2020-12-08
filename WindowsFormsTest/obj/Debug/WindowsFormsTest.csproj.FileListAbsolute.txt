@@ -7,3 +7,4 @@ F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.csproj.Generate
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.csproj.CoreCompileInputs.cache
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.exe
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.pdb
+F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.csprojAssemblyReference.cache
