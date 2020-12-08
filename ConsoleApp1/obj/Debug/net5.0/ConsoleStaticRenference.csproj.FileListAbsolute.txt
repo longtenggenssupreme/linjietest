@@ -74,3 +74,4 @@ F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ref\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.pdb
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.genruntimeconfig.cache
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Bogus.dll
