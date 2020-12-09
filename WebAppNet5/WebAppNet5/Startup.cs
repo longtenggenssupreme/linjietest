@@ -26,6 +26,8 @@ namespace WebAppNet5
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddTransient<ITestA, TestA>();
+            services.AddTransient<ITestB, TestB>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.
@@ -33,8 +35,8 @@ namespace WebAppNet5
         {
             //原生的服务容器，会自动注册到当前Autofac container容器中去，不需要使用containerBuilder.Populate(services);
 
-            containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
-            containerBuilder.RegisterType<TestB>().As<ITestB>().InstancePerDependency();
+            //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+            //containerBuilder.RegisterType<TestB>().As<ITestB>().InstancePerDependency();
             containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerDependency();
             containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerDependency();
         }

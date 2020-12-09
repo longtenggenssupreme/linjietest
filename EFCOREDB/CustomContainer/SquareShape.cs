@@ -14,6 +14,7 @@ namespace EFCOREDB
     {
         [CustomProperty]
         public RectangleShape RectangleShape { get; set; }
+        
         public void Show()
         {
             Console.WriteLine("SquareShape");

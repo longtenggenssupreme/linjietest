@@ -12,6 +12,9 @@ namespace EFCOREDB
     [CustomType]
     public class RectangleShape : IShape
     {
+        [CustomProperty]
+        public SquareShape SquareShape { get; set; }
+
         public void Show()
         {
             Console.WriteLine("RectangleShape");

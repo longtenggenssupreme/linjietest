@@ -70,7 +70,7 @@ namespace EFCOREDB
             #endregion
 
             #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
-            //TestIOCcontainerFactory();
+            TestIOCcontainerFactory();
             #endregion
 
             //TestBitarry();
@@ -1023,6 +1023,7 @@ namespace EFCOREDB
             /// 容器，哈希字典存储创建对象的实例化对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
             /// </summary>
             private Dictionary<string, object> iocContainerDict = new Dictionary<string, object>();
+            //Hashtable //HashSet
 
             /// <summary>
             /// 容器，哈希字典存储程序集中的所有的类对象，使用字典，不适用list集合，因为字典的1、有唯一性保证，2、检索效率高，性能好，当然也可以使用Hashset
@@ -1083,6 +1084,10 @@ namespace EFCOREDB
             public object CreateObject(string typeName)
             {
                 //iocTempContainerDict 先取值 解决死锁问题-----A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
+                if (iocTempContainerDict.ContainsKey(typeName))
+                {
+                    return iocTempContainerDict[typeName];
+                }
 
                 //从哈希字典存储程序集中的所有的类对象查询对应类名的类
                 Type type = typesDict[typeName];
@@ -1096,7 +1101,10 @@ namespace EFCOREDB
                 //第一次循环 创建对象实例
                 var typeInstant = Activator.CreateInstance(type);
 
+
                 //iocTempContainerDict 存值 解决死锁问题-----A对象中有属性B，B对象中有属性C C对象中有属性A，这样兴成循环，会导致死锁
+                //iocTempContainerDict.Add(typeName, typeInstant);
+                iocTempContainerDict.Add(type.Name, typeInstant);
 
                 //设置实例的属性,出现情况1、A对象中有属性B，2、B对象中有属性C 3、B对象中有属性A
                 var properties = type.GetProperties().Where(t => t.GetCustomAttribute(typeof(CustomPropertyAttribute)) is not null);//获取具有标记的属性;
