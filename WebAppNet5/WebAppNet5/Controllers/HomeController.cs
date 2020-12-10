@@ -20,6 +20,12 @@ namespace WebAppNet5.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogTrace("LogTrace---这是log4net的测试");
+            _logger.LogDebug("LogDebug---这是log4net的测试");
+            _logger.LogInformation("LogInformation----这是log4net的测试LogInformation");
+            _logger.LogWarning("LogWarning---这是log4net的测试");
+            _logger.LogError("LogError---这是log4net的测试");
+            _logger.LogCritical("LogCritical---这是log4net的测试");
             return View();
         }
 

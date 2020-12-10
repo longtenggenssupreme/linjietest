@@ -75,3 +75,7 @@ F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ref\ConsoleStaticRenference.dl
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.pdb
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.genruntimeconfig.cache
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Bogus.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Extensions.DependencyInjection.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Scrutor.dll
