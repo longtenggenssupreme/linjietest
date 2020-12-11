@@ -61,7 +61,7 @@ namespace WebAppNet5
         /// <summary>
         /// 不显示图片的替换文本
         /// </summary>
-        public string AlternativeText { get; set; }//界面使用的时候alternative-text
+        public string AlternativeText { get; set; }//界面使用的时候alternative-text-
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using System.IO;
 
 namespace EFCOREDB
 {
@@ -35,10 +36,8 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
 
-            #region 测试 容器
-            //TestServiceCollection();
-            //TestServiceCollectionWithAutofac();
-            //TestAutofacWithServiceCollection();
+            #region 测试 测试文件系统监听文件
+            TestFileSystemWatch();
             #endregion
 
 
@@ -70,7 +69,7 @@ namespace EFCOREDB
             #endregion
 
             #region 自定义容器IOC(控制反转)，使用DI(依赖注入)
-            TestIOCcontainerFactory();
+            //TestIOCcontainerFactory();
             #endregion
 
             //TestBitarry();
@@ -132,6 +131,50 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region 测试文件系统监听文件
+        /// <summary>
+        /// 测试文件系统监听文件
+        /// </summary>
+        public static void TestFileSystemWatch()
+        {
+            FileSystemWatcher fileSystem = new()
+            {
+                Path = @"F:\Test\test",//监听的目录
+                Filter = "*.*",//监听目录下哪些类型的文件
+                //NotifyFilter = NotifyFilters.LastWrite//监听操作类型，修改删除创建等
+                //EnableRaisingEvents=true//是否启用该监听组件
+            };
+            fileSystem.EnableRaisingEvents = true;
+            fileSystem.Created += FileSystem_Created;
+            fileSystem.Deleted += FileSystem_Deleted;
+            fileSystem.Renamed += FileSystem_Renamed;
+            fileSystem.Changed += FileSystem_Changed;
+            Console.WriteLine();
+
+        }
+
+        private static void FileSystem_Changed(object sender, FileSystemEventArgs e)
+        {
+            Console.WriteLine($"监听文件变化：ChangeType:{e.ChangeType},FullPath:{e.FullPath},Name:{e.Name}");
+        }
+
+        private static void FileSystem_Renamed(object sender, RenamedEventArgs e)
+        {
+            Console.WriteLine($"监听文件变化：ChangeType:{e.ChangeType},FullPath:{e.FullPath},Name:{e.Name}");
+        }
+
+        private static void FileSystem_Deleted(object sender, FileSystemEventArgs e)
+        {
+            Console.WriteLine($"监听文件变化：ChangeType:{e.ChangeType},FullPath:{e.FullPath},Name:{e.Name}");
+        }
+
+        private static void FileSystem_Created(object sender, FileSystemEventArgs e)
+        {
+            Console.WriteLine($"监听文件变化：ChangeType:{e.ChangeType},FullPath:{e.FullPath},Name:{e.Name}");
+        }
+        #endregion
+
         #region 测试 容器
         /// <summary>
         /// 测试自带的IOC容器的DI依赖注入单独使用
