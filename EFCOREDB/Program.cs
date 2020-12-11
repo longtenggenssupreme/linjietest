@@ -37,11 +37,15 @@ namespace EFCOREDB
         {
 
             #region 测试 测试文件系统监听文件
-            TestFileSystemWatch();
+            //TestFileSystemWatch();
             #endregion
 
 
             #region 全部
+
+            #region 测试 测试文件系统监听文件
+            //TestFileSystemWatch();
+            #endregion
 
             #region 测试 容器
             //TestServiceCollection();

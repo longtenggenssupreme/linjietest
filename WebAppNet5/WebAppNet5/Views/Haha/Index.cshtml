@@ -29,6 +29,26 @@
 }
 
 <div class="text-center">
+    @{
+        @:Html ViewBag ViewData TempData传值
+        <br />
+        <h1>@ViewBag.CommandParameterIP</h1>
+        <br />
+        <br />
+        <h1>@ViewBag.CommandParameterPort</h1>
+        <br />
+        @:Html ViewBag ViewData TempData传值
+        <h2>@ViewBag.item</h2>
+        <br />
+        <h2>@ViewData["test"]</h2>
+        <br />
+        <h2>@TempData["test"]</h2>
+        <br />
+        <SimpleCustomHtml>@Model.Name</SimpleCustomHtml>
+        <br />
+        @:定义一个图片的taghelper，razor标记帮助器
+    }
+    <br />
     <h1 class="display-4">这是动态编译的</h1>
     <h2>@Model.Id</h2>
     <h2>@Model.Name</h2>
@@ -47,4 +67,5 @@
     }
     <br />
     <ImageCustom image-link="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1188114947,823520637&fm=26&gp=0.jpg" alternative-text="图片加载失败" />@*</ImageCustom>*@
+    <ImageCustom image-link="https://note.youdao.com/yws/res/272/WEBRESOURCE9d30a122d186506672c07ccad108b402" alternative-text="图片加载失败" />@*</ImageCustom>*@
 </div>
