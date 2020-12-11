@@ -4,16 +4,47 @@
 @using WebAppNet5
 @model WebAppNet5.Models.HahaViewModel
 @inject ITestA testA
+@*@CustomHtml Microsoft.AspNetCore.Mvc.TagHelpers*@
 @*@Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation*@
 @{
     testA.Show();
+    <br />
+<textarea>@@1111</textarea>
+    <br />
+    @:这是要输出的纯文本
+    <br />
+    @*@Html.Raw(Model.Address)*@
+    @Href("~/")
+    <br />
+    @Html.TextArea("<h2>@Model.Id</h2>")
+    <br />
+    // Html标签扩展---自定义标签CustomArea
+    @Html.CustomArea("内容。。。")
+    <br />
+    // Html标签扩展---自定义标签Simple
+    //如果有特性[HtmlTargetElement("SimpleCustomHtml")]，优先使用特性，
+    //没有特性的话，使用SimpleTagHelper中的Simple作为标签,如下的SimpleCustomHtml和Simple，其中紫色为可用的
+    <SimpleCustomHtml>@Model.Name</SimpleCustomHtml>
+    <Simple>@Model.Address</Simple>
 }
 
 <div class="text-center">
-    <h1 class="display-4">123哈哈333333hahahah3333333</h1>
+    <h1 class="display-4">这是动态编译的</h1>
     <h2>@Model.Id</h2>
     <h2>@Model.Name</h2>
     <h2>@Model.Address</h2>
     <h2>@Model.Age</h2>
+    @Html.TextArea("Html")
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <textarea>@@</textarea>
+    <br />
+    @{
+        @:Html标签扩展---自定义标签Simple
+        <br />
+        <SimpleCustomHtml>@Model.Name</SimpleCustomHtml>
+        <br />
+        @:定义一个图片的taghelper，razor标记帮助器
+    }
+    <br />
+    <ImageCustom image-link="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1188114947,823520637&fm=26&gp=0.jpg" alternative-text="图片加载失败" />@*</ImageCustom>*@
 </div>

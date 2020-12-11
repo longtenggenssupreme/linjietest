@@ -1,3 +1,9 @@
 ﻿@using WebAppNet5
 @using WebAppNet5.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@* 一般自定义以后需要导入自定义的TagHelper标签，
+    之后在可以使用，* 代表所有以Microsoft.AspNetCore.Mvc.TagHelpers结尾的TagHelper的标签，
+    但也可以单组注册一个，但是我们一般都是注册所有 ，
+    下面是注册一个以TagHelper结尾的TagHelper的标签，
+    上面的 * 是注册所有以TagHelper结尾的TagHelper的标签 *@
+@addTagHelper *, WebAppNet5
