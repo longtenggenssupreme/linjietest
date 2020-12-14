@@ -8,4 +8,13 @@
     <p>
         @await Html.PartialAsync("/Views/Haha/Index2.cshtml")
     </p>
+    <p>
+        @*自定义视图组件，可以加特性，以特性为准，否则使用类名去掉ViewComponent，即MyCustom，调用的时候使用的名称*@
+        @*@await Component.InvokeAsync("MyCustom", new { json = "哈哈，这是自定义视图组件" })*@
+    </p>
+    <p>
+        @*自定义视图组件，可以加特性，以特性为准，否则使用类名去掉ViewComponent，即MyCustom，调用的时候使用的名称*@
+        @await Component.InvokeAsync("CustomView", new { json = "哈哈，这是自定义视图组件2222" })
+        
+    </p>
 </div>
