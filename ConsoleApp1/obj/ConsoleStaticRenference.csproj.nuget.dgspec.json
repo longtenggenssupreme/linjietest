@@ -153,6 +153,10 @@
               "target": "Package",
               "version": "[5.0.0, )"
             },
+            "Microsoft.FeatureManagement": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.Owin": {
               "target": "Package",
               "version": "[4.0.1, )"

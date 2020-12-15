@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 
 namespace WebAppNet5
 {
@@ -69,6 +71,8 @@ namespace WebAppNet5
             //NLog.LogManager.GetCurrentClassLogger().Info("测试nlog日志。。。。。");
             //NLog.LogManager.Shutdown();
             services.AddRazorPages().AddRazorRuntimeCompilation();//启动的预编译，默认系统会将视图编译进行预编译处理，最终会将编译好的视图
+            //.NET应用实现定时开关
+            services.AddFeatureManagement().AddFeatureFilter<TimeWindowFilter>();
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.

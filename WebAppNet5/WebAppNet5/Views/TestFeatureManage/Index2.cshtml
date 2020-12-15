@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<p>
+    @*appsettings.json中配置 FeatureFilter<TimeWindowFilter>()过滤器 配置信息 "FeatureManagement": {
+          "CustomeSwitch": {
+            "EnabledFor": [
+              {
+                "Name": "TimeWindow",
+                "Parameters": {
+                  "Start": "12/16/2020 00:00:00 GMT",
+                  "End": "12/30/2020 00:00:00 GMT"
+                }
+              }
+            ]
+          }
+        },
+            其中 CustomeSwitch 是feature标签要绑定的名称，根据该值是否显示标签信息的。
+            如果不想显示feature标签，只需要设置 negate="true"
+    *@
+    <feature name="CustomeSwitch"><font color="red">这是.NET应用实现定时开关,使用addTagHelper标签feature 没有设置 negate="true",显示feature标签  </font></feature>
+    @*设置 negate="true",不想显示feature标签 *@
+    <feature name="CustomeSwitch" negate="true"><font color="red">这是.NET应用实现定时开关,使用addTagHelper标签feature 设置 negate="true",不显示feature标签</font></feature>
+    @*<feature name="EnableWebAPI, EnableAduit" requirement="All">只有CustomeSwitch, CustomeSwitchB都是enable时即都为true时，才可以显示</feature>
+    <feature name="EnableWebAPI, EnableAduit" requirement="Any">只要CustomeSwitch, CustomeSwitchB有一个是enable时即为true时，就可以显示</feature>*@
+<p>@ViewBag.item</p>

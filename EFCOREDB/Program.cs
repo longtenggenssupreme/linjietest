@@ -17,6 +17,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using System.IO;
+using Quartz.Spi;
+using System.Threading.Channels;
+using Microsoft.FeatureManagement;
 
 namespace EFCOREDB
 {
@@ -36,12 +39,14 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
 
-            #region 测试 测试文件系统监听文件
-            //TestFileSystemWatch();
+            #region  #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
+            TestFeatureManage();
             #endregion
 
-
             #region 全部
+            #region  #region 测试Dotnet Core下的Channel System.Threading.Channels
+            //TestDotnetCoreChannel();
+            #endregion
 
             #region 测试 测试文件系统监听文件
             //TestFileSystemWatch();
@@ -135,6 +140,70 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
+        /// <summary>
+        /// 测试.NET应用实现定时开关
+        /// </summary>
+        public static async void TestFeatureManage()
+        {
+            //添加IOC依赖注入到容器
+            IServiceCollection services = new ServiceCollection();
+            services.AddFeatureManagement();
+           
+            var seviceProvider = services.BuildServiceProvider();
+            IFeatureManager featureManager = seviceProvider.GetRequiredService<IFeatureManager>();
+            if (await featureManager.IsEnabledAsync(nameof(FeatureFlag.EnableWebAPI)))
+            {
+                Console.WriteLine($"FeatureManage NET应用实现定时开关,启用");
+            }
+            else
+            {
+                Console.WriteLine($"FeatureManage开关,关闭");
+            }
+        }
+
+        /// <summary>
+        /// 测试开关枚举
+        /// </summary>
+        public enum FeatureFlag
+        {
+            /// <summary>
+            /// webapi
+            /// </summary>
+            EnableWebAPI,
+            /// <summary>
+            /// 审计
+            /// </summary>
+            EnableAduit
+        }
+        #endregion
+
+        #region 测试Dotnet Core下的Channel System.Threading.Channels
+        /// <summary>
+        /// 测试Dotnet Core下的ChannelSystem.Threading.Channels
+        /// </summary>
+        public static async void TestDotnetCoreChannel()
+        {
+            int x = 1;
+            //创建通道
+            var channel = Channel.CreateUnbounded<string>();
+            while (true)
+            {
+                Console.WriteLine($"生产者生产数据:{x}");
+                await channel.Writer.WriteAsync($"数据:{x}");
+                if (await channel.Reader.WaitToReadAsync())
+                {
+                    if (channel.Reader.TryRead(out string item))
+                    {
+                        Console.WriteLine($"消费者读取item:{item}");
+                    }
+                }
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+                x++;
+            }
+        }
+        #endregion
 
         #region 测试文件系统监听文件
         /// <summary>
@@ -1694,21 +1763,48 @@ namespace EFCOREDB
         public static async void TestQuartZ()
         {
             var factory = new StdSchedulerFactory();
+            //var scheduler1 = factory.GetScheduler().GetAwaiter().GetResult();
             var scheduler = await factory.GetScheduler();
-            await scheduler.Start();
+            //await scheduler.Start();
             var job = JobBuilder.Create<MyJob>().WithIdentity("job1", "group1").Build();
             var triger = TriggerBuilder.Create().WithIdentity("job1", "group1")
                 .StartNow()
                 .WithSimpleSchedule(sc => sc.WithInterval(TimeSpan.FromSeconds(5)).RepeatForever())
                 .Build();
             await scheduler.ScheduleJob(job, triger);
+            await scheduler.Start();
         }
+        [DisallowConcurrentExecution]
         public class MyJob : IJob
         {
             public Task Execute(IJobExecutionContext context)
             {
                 return Task.Run(() => { Console.WriteLine($"{DateTime.Now}:执行任务"); });
                 //return Console.Out.WriteLineAsync($"{DateTime.Now}:执行任务");
+            }
+        }
+
+        /// <summary>
+        /// 任务创建工厂
+        /// </summary>
+        public class CustomQuartzJobFactory : IJobFactory
+        {
+            private readonly IServiceProvider _serviceProvider;
+
+            public CustomQuartzJobFactory(IServiceProvider serviceProvider)
+            {
+                _serviceProvider = serviceProvider;
+            }
+
+            public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
+            {
+                var jobDetail = bundle.JobDetail;
+                return (IJob)_serviceProvider.GetService(jobDetail.JobType);
+            }
+
+            public void ReturnJob(IJob job)
+            {
+
             }
         }
 

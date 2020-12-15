@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,17 +16,17 @@ namespace WebAppNet5.Controllers
     {
         private readonly ILogger<HahaController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly Rootobject _rootobject; 
+        private readonly Rootobject _rootobject;       
 
-        public HahaController(ILogger<HahaController> logger, IConfiguration configuration,IOptions<Rootobject> options)
+        public HahaController(ILogger<HahaController> logger, IConfiguration configuration, IOptions<Rootobject> options)
         {
             _logger = logger;
             _configuration = configuration;
-            _rootobject = options.Value;
+            _rootobject = options.Value;           
         }
 
         public IActionResult Index()
-        {         
+        {
             ViewBag.CommandParameterPort = _configuration["port"];//dotnet WenAppNet5.dll --urls="http://*:8081" --ip="127.0.0.1" --port=8082
             ViewBag.CommandParameterIP = _configuration["ip"];//dotnet WenAppNet5.dll --urls="http://*:8081" --ip="127.0.0.1" --port=8082
             ViewBag.item = "测试ViewBag传值123";
