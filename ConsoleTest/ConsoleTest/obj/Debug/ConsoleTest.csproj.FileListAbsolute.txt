@@ -1,4 +1,3 @@
-F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.csproj.CoreCompileInputs.cache
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\ConsoleTest.exe.config
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\ConsoleTest.exe
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\ConsoleTest.pdb
@@ -7,6 +6,7 @@ F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\Newtonsoft.Json.dll
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\ComLibs.pdb
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\bin\Debug\Newtonsoft.Json.xml
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.csproj.CoreCompileInputs.cache
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.csproj.CopyComplete
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.exe
 F:\Person\aaa\LJTest\ConsoleTest\ConsoleTest\obj\Debug\ConsoleTest.pdb

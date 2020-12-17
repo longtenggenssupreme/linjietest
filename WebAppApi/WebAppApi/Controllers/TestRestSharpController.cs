@@ -57,7 +57,7 @@ namespace WebAppApi.Controllers
         // POST: TestRestSharpController/Create
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        [Route("{name?}")]
+        //[Route("{name?}")]//[FromRoute(Name = "name")] string str
         public string Post([FromBody] string str)/*([FromHeader] string str)*//*([FromQuery] string str)*//*([FromForm] IFormCollection str)*//*([FromRoute(Name = "name")] string str)*//*([FromServices] ISecurityService securityService, string str)*/
         {
             _logger.LogInformation("使用的HttpPost");

@@ -21,6 +21,11 @@ using Quartz.Spi;
 using System.Threading.Channels;
 using Microsoft.FeatureManagement;
 using RestSharp;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Net.WebSockets;
+using System.Net.Sockets;
 
 namespace EFCOREDB
 {
@@ -39,16 +44,41 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region  #region 测试RestSharp
-            TestRestSharp();
+            #region 测试TestUdpSocket
+            TestUdpSocket();
             #endregion
 
             #region 全部
-            #region  #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
+
+            #region 测试TestTcpSocket
+            //TestTcpSocket();
+            #endregion
+
+            #region 测试TestTcp
+            //TestTcp();
+            #endregion
+
+            #region  测试Socket
+            //TestSocket();
+            #endregion
+
+            #region  测试TestHttpListener
+            //TestHttpListenerWebSocket(); 
+            #endregion
+
+            #region  测试TestHttpListener
+            //TestHttpListener();
+            #endregion
+
+            #region  测试RestSharp
+            //TestRestSharp();
+            #endregion
+
+            #region  测试Dotnet Core下的FeatureManage NET应用实现定时开关
             //TestFeatureManage();
             #endregion
 
-            #region  #region 测试Dotnet Core下的Channel System.Threading.Channels
+            #region  测试Dotnet Core下的Channel System.Threading.Channels
             //TestDotnetCoreChannel();
             #endregion
 
@@ -85,7 +115,9 @@ namespace EFCOREDB
             //TestIOCcontainerFactory();
             #endregion
 
-            //TestBitarry();
+            #region 测试TestBitarry
+            //TestBitarry(); 
+            #endregion
 
             #region TestExpression
             //TestDynamicExpressionToSql();
@@ -145,48 +177,560 @@ namespace EFCOREDB
             Console.Read();
         }
 
-        #region 测试RestSharp
+        #region 测试TestUdp测试Socket
 
-        private static RestClient client = new RestClient("http://localhost:5000/api/");
         /// <summary>
-        /// 测试RestSharp
+        /// 测试TestUdp
         /// </summary>
-        public static async void TestRestSharp()
+        public static void TestUdpSocket()
         {
-            await Task.Delay(TimeSpan.FromSeconds(10));
-            //创建RestSharp的请求客户端以及设置基地址，该机地址是配合请求的资源地址一起使用的
-            //RestSharp.RestClient restClient = new RestSharp.RestClient("http://+:5000/api/");
-            RestClient restClient = new RestClient("http://127.0.0.1:5000/");
-            //创建请求信息以及请求的地址
-            //RestRequest restRequest = new RestRequest("api/TestRestSharp", Method.GET); WeatherForecastController
-            RestRequest restRequest = new RestRequest("WeatherForecast", Method.GET); 
-            //执行请求，获取返回的请求结果
-            //var result = restClient.ExecuteAsync(restRequest).GetAwaiter().GetResult();
-            //var result = restClient.Execute<List<string>>(restRequest);
-            restRequest.AddHeader("contentType", "application.json;charset=utf-8");
-            var result = restClient.Execute(restRequest);
-            //RestRequest request = new RestRequest("TestRestSharp", Method.GET);
-            //IRestResponse<List<string>> result = client.Execute<List<string>>(request);
-
-            //RestRequest request = new RestRequest("Default", Method.POST);
-            //request.AddJsonBody("Robert Michael");
-            //var response = client.Execute(request);
-
-            RestClient client = new RestClient("http://localhost:5000/api/");
-            RestRequest request = new RestRequest("Default", Method.GET);
-            IRestResponse<List<string>> response = client.Execute<List<string>>(request);
-            if (result is not null)
+            var threadStart = new Thread(new ThreadStart(StartTestUdpSocket))
             {
-                Console.WriteLine($"FeatureManage NET应用实现定时开关,启用");
+                IsBackground = true
+            };
+            threadStart.Start();
+            Console.WriteLine($"TestUdp开始测试数据");
+
+            //var endip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
+            var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
+            ipendipoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
+            var endipoint = (EndPoint)ipendipoint;
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            int test = 1;
+            while (true)
+            {
+                #region  Socket----Udp
+                //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+                Console.WriteLine($"Udp scoket client 发送数据:{test}");
+                var senddata = Encoding.UTF8.GetBytes($"client{test}");
+                socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
+
+                var buffer = new byte[1024];
+                var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
+                Console.WriteLine($"Udp scoket client 接收数据::{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+             
+                test++;
+                Thread.Sleep(2000);
+                //socket.Dispose();
+                #endregion
+
+                #region Socket----Tcp
+                //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+                //Console.WriteLine($"scoket client 发送数据:{test}");
+                //socket.Send(Encoding.UTF8.GetBytes($"client{test}"));
+
+                //var buffer = new byte[1024];
+                //var socketConnReceCount = socket.Receive(buffer);
+                //Console.WriteLine($"scoket client 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                //test++;
+                //Thread.Sleep(2000);
+                //socket.Dispose();
+                #endregion
+
             }
-            else
+        }
+
+        public static void StartTestUdpSocket()
+        {
+            var endip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Bind(endip);
+            //socket.Listen(10);
+
+            var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
+            var endipoint = (EndPoint)ipendipoint;
+            int test = 1;
+            Console.WriteLine($"Udp服务端 启动监听");
+            while (true)
             {
-                Console.WriteLine($"FeatureManage开关,关闭");
+                #region Socket----Udp
+                //var socketConn = await socket.AcceptAsync();
+                var buffer = new byte[1024];
+                var socketConnReceCount = socket.ReceiveFrom(buffer,ref endipoint);
+                Console.WriteLine($"Udp服务端 scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                Console.WriteLine($"Udp服务端 scoket 服务端处理数据:{test}");
+                var senddata = Encoding.UTF8.GetBytes($"服务端已处理{test}");
+                socket.SendTo(senddata, 0, senddata.Length,SocketFlags.None, endipoint);
+                test++;
+                //socket.Dispose();
+                #endregion
+
+                #region Socket----Tcp
+                //var socketConn = await socket.AcceptAsync();
+                //var buffer = new byte[1024];
+                //var socketConnReceCount = socketConn.Receive(buffer);
+                //Console.WriteLine($"TcpListener scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                //Console.WriteLine($"TcpListener scoket 服务端处理数据:{test}");
+                //socketConn.Send(Encoding.UTF8.GetBytes($"服务端已处理{test}"));
+                //test++;
+                //socketConn.Dispose();
+                #endregion
             }
         }
 
         #endregion
 
+        #region 测试TestTcp测试Socket
+
+        /// <summary>
+        /// 测试TestTcp
+        /// </summary>
+        public static void TestTcpSocket()
+        {
+            var threadStart = new Thread(new ThreadStart(StartTestTcpSocket))
+            {
+                IsBackground = true
+            };
+            threadStart.Start();
+            Console.WriteLine($"TestTcp开始测试数据");
+
+            int test = 1;
+            while (true)
+            {
+                #region TcpClient
+                //TcpClient tcpClient = new TcpClient();
+                //tcpClient.Connect(IPAddress.Parse("127.0.0.1"), 1122);
+                //Console.WriteLine($"TcpClient 发送数据:{test}");
+                //await tcpClient.GetStream().WriteAsync(Encoding.UTF8.GetBytes($"client{test}"));
+
+                //var buffer = new byte[1024];
+                //var socketConnReceCount = await tcpClient.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                //Console.WriteLine($"TcpClient 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                //test++;
+                //Thread.Sleep(2000);
+                //tcpClient.Dispose();
+                #endregion
+
+                #region Socket
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+                Console.WriteLine($"scoket client 发送数据:{test}");
+                socket.Send(Encoding.UTF8.GetBytes($"client{test}"));
+
+                var buffer = new byte[1024];
+                var socketConnReceCount = socket.Receive(buffer);
+                Console.WriteLine($"scoket client 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                test++;
+                Thread.Sleep(2000);
+                socket.Dispose();
+                #endregion
+
+            }
+        }
+
+        public static async void StartTestTcpSocket()
+        {
+            TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 1122);
+            #region TcpListener scoket
+            //tcpListener.Server.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+            //tcpListener.Server.Listen(10);
+            #endregion
+            tcpListener.Start();
+            int test = 1;
+            Console.WriteLine($"TcpListener服务端 启动监听");
+            while (true)
+            {
+                #region TcpClient----AcceptTcpClientAsync
+                //var tcpclient = await tcpListener.AcceptTcpClientAsync();
+                //var bytes = new byte[1024];
+                //var readdataCount = await tcpclient.GetStream().ReadAsync(bytes, 0, bytes.Length);
+                //Console.WriteLine($"TcpListener服务端接收数据:{Encoding.UTF8.GetString(bytes, 0, readdataCount)}");
+
+                //bytes = Encoding.UTF8.GetBytes($"服务端已处理{test}");
+                //await tcpclient.GetStream().WriteAsync(bytes, 0, bytes.Length);
+                //tcpclient.Dispose();
+                #endregion
+
+                #region Socket----AcceptSocketAsync
+                var socketConn = await tcpListener.AcceptSocketAsync();
+                //var socketConn = await socket.AcceptAsync();
+                var buffer = new byte[1024];
+                var socketConnReceCount = socketConn.Receive(buffer);
+                Console.WriteLine($"TcpListener scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                Console.WriteLine($"TcpListener scoket 服务端处理数据:{test}");
+                socketConn.Send(Encoding.UTF8.GetBytes($"服务端已处理{test}"));
+                test++;
+                socketConn.Dispose();
+                #endregion
+            }
+        }
+
+        #endregion
+
+        #region 测试TestTcp
+
+        /// <summary>
+        /// 测试TestTcp
+        /// </summary>
+        public static async void TestTcp()
+        {
+            var threadStart = new Thread(new ThreadStart(StartTestTcp))
+            {
+                IsBackground = true
+            };
+            threadStart.Start();
+            Console.WriteLine($"TestTcp开始测试数据");
+
+            int test = 1;
+            while (true)
+            {
+                TcpClient tcpClient = new TcpClient();
+                tcpClient.Connect(IPAddress.Parse("127.0.0.1"), 1122);
+                Console.WriteLine($"TcpClient 发送数据:{test}");
+                await tcpClient.GetStream().WriteAsync(Encoding.UTF8.GetBytes($"client{test}"));
+
+                var buffer = new byte[1024];
+                var socketConnReceCount = await tcpClient.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                Console.WriteLine($"TcpClient 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                test++;
+                Thread.Sleep(2000);
+                tcpClient.Dispose();
+            }
+        }
+
+        public static async void StartTestTcp()
+        {
+            TcpListener tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 1122);
+            tcpListener.Start();
+            int test = 1;
+            Console.WriteLine($"TcpListener服务端 启动监听");
+            while (true)
+            {
+                var tcpclient = await tcpListener.AcceptTcpClientAsync();
+                var bytes = new byte[1024];
+                var readdataCount = await tcpclient.GetStream().ReadAsync(bytes, 0, bytes.Length);
+                Console.WriteLine($"TcpListener服务端接收数据:{Encoding.UTF8.GetString(bytes, 0, readdataCount)}");
+
+                bytes = Encoding.UTF8.GetBytes($"服务端已处理{test}");
+                await tcpclient.GetStream().WriteAsync(bytes, 0, bytes.Length);
+                test++;
+                tcpclient.Dispose();
+            }
+        }
+
+        #endregion
+
+        #region 测试Socket
+
+        /// <summary>
+        /// 测试Socket
+        /// </summary>
+        public static void TestSocket()
+        {
+            var threadStart = new Thread(new ThreadStart(StartSocket))
+            {
+                IsBackground = true
+            };
+            threadStart.Start();
+            Console.WriteLine($"Socket开始测试数据");
+
+            int test = 1;
+            while (true)
+            {
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3344));
+                Console.WriteLine($"scoket client 发送数据:{test}");
+                socket.Send(Encoding.UTF8.GetBytes($"client{test}"));
+
+                var buffer = new byte[1024];
+                var socketConnReceCount = socket.Receive(buffer);
+                Console.WriteLine($"scoket client 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                test++;
+                Thread.Sleep(2000);
+                socket.Dispose();
+            }
+        }
+
+        public static async void StartSocket()
+        {
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.LingerState.Enabled = false;
+            socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3344));
+            socket.Listen(10);
+            int test = 1;
+            Console.WriteLine($"Socket服务端 启动监听");
+            while (true)
+            {
+                var socketConn = await socket.AcceptAsync();
+                var buffer = new byte[1024];
+                var socketConnReceCount = socketConn.Receive(buffer);
+                Console.WriteLine($"scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+
+                Console.WriteLine($"scoket 服务端处理数据:{test}");
+                socketConn.Send(Encoding.UTF8.GetBytes($"服务端已处理{test}"));
+                test++;
+                socketConn.Dispose();
+            }
+        }
+
+        #endregion
+
+        #region 测试HttpListenerWebSocket
+
+        /// <summary>
+        /// 测试HttpListener
+        /// </summary>
+        public static async void TestHttpListenerWebSocket()
+        {
+            var threadStart = new Thread(new ThreadStart(StartHttpListenerWebSocket))
+            {
+                IsBackground = true
+            };
+            threadStart.Start();
+            Console.WriteLine($"WebSocket开始测试数据");
+
+            int test = 1;
+            while (true)
+            {
+                ClientWebSocket clientWebSocket = new ClientWebSocket();
+                await clientWebSocket.ConnectAsync(new Uri("ws://localhost:5566"), default);
+                if (clientWebSocket.State == WebSocketState.Open)
+                {
+                    var bytes = Encoding.UTF8.GetBytes($"客户端发---{test}");
+                    var bufferSend = new ArraySegment<byte>(bytes);
+                    await clientWebSocket.SendAsync(bufferSend, WebSocketMessageType.Text, true, default);
+
+                    var buffer = new byte[1024];
+                    var webSocketReceiveResult = await clientWebSocket.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                    var result = Encoding.UTF8.GetString(buffer, 0, webSocketReceiveResult.Count);
+                    Console.WriteLine($"客户端收---{result}");
+                }
+                test++;
+                Thread.Sleep(1000);
+            }
+        }
+
+        public static async void StartHttpListenerWebSocket()
+        {
+            HttpListener httpListener = new HttpListener();
+            //httpListener.Prefixes.Add("http://localhost:5566/");
+            //httpListener.Prefixes.Add("http://+:5566/");
+            httpListener.Prefixes.Add("http://*:5566/");
+            httpListener.Start();
+            Console.WriteLine($"httpListener 启动监听");
+            while (true)
+            {
+                //var asyncResult = httpListener.BeginGetContext(new AsyncCallback(CallbackWebSocket), httpListener);
+                //asyncResult.AsyncWaitHandle.WaitOne();
+                //下面也可以
+                //var httpListenerContext = httpListener.GetContextAsync().GetAwaiter().GetResult();
+                //var httpListenerContext = httpListener.GetContextAsync().Result;
+                var httpListenerContext = await httpListener.GetContextAsync();
+                //处理httpListenerContext
+                ProcessHttpListenerContextWebSocket(httpListenerContext);
+            }
+        }
+
+        private static async void ProcessHttpListenerContextWebSocket(HttpListenerContext httpcontent)
+        {
+            if (httpcontent.Request.IsWebSocketRequest)//处理WebSocketRequest
+            {
+                var webSocketContext = await httpcontent.AcceptWebSocketAsync(null);
+                var webSocket = webSocketContext.WebSocket;
+                var buffer = new byte[1024];
+                var WebSocketReceiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                var result = Encoding.UTF8.GetString(buffer, 0, WebSocketReceiveResult.Count);
+                Console.WriteLine($"服务端 收到:{result}");
+
+                var bytes = Encoding.UTF8.GetBytes($"服务端处理:{result}");
+                var bufferSend = new ArraySegment<byte>(bytes);
+                await webSocket.SendAsync(bufferSend, WebSocketMessageType.Text, true, default);
+                webSocket.Dispose();
+            }
+            else //处理HttpWebRequest
+            {
+                Console.WriteLine($"HttpWebRequest 请求");
+                if (httpcontent.Request.HttpMethod == HttpMethod.Post.ToString())
+                {
+                    Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+                    var input = new StreamReader(httpcontent.Request.InputStream).ReadToEnd();
+                    var bytes = Encoding.UTF8.GetBytes($"我们收到数据:{input}，哈哈哈哈");
+                    httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                    httpcontent.Response.Close();
+                }
+                else
+                {
+                    Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+                    var bytes = Encoding.UTF8.GetBytes($"{httpcontent.Request.RawUrl}----哈哈哈哈");
+                    httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                    httpcontent.Response.Close();
+                }
+            }
+        }
+
+        private static async void CallbackWebSocket(IAsyncResult ar)
+        {
+            var httplist = (HttpListener)ar.AsyncState;
+            var httpcontent = httplist.EndGetContext(ar);
+            if (httpcontent.Request.IsWebSocketRequest)
+            {
+                var webSocketContext = await httpcontent.AcceptWebSocketAsync(null);
+                var webSocket = webSocketContext.WebSocket;
+                var buffer = new byte[1024];
+                await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), default);
+                var result = Encoding.UTF8.GetString(buffer.ToArray());
+                var bytes = Encoding.UTF8.GetBytes($"我们收到数据:{result}，以处理");
+                var bufferSend = new ArraySegment<byte>(bytes);
+                await webSocket.SendAsync(bufferSend, WebSocketMessageType.Text, true, default);
+            }
+        }
+
+        #endregion
+
+        #region 测试HttpListener
+
+        /// <summary>
+        /// 测试HttpListener
+        /// </summary>
+        public static async void TestHttpListener()
+        {
+            var threadStart = new Thread(new ThreadStart(StartHttpListener))
+            {
+                IsBackground = true
+            };
+            threadStart.Start();
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            Console.WriteLine($"开始测试数据");
+            int test = 1;
+            while (true)
+            {
+                if (test % 2 == 0)
+                {
+                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"http://localhost:5566?a={test}");
+                    httpWebRequest.Method = "Get";
+                    using var response = httpWebRequest.GetResponse().GetResponseStream();
+                    var result = new StreamReader(response).ReadToEnd();
+                    Console.WriteLine($"偶数--结果数据{result}");
+                }
+                else
+                {
+                    HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create($"http://localhost:5566?a={test}");
+                    httpWebRequest.Method = "Post";
+                    var bytes = Encoding.UTF8.GetBytes($"Post数据：{test}");
+                    using var requestStream = httpWebRequest.GetRequestStream();
+                    requestStream.Write(bytes, 0, bytes.Length);
+                    requestStream.Flush();
+                    using var response = httpWebRequest.GetResponse().GetResponseStream();
+                    var result = new StreamReader(response).ReadToEnd();
+                    Console.WriteLine($"奇数--结果数据{result}");
+                }
+                test++;
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+            }
+        }
+
+        public static async void StartHttpListener()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            HttpListener httpListener = new HttpListener();
+            //httpListener.Prefixes.Add("http://localhost:5566/");
+            //httpListener.Prefixes.Add("http://+:5566/");
+            httpListener.Prefixes.Add("http://*:5566/");
+            httpListener.Start();
+            Console.WriteLine($"httpListener 启动监听");
+            while (true)
+            {
+                var ssyncResult = httpListener.BeginGetContext(new AsyncCallback(Callback), httpListener);
+                ssyncResult.AsyncWaitHandle.WaitOne();
+            }
+        }
+
+        private static void Callback(IAsyncResult ar)
+        {
+            var httplist = (HttpListener)ar.AsyncState;
+            var httpcontent = httplist.EndGetContext(ar);
+            ProcessHttpListenerContext(httpcontent);
+            #region 下面的处理抽成 ProcessHttpListenerContext 方法
+            //if (httpcontent.Request.HttpMethod == HttpMethod.Post.ToString())
+            //{
+            //    Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+            //    var input = new StreamReader(httpcontent.Request.InputStream).ReadToEnd();
+            //    var bytes = Encoding.UTF8.GetBytes($"我们收到数据:{input}，哈哈哈哈");
+            //    httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+            //    httpcontent.Response.Close();
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+            //    var bytes = Encoding.UTF8.GetBytes($"{httpcontent.Request.RawUrl}----哈哈哈哈");
+            //    httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+            //    httpcontent.Response.Close();
+            //} 
+            #endregion
+        }
+
+        private static void ProcessHttpListenerContext(HttpListenerContext httpcontent)
+        {
+            if (httpcontent.Request.HttpMethod == HttpMethod.Post.ToString())
+            {
+                Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+                var input = new StreamReader(httpcontent.Request.InputStream).ReadToEnd();
+                var bytes = Encoding.UTF8.GetBytes($"我们收到数据:{input}，哈哈哈哈");
+                httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                httpcontent.Response.Close();
+            }
+            else
+            {
+                Console.WriteLine($"请求方法：{httpcontent.Request.HttpMethod}");
+                var bytes = Encoding.UTF8.GetBytes($"{httpcontent.Request.RawUrl}----哈哈哈哈");
+                httpcontent.Response.OutputStream.Write(bytes, 0, bytes.Length);
+                httpcontent.Response.Close();
+            }
+        }
+        #endregion
+
+        #region 测试RestSharp
+
+        /// <summary>
+        /// 测试RestSharp
+        /// </summary>
+        public static async void TestRestSharp()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
+            //创建RestSharp的请求客户端以及设置基地址，该机地址是配合请求的资源地址一起使用的
+            //RestSharp.RestClient restClient = new RestSharp.RestClient("http://+:5566");//http://localhost:5566
+            RestClient restClient = new RestClient("http://localhost:5566");
+            //创建请求信息以及请求的地址
+            RestRequest restRequest = new RestRequest("/api/TestRestSharp", Method.GET);
+            //restRequest.AddHeader("contentType", "application.json;charset=utf-8");
+            //执行请求，获取返回的请求结果
+            //var result = restClient.ExecuteAsync(restRequest).GetAwaiter().GetResult();
+            var result = restClient.Execute<List<string>>(restRequest);
+
+            restRequest = new RestRequest("/api/TestRestSharp/1", Method.GET);
+            var result1 = restClient.Execute(restRequest);
+
+            restRequest = new RestRequest("/api/TestRestSharp", Method.POST);
+            restRequest.AddJsonBody("666666");
+            var result2 = restClient.Execute(restRequest);
+
+            restRequest = new RestRequest("/api/TestRestSharp/2", Method.PUT);
+            restRequest.AddJsonBody("9999");
+            var result3 = restClient.Execute(restRequest);
+
+            restRequest = new RestRequest("/api/TestRestSharp/1", Method.DELETE);
+            var result4 = restClient.Execute(restRequest);
+            //if (result is not null)
+            //{
+            //    Console.WriteLine($"FeatureManage NET应用实现定时开关,启用");
+            //}
+            //else
+            //{
+            //    Console.WriteLine($"FeatureManage开关,关闭");
+            //}
+        }
+
+        #endregion
 
         #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
         /// <summary>
@@ -262,8 +806,8 @@ namespace EFCOREDB
             {
                 Path = @"F:\Test\test",//监听的目录
                 Filter = "*.*",//监听目录下哪些类型的文件
-                //NotifyFilter = NotifyFilters.LastWrite//监听操作类型，修改删除创建等
-                //EnableRaisingEvents=true//是否启用该监听组件
+                               //NotifyFilter = NotifyFilters.LastWrite//监听操作类型，修改删除创建等
+                               //EnableRaisingEvents=true//是否启用该监听组件
             };
             fileSystem.EnableRaisingEvents = true;
             fileSystem.Created += FileSystem_Created;
@@ -305,9 +849,9 @@ namespace EFCOREDB
             services.AddTransient<ITestA, TestA>();//瞬态，每次使用的时候容器都会创建一个新的实例对象
             services.AddSingleton<ITestB, TestB>();//单例，整个进程中容器只会创建一个实例对象存储在根容器的容器中
             services.AddScoped<ITestC, TestC>();//作用域，不同的作用域容器创建不同的实例对象，但是都属于根容器下
-            //根容器下保留容器创建的单例实例对象，
-            //根容器下的子容器中的公用根容器的容器创建的单例实例对象，子容器中容器创建的单例实例对象也是存储到根容器的容器中的
-            //根容器下不同子容器中使用的对象实例是相同的
+                                                //根容器下保留容器创建的单例实例对象，
+                                                //根容器下的子容器中的公用根容器的容器创建的单例实例对象，子容器中容器创建的单例实例对象也是存储到根容器的容器中的
+                                                //根容器下不同子容器中使用的对象实例是相同的
             services.AddTransient<ITestD, TestD>();
 
             var seviceProvider = services.BuildServiceProvider();
@@ -455,7 +999,7 @@ namespace EFCOREDB
             //testC353Tag = lifetimeScope31Tag.Resolve<ITestC>();
             //Console.WriteLine($"是否为同一个对象实例：{testC323Tag.Equals(testC353Tag)}");
             //Console.WriteLine();
-            #endregion 
+            #endregion
             #endregion
 
             #region 原生依赖注入的扩展 Scrutor----》 Register services using assembly scanning and a fluent API.
@@ -2504,7 +3048,7 @@ END";
             var pk = $"PK_{tableName}";
             string decide = $"SELECT COUNT(1) FROM all_tables WHERE TABLE_NAME='{tableName}' AND OWNER='{schema}'";
             string sqlRaw =
-    $@"DECLARE num NUMBER;
+        $@"DECLARE num NUMBER;
 BEGIN
 	SELECT
 		COUNT(1) INTO num 

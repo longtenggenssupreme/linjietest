@@ -44,12 +44,12 @@ namespace WebAppApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAppApi API"));
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-            app.UseSwagger();
-            app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAppApi API"));
+            app.UseRouting();           
 
             app.UseAuthorization();
 

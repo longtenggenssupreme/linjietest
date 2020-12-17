@@ -6,6 +6,9 @@ F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.runtim
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ref\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.pdb
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Extensions.DependencyInjection.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Bogus.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Hangfire.AspNetCore.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Hangfire.Core.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Hangfire.SqlServer.dll
@@ -15,6 +18,8 @@ F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.InMemory.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.FeatureManagement.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.Identity.Client.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
@@ -30,6 +35,8 @@ F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Owin.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Pomelo.EntityFrameworkCore.MySql.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Pomelo.JsonObject.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Quartz.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\RestSharp.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Scrutor.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\System.Data.SqlClient.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
@@ -74,8 +81,3 @@ F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ref\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.pdb
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.genruntimeconfig.cache
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Bogus.dll
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.dll
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Extensions.DependencyInjection.dll
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Scrutor.dll
