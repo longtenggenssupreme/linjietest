@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Lat1+0C+aGlXMzKW02bjAMThy9kQBsBiwmYgm/QRRK1gw4ShurBElSc7BxmVQvpJZzXVzRHqu30V4jZFerczPQ==",
+  "dgSpecHash": "OnsWeJKbV66C17Wo1ZTlH6rQRcOdm1riunoucM0C6EYA0LY0mXsn2sBHB938vYD8th/1M2ibJDZnw3E3QNpXtA==",
   "success": true,
   "projectFilePath": "F:\\Person\\aaa\\LJTest\\EFCOREDB\\EFCOREDB.csproj",
   "expectedPackageFiles": [
@@ -54,6 +54,7 @@
     "C:\\Users\\Administrator\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\3.2.4\\pomelo.entityframeworkcore.mysql.3.2.4.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\pomelo.jsonobject\\2.2.1\\pomelo.jsonobject.2.2.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\quartz\\3.2.3\\quartz.3.2.3.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\restsharp\\106.11.7\\restsharp.106.11.7.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni\\4.4.0\\runtime.win-arm64.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512",

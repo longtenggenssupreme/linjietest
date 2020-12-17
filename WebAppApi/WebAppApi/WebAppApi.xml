@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAppApi</name>
+    </assembly>
+    <members>
+        <member name="M:WebAppApi.Controllers.WeatherForecastController.#ctor(Microsoft.Extensions.Logging.ILogger{WebAppApi.Controllers.WeatherForecastController})">
+            <summary>
+            这是构造函数备注
+            </summary>
+            <param name="logger">日志</param>
+        </member>
+        <member name="M:WebAppApi.Controllers.WeatherForecastController.Get">
+            <summary>
+            这是方法的备注
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

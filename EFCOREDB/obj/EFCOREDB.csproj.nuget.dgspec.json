@@ -111,6 +111,10 @@
               "target": "Package",
               "version": "[3.2.3, )"
             },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.11.7, )"
+            },
             "Scrutor": {
               "target": "Package",
               "version": "[3.3.0, )"

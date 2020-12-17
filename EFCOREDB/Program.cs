@@ -20,6 +20,7 @@ using System.IO;
 using Quartz.Spi;
 using System.Threading.Channels;
 using Microsoft.FeatureManagement;
+using RestSharp;
 
 namespace EFCOREDB
 {
@@ -38,12 +39,15 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-
-            #region  #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
-            TestFeatureManage();
+            #region  #region 测试RestSharp
+            TestRestSharp();
             #endregion
 
             #region 全部
+            #region  #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
+            //TestFeatureManage();
+            #endregion
+
             #region  #region 测试Dotnet Core下的Channel System.Threading.Channels
             //TestDotnetCoreChannel();
             #endregion
@@ -141,6 +145,49 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region 测试RestSharp
+
+        private static RestClient client = new RestClient("http://localhost:5000/api/");
+        /// <summary>
+        /// 测试RestSharp
+        /// </summary>
+        public static async void TestRestSharp()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(10));
+            //创建RestSharp的请求客户端以及设置基地址，该机地址是配合请求的资源地址一起使用的
+            //RestSharp.RestClient restClient = new RestSharp.RestClient("http://+:5000/api/");
+            RestClient restClient = new RestClient("http://127.0.0.1:5000/");
+            //创建请求信息以及请求的地址
+            //RestRequest restRequest = new RestRequest("api/TestRestSharp", Method.GET); WeatherForecastController
+            RestRequest restRequest = new RestRequest("WeatherForecast", Method.GET); 
+            //执行请求，获取返回的请求结果
+            //var result = restClient.ExecuteAsync(restRequest).GetAwaiter().GetResult();
+            //var result = restClient.Execute<List<string>>(restRequest);
+            restRequest.AddHeader("contentType", "application.json;charset=utf-8");
+            var result = restClient.Execute(restRequest);
+            //RestRequest request = new RestRequest("TestRestSharp", Method.GET);
+            //IRestResponse<List<string>> result = client.Execute<List<string>>(request);
+
+            //RestRequest request = new RestRequest("Default", Method.POST);
+            //request.AddJsonBody("Robert Michael");
+            //var response = client.Execute(request);
+
+            RestClient client = new RestClient("http://localhost:5000/api/");
+            RestRequest request = new RestRequest("Default", Method.GET);
+            IRestResponse<List<string>> response = client.Execute<List<string>>(request);
+            if (result is not null)
+            {
+                Console.WriteLine($"FeatureManage NET应用实现定时开关,启用");
+            }
+            else
+            {
+                Console.WriteLine($"FeatureManage开关,关闭");
+            }
+        }
+
+        #endregion
+
+
         #region 测试Dotnet Core下的FeatureManage NET应用实现定时开关
         /// <summary>
         /// 测试.NET应用实现定时开关
@@ -150,7 +197,7 @@ namespace EFCOREDB
             //添加IOC依赖注入到容器
             IServiceCollection services = new ServiceCollection();
             services.AddFeatureManagement();
-           
+
             var seviceProvider = services.BuildServiceProvider();
             IFeatureManager featureManager = seviceProvider.GetRequiredService<IFeatureManager>();
             if (await featureManager.IsEnabledAsync(nameof(FeatureFlag.EnableWebAPI)))
