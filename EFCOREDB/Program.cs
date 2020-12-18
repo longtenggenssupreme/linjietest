@@ -26,6 +26,7 @@ using System.Net.Http;
 using System.Text;
 using System.Net.WebSockets;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 
 namespace EFCOREDB
 {
@@ -44,9 +45,14 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestUdpSocket
-            TestUdpSocket();
+            #region 消除eliminate remove If-Else
+            TestRemoveIfElse();
             #endregion
+
+            #region 测试TestUdpSocket
+            //TestUdpSocket();
+            #endregion
+
 
             #region 全部
 
@@ -177,6 +183,237 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region 消除eliminate remove If-Else
+        public static void TestRemoveIfElse()
+        {
+            Console.WriteLine($"TestRemoveIfElse");
+            TestIfElse testIfElse = new TestIfElse();
+            TestIfElse.TestOrder order = new TestIfElse.TestOrder { Id = 1, Name = "zhansan" };
+            var result = TestIfElse.RemoveIfElse(order, "json");
+            Console.WriteLine($"消除eliminate remove If-Else：{result}");
+            result = TestIfElse.RemoveIfElse1(order, "json");
+            Console.WriteLine($"消除eliminate remove If-Else：{result}");
+            result = TestIfElse.RemoveIfElse3(order, "json");
+            Console.WriteLine($"消除eliminate remove If-Else：{result}");
+            result = testIfElse.RemoveIfElse4(order, "json");
+            Console.WriteLine($"消除eliminate remove If-Else：{result}");
+            result = testIfElse.RemoveIfElse4(order, "plaintext");
+            Console.WriteLine($"消除eliminate remove If-Else：{result}");
+        }
+
+        public class TestIfElse
+        {
+            public TestIfElse()
+            {
+
+            }
+            public TestIfElse(int s, string y)
+            {
+
+            }
+            /// <summary>
+            /// 第一种方式，最常见的方式
+            /// </summary>
+            /// <param name="order"></param>
+            /// <param name="formatType"></param>
+            /// <returns></returns>
+            public static string RemoveIfElse(TestOrder order, string formatType)
+            {
+                string result = string.Empty;
+                if (formatType.Equals("json", StringComparison.OrdinalIgnoreCase))
+                {
+                    result = JsonConvert.SerializeObject(order);
+                }
+                else if (formatType.Equals("plaintext", StringComparison.OrdinalIgnoreCase))
+                {
+                    result = $"id={order.Id},name={order.Name}";
+                }
+                else
+                {
+                    result = $"Unknown format";
+                }
+                return result;
+            }
+
+            /// <summary>
+            /// 第二种方式，假设只有两种情况，也就是json和plaintext这两种格式
+            /// </summary>
+            /// <param name="order"></param>
+            /// <param name="formatType"></param>
+            /// <returns></returns>
+            public static string RemoveIfElse1(TestOrder order, string formatType)
+            {
+                //if (formatType == "json") return JsonConvert.SerializeObject(order);
+                //if (formatType == "plaintext") return $"id={order.Id},name={order.Name}";
+                //return $"Unknown format";
+
+                string result = string.Empty;
+                switch (formatType)
+                {
+                    case "json":
+                        result = $"id={order.Id},name={order.Name}";
+                        break;
+                    default:
+                        result = $"Unknown format";
+                        break;
+                }
+
+                string result2 = formatType switch
+                {
+                    "json" => $"id={order.Id},name={order.Name}",
+                    _ => $"Unknown format"
+                };
+                return result;
+            }
+
+            /// <summary>
+            /// 第二种方式，假设只有两种情况，也就是json和plaintext这两种格式
+            /// </summary>
+            /// <param name="order"></param>
+            /// <param name="formatType"></param>
+            /// <returns></returns>
+            public static string RemoveIfElse2(TestOrder order, string formatType)
+            {
+                //先决条件
+                if (string.IsNullOrWhiteSpace(formatType))
+                    return $"Unknown format";
+                //if (formatType is null)
+                //    return $"Unknown format";
+
+                //处理逻辑
+                return formatType == "json" ? JsonConvert.SerializeObject(order) : $"id={order.Id},name={order.Name}";
+            }
+
+            /// <summary>
+            /// 第三种方式，使用字典处理key格式名称，value是Func<TestOrder, string>(对应的处理逻辑)
+            /// </summary>
+            /// <param name="order"></param>
+            /// <param name="formatType"></param>
+            /// <returns></returns>
+            public static string RemoveIfElse3(TestOrder order, string formatType)
+            {
+                //先决条件
+                if (string.IsNullOrWhiteSpace(formatType))
+                    return $"Unknown format";
+                //字典应该是在其他位置预先设置好的，然后在这里使用，这里只为演示
+                Dictionary<string, Func<TestOrder, string>> dict = new Dictionary<string, Func<TestOrder, string>>
+                {
+                    ["json"] = a => JsonConvert.SerializeObject(a),
+                    ["plaintext"] = a => $"id={a.Id},name={a.Name}"
+                };
+
+                //处理逻辑
+                return dict[formatType]?.Invoke(order);
+            }
+
+            #region 第四种方式使用反射和特性还有字典
+            /// <summary>
+            /// 第四种方式使用反射和特性还有字典
+            /// </summary>
+            /// <param name="order"></param>
+            /// <param name="formatType">特性标记的名称(特性中定义的字段Name)</param>
+            /// <returns></returns>
+            public string RemoveIfElse4(TestOrder order, string formatType)
+            {
+                //先决条件
+                if (string.IsNullOrWhiteSpace(formatType))
+                    return $"format is null";
+
+                ////字典应该是在其他位置预先设置好的，然后在这里使用，这里只为演示
+                var dict = GetType().Assembly
+                    .GetExportedTypes()
+                    .Where(t => t.GetInterfaces().Contains(typeof(IFormat123)))
+                    .ToDictionary(t => t.GetCustomAttribute<FlagFormatAttribute>().Name);
+
+                if (dict[formatType] is null)
+                    return $"No valid format";
+
+                //处理逻辑
+                var format = Activator.CreateInstance(dict[formatType]) as IFormat123;
+                return format.Format(order);
+            }
+
+            /// <summary>
+            /// 格式化接口
+            /// </summary>
+            public interface IFormat123
+            {
+                /// <summary>
+                /// 格式化处理方法
+                /// </summary>
+                /// <param name="order"></param>
+                /// <returns></returns>
+                string Format(TestOrder order);
+            }
+
+            /// <summary>
+            /// json格式化
+            /// </summary>
+            [FlagFormat(Name = "json")]
+            public class JsonFormat : IFormat123
+            {
+                public string Format(TestOrder order)
+                {
+                    return JsonConvert.SerializeObject(order);
+                }
+            }
+
+            /// <summary>
+            /// plaintext格式化
+            /// </summary>
+            [FlagFormat(Name = "plaintext")]
+            public class PlainTextFormat : IFormat123
+            {
+                public string Format(TestOrder order)
+                {
+                    return $"id={order.Id},name={order.Name}";
+                }
+            }
+            /// <summary>
+            /// xml格式化
+            /// </summary>
+            [FlagFormat(Name = "xml")]
+            public class XMLFormat : IFormat123
+            {
+                public string Format(TestOrder order)
+                {
+                    return $"<id>{order.Id}></id>,<name>{order.Name}</name>";
+                }
+            }
+
+            #endregion
+
+            /// <summary>
+            /// 测试类
+            /// </summary>
+            public class TestOrder
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+            }
+
+            /// <summary>
+            /// 自定义特性，主要用于区分不同的对象
+            /// </summary>
+            [AttributeUsage(AttributeTargets.Class)]
+            public class FlagFormatAttribute : Attribute
+            {
+                /// <summary>
+                /// 名称
+                /// </summary>
+                public string Name { get; set; }
+            }
+        }
+
+        public class TestIfElse1 : TestIfElse
+        {
+            public TestIfElse1(int s, string x) : base(s, x)
+            {
+
+            }
+        }
+        #endregion
+
         #region 测试TestUdp测试Socket
 
         /// <summary>
@@ -209,7 +446,7 @@ namespace EFCOREDB
                 var buffer = new byte[1024];
                 var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
                 Console.WriteLine($"Udp scoket client 接收数据::{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
-             
+
                 test++;
                 Thread.Sleep(2000);
                 //socket.Dispose();
@@ -249,12 +486,12 @@ namespace EFCOREDB
                 #region Socket----Udp
                 //var socketConn = await socket.AcceptAsync();
                 var buffer = new byte[1024];
-                var socketConnReceCount = socket.ReceiveFrom(buffer,ref endipoint);
+                var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
                 Console.WriteLine($"Udp服务端 scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
 
                 Console.WriteLine($"Udp服务端 scoket 服务端处理数据:{test}");
                 var senddata = Encoding.UTF8.GetBytes($"服务端已处理{test}");
-                socket.SendTo(senddata, 0, senddata.Length,SocketFlags.None, endipoint);
+                socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
                 test++;
                 //socket.Dispose();
                 #endregion
