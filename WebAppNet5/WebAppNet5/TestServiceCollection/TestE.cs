@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace EFCOREDB
+namespace WebAppNet5
 {
     /// <summary>
-    /// 接口A实现
+    /// 接口E实现
     /// </summary>
-    public class TestD : ITestD
+    public class TestE : ITestE
     {
         #region Properties 属性注入
         public ITestA TestA { get; set; }
@@ -19,7 +23,7 @@ namespace EFCOREDB
         private readonly ITestC _testC;
         #endregion
 
-        public TestD(ITestA testA, ITestB testB, ITestC testC)
+        public TestE(ITestA testA, ITestB testB, ITestC testC)//优先使用多个匹配最多的注入接口参数的构造函数
         {
             _testA = testA;
             _testB = testB;
@@ -27,8 +31,8 @@ namespace EFCOREDB
             Console.WriteLine("这是接口D的实现类 构造函数初始化");
         }
 
-        public TestD()
-        {            
+        public TestE()//优先使用多个匹配最多的注入接口参数的构造函数
+        {
             Console.WriteLine("这是接口D的实现类 构造函数初始化");
         }
 

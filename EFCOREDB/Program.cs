@@ -31,13 +31,16 @@ using Newtonsoft.Json;
 namespace EFCOREDB
 {
 
+    /// <summary>
+    /// 在支持远程操作的应用程序中，允许跨应用程序域边界访问对象
+    /// </summary>
     //System.Runtime.Serialization.SerializationException:
     //“程序集“ConsoleTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null”
     //中的类型“CommonTools.Program”未标记为可序列化。”
     //处理方式1，添加[Serializable]特性
     //处理方式2，继承MarshalByRefObject
     //[Serializable]
-    public class Program /*: MarshalByRefObject*/
+    public class Program /*MarshalByRefObject*/
     {
         public static int y = 5;
         public static int x = y;
@@ -45,8 +48,8 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 消除eliminate remove If-Else
-            TestRemoveIfElse();
+            #region IOC TestIOC
+            TestIOC();
             #endregion
 
             #region 测试TestUdpSocket
@@ -55,6 +58,13 @@ namespace EFCOREDB
 
 
             #region 全部
+            #region 消除eliminate remove If-Else
+            //TestRemoveIfElse();
+            #endregion
+
+            #region 测试TestUdpSocket
+            //TestUdpSocket();
+            #endregion
 
             #region 测试TestTcpSocket
             //TestTcpSocket();
@@ -182,6 +192,160 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region IOC TestIOC
+        public static void TestIOC()
+        {
+            Console.WriteLine($"测试---IOC");
+            ContainerBuilder builder = new ContainerBuilder();
+            //默认都是构造函数注入
+            builder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();//瞬态
+            builder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
+            builder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
+            builder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域
+
+            //接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            builder.RegisterType<TestE>().As<ITestE>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+
+
+            //controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            //builder.RegisterType<TestController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+
+            //使用方法注入----接口中的实现类中的其他接口服务的属性注入
+            builder.RegisterType<TestG>().OnActivated(t=>t.Instance.MethodInject(t.Context.Resolve<ITestB>())).As<ITestG>().InstancePerMatchingLifetimeScope("TEST456").PropertiesAutowired();//指定作用域，指定应用域
+
+            var contaier = builder.Build();
+
+            #region 作用域
+            #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
+
+            using var scope = contaier.BeginLifetimeScope("TEST456");
+            var testG = scope.Resolve<ITestG>();
+            testG.Show();//测试方法注入
+            #endregion
+
+            #region 属性注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
+
+            //using var scope = contaier.BeginLifetimeScope("TEST123");
+            //var testE = scope.Resolve<ITestE>();
+            //testE.Show();//测试属性注入
+           
+            #endregion
+
+            #region 属性注入 InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
+            //ITestD testD5;
+            //ITestD testD6;
+            //ITestD testD7;
+            //using var scope = contaier.BeginLifetimeScope("TEST");
+            //var testD = scope.Resolve<ITestD>();
+            ////var testA = scope.Resolve<ITestA>();//测试属性注入
+            ////testA.Show();
+            //testD.Show();//测试属性注入
+            //testD5 = testD;
+
+            ////子作用域
+            //using var scope1 = scope.BeginLifetimeScope();
+            //var testD1 = scope1.Resolve<ITestD>();
+            //var testD11 = scope1.Resolve<ITestD>();
+            //testD6 = testD1;
+            //Console.WriteLine($"子作用域内部：{object.ReferenceEquals(testD1, testD11)}");
+
+            ////子作用域
+            //using var scope2 = scope.BeginLifetimeScope();
+            //var testD2 = scope2.Resolve<ITestD>();
+            //testD7 = testD2;
+            //var testD21 = scope2.Resolve<ITestD>();
+            //Console.WriteLine($"子作用域内部：{object.ReferenceEquals(testD2, testD21)}");
+
+            //Console.WriteLine($"作用域及子作用域：{object.ReferenceEquals(testD5, testD6)}");
+            //Console.WriteLine($"不同子作用域对比：{object.ReferenceEquals(testD6, testD7)}");
+            #endregion
+
+            #region InstancePerLifetimeScope使用作用域及子作用域
+            //ITestC testC5;
+            //ITestC testC6;
+            //ITestC testC7;
+            //using var scope = contaier.BeginLifetimeScope();
+            //var testC = scope.Resolve<ITestC>();
+            //testC5 = testC;
+
+            ////子作用域
+            //using var scope1 = scope.BeginLifetimeScope();
+            //var testC1 = scope1.Resolve<ITestC>();
+            //var testC11 = scope1.Resolve<ITestC>();
+            //testC6 = testC1;
+            //Console.WriteLine($"子作用域内部：{object.ReferenceEquals(testC1, testC11)}");
+
+            ////子作用域
+            //using var scope2 = scope.BeginLifetimeScope();
+            //var testC2 = scope2.Resolve<ITestC>();
+            //testC7 = testC2;
+            //var testC21 = scope2.Resolve<ITestC>();
+            //Console.WriteLine($"子作用域内部：{object.ReferenceEquals(testC2, testC21)}");
+
+            //Console.WriteLine($"作用域及子作用域：{object.ReferenceEquals(testC5, testC6)}");
+            //Console.WriteLine($"不同子作用域对比：{object.ReferenceEquals(testC6, testC7)}");
+            #endregion
+
+            #region InstancePerLifetimeScope使用同一作用域及不同作用域
+            //ITestC testC5;
+            //ITestC testC6;
+            //using var scope1 = contaier.BeginLifetimeScope();
+            //var testC = scope1.Resolve<ITestC>();
+            //testC.Show();
+            //testC5 = testC;
+            //var testC1 = scope1.Resolve<ITestC>();
+            //testC1.Show();
+            //Console.WriteLine($"相同作用域：{object.ReferenceEquals(testC, testC1)}");
+
+            //using var scope2 = contaier.BeginLifetimeScope();
+            //var testC3 = scope2.Resolve<ITestC>();
+            //testC3.Show();
+            //testC6 = testC3;
+            //var testC4 = scope2.Resolve<ITestC>();
+            //testC4.Show();
+            //Console.WriteLine($"相同作用域：{object.ReferenceEquals(testC3, testC4)}");
+
+            //Console.WriteLine($"不同作用域对比：{object.ReferenceEquals(testC5, testC6)}");
+            #endregion
+
+            #region InstancePerLifetimeScope使用作用域
+            //using var scope = contaier.BeginLifetimeScope();
+            //var testC = scope.Resolve<ITestC>();
+            //testC.Show();
+            //var testC1 = scope.Resolve<ITestC>();
+            //testC1.Show();
+            //Console.WriteLine($"作用域：{object.ReferenceEquals(testC, testC1)}");
+            #endregion
+
+            #region InstancePerLifetimeScope默认作用域单例
+            //var testC = contaier.Resolve<ITestC>();
+            //testC.Show();
+            //var testC1 = contaier.Resolve<ITestC>();
+            //testC1.Show(); 
+            //Console.WriteLine($"作用域：{object.ReferenceEquals(testC, testC1)}");
+            #endregion
+            #endregion
+
+            #region 单例
+            //var testB = contaier.Resolve<ITestB>();
+            //testB.Show();
+            //var testB1 = contaier.Resolve<ITestB>();
+            //testB1.Show();
+            //Console.WriteLine($"单例：{object.ReferenceEquals(testB, testB1)}");
+            #endregion
+
+            #region 瞬态
+            //var testA = contaier.Resolve<ITestA>();
+            ////testA.Show();
+            //var testA1 = contaier.Resolve<ITestA>();
+            ////testA1.Show();
+            //Console.WriteLine($"瞬态：{object.ReferenceEquals(testA,testA1)}"); 
+            #endregion
+
+            Console.WriteLine($"测试完成。。。");
+        }
+        #endregion
 
         #region 消除eliminate remove If-Else
         public static void TestRemoveIfElse()
@@ -1450,7 +1614,7 @@ namespace EFCOREDB
         #region 测试析构函数
         /// <summary>
         /// 测试析构函数程序员无法控制解构器何时被执行因为这是由垃圾搜集器决定的。
-        /// 但程序退出时解构器被调用了。你能通过日志输出文件来确认析构函数是否别调用。这里将它输出在文本文件中，可以看到解构器被调用了，因为在背后base.Finalize()被调用了。
+        /// 但程序退出时解构器被调用了。只能通过日志输出文件来确认析构函数是否别调用。这里将它输出在文本文件中，可以看到解构器被调用了，因为在背后base.Finalize()被调用了。
         /// </summary>
         public static void TestInstanceDestructor()
         {
