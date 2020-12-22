@@ -51,16 +51,16 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region IOC TestIOC
-            TestIOC();
-            #endregion
-
             #region 测试TestUdpSocket
-            //TestUdpSocket();
+            TestUdpSocket();
             #endregion
 
 
             #region 全部
+            #region IOC TestIOC
+            //TestIOC();
+            #endregion
+
             #region 消除eliminate remove If-Else
             //TestRemoveIfElse();
             #endregion
@@ -239,7 +239,7 @@ namespace EFCOREDB
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
             var conmodule = new ConfigurationModule(configurationBuilder.Build());
-            builder.RegisterModule(conmodule); 
+            builder.RegisterModule(conmodule);
             #endregion
 
             var contaier = builder.Build();
@@ -639,6 +639,35 @@ namespace EFCOREDB
         /// </summary>
         public static void TestUdpSocket()
         {
+            #region 将无连接数据报发送到指定的远程主机
+            //IPHostEntry hostEntry = Dns.GetHostEntry(Dns.GetHostName());
+            //IPEndPoint endPoint = new IPEndPoint(hostEntry.AddressList[3], 11000);
+            //Socket s = new Socket(endPoint.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+            //byte[] msg = Encoding.ASCII.GetBytes("This is a test");
+            //Console.WriteLine("Sending data.");
+            //// This call blocks.
+            //s.SendTo(msg, endPoint);
+            //s.Close();
+            #endregion
+
+            #region 从远程主机接收无连接的数据报
+
+            // IPHostEntry hostEntry1 = Dns.GetHostEntry(Dns.GetHostName());
+            //IPEndPoint endPoint1 = new IPEndPoint(hostEntry1.AddressList[3], 11000);
+            //Socket s1 = new Socket(endPoint1.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+            //// Creates an IPEndPoint to capture the identity of the sending host.
+            //IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            //EndPoint senderRemote = (EndPoint)sender;
+            //// Binding is required with ReceiveFrom calls.
+            //s1.Bind(endPoint);
+
+            //byte[] msg1 = new Byte[256];
+            //Console.WriteLine("Waiting to receive datagrams from client...");
+            //// This call blocks.
+            //s1.ReceiveFrom(msg, ref senderRemote);
+            //s1.Close();
+            #endregion
+
             var threadStart = new Thread(new ThreadStart(StartTestUdpSocket))
             {
                 IsBackground = true
@@ -646,45 +675,56 @@ namespace EFCOREDB
             threadStart.Start();
             Console.WriteLine($"TestUdp开始测试数据");
 
-            //var endip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
-            var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
-            ipendipoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
+            Thread.Sleep(1000);
+
+            var ipendipoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
             var endipoint = (EndPoint)ipendipoint;
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             int test = 1;
-            while (true)
+            try
             {
-                #region  Socket----Udp
-                //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
-                Console.WriteLine($"Udp scoket client 发送数据:{test}");
-                var senddata = Encoding.UTF8.GetBytes($"client{test}");
-                socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
+                while (true)
+                {
+                    #region  Socket----Udp
+                    //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+                    Console.WriteLine($"Udp scoket client 发送数据:{test}");
+                    var senddata = Encoding.UTF8.GetBytes($"client{test}");
+                    socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
 
-                var buffer = new byte[1024];
-                var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
-                Console.WriteLine($"Udp scoket client 接收数据::{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+                    var buffer = new byte[1024];
+                    var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
+                    Console.WriteLine($"Udp scoket client 接收数据::{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
 
-                test++;
-                Thread.Sleep(2000);
-                //socket.Dispose();
-                #endregion
+                    test++;
+                    Thread.Sleep(1000);
+                    //socket.Dispose();
+                    #endregion
 
-                #region Socket----Tcp
-                //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
-                //Console.WriteLine($"scoket client 发送数据:{test}");
-                //socket.Send(Encoding.UTF8.GetBytes($"client{test}"));
+                    #region Socket----Tcp
+                    //Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    //socket.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1122));
+                    //Console.WriteLine($"scoket client 发送数据:{test}");
+                    //socket.Send(Encoding.UTF8.GetBytes($"client{test}"));
 
-                //var buffer = new byte[1024];
-                //var socketConnReceCount = socket.Receive(buffer);
-                //Console.WriteLine($"scoket client 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+                    //var buffer = new byte[1024];
+                    //var socketConnReceCount = socket.Receive(buffer);
+                    //Console.WriteLine($"scoket client 接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
 
-                //test++;
-                //Thread.Sleep(2000);
-                //socket.Dispose();
-                #endregion
+                    //test++;
+                    //Thread.Sleep(2000);
+                    //socket.Dispose();
+                    #endregion
 
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                socket.Dispose();
             }
         }
 
@@ -693,38 +733,50 @@ namespace EFCOREDB
             var endip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 2233);
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.Bind(endip);
-            //socket.Listen(10);
 
-            var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
-            var endipoint = (EndPoint)ipendipoint;
+            //var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
+            //var endipoint = (EndPoint)ipendipoint;
             int test = 1;
             Console.WriteLine($"Udp服务端 启动监听");
-            while (true)
+            try
             {
-                #region Socket----Udp
-                //var socketConn = await socket.AcceptAsync();
-                var buffer = new byte[1024];
-                var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
-                Console.WriteLine($"Udp服务端 scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+                while (true)
+                {
+                    #region Socket----Udp
+                    //var socketConn = await socket.AcceptAsync();
+                    var buffer = new byte[1024];
+                    var ipendipoint = new IPEndPoint(IPAddress.Any, 0);
+                    var endipoint = (EndPoint)ipendipoint;
+                    var socketConnReceCount = socket.ReceiveFrom(buffer, ref endipoint);
+                    Console.WriteLine($"Udp服务端 scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
 
-                Console.WriteLine($"Udp服务端 scoket 服务端处理数据:{test}");
-                var senddata = Encoding.UTF8.GetBytes($"服务端已处理{test}");
-                socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
-                test++;
-                //socket.Dispose();
-                #endregion
+                    Console.WriteLine($"Udp服务端 scoket 服务端处理数据:{test}");
+                    var senddata = Encoding.UTF8.GetBytes($"服务端已处理{test}");
+                    socket.SendTo(senddata, 0, senddata.Length, SocketFlags.None, endipoint);
+                    test++;
+                    //socket.Dispose();
+                    #endregion
 
-                #region Socket----Tcp
-                //var socketConn = await socket.AcceptAsync();
-                //var buffer = new byte[1024];
-                //var socketConnReceCount = socketConn.Receive(buffer);
-                //Console.WriteLine($"TcpListener scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
+                    #region Socket----Tcp
+                    //var socketConn = await socket.AcceptAsync();
+                    //var buffer = new byte[1024];
+                    //var socketConnReceCount = socketConn.Receive(buffer);
+                    //Console.WriteLine($"TcpListener scoket 服务端接收数据:{Encoding.UTF8.GetString(buffer, 0, socketConnReceCount)}");
 
-                //Console.WriteLine($"TcpListener scoket 服务端处理数据:{test}");
-                //socketConn.Send(Encoding.UTF8.GetBytes($"服务端已处理{test}"));
-                //test++;
-                //socketConn.Dispose();
-                #endregion
+                    //Console.WriteLine($"TcpListener scoket 服务端处理数据:{test}");
+                    //socketConn.Send(Encoding.UTF8.GetBytes($"服务端已处理{test}"));
+                    //test++;
+                    //socketConn.Dispose();
+                    #endregion
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                socket.Dispose();
             }
         }
 
