@@ -10,7 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Config\autofacconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config\autofacconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Include="Bogus" Version="32.0.1" />
     <PackageReference Include="Hangfire" Version="1.7.18" />

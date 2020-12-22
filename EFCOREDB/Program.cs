@@ -1,32 +1,35 @@
-﻿using Hangfire;
+﻿using Autofac;
+using Autofac.Configuration;
+using Autofac.Core;
+using Hangfire;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FeatureManagement;
+using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
+using RestSharp;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Diagnostics;
 using System.Data;
 using System.Data.SqlClient;
-using Microsoft.Extensions.DependencyInjection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.IO;
-using Quartz.Spi;
-using System.Threading.Channels;
-using Microsoft.FeatureManagement;
-using RestSharp;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Net.WebSockets;
 using System.Net.Sockets;
-using Newtonsoft.Json;
+using System.Net.WebSockets;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 
 namespace EFCOREDB
 {
@@ -198,30 +201,63 @@ namespace EFCOREDB
         {
             Console.WriteLine($"测试---IOC");
             ContainerBuilder builder = new ContainerBuilder();
-            //默认都是构造函数注入
-            builder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();//瞬态
-            builder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
-            builder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
-            builder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域
 
-            //接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            builder.RegisterType<TestE>().As<ITestE>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            #region Autofac默认都是构造函数注入
+            ////Autofac默认都是构造函数注入
+            //builder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();//瞬态
+            //builder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
+            //builder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
+            //builder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域
+            //builder.RegisterType<TestD>().As<ITestD>().InstancePerRequest("TEST");////指定作用域，指定应用域
+            //builder.RegisterType<TestD>().As<ITestD>().PerRequest();////指定作用域，指定应用域
+
+            ////Autofac接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            //builder.RegisterType<TestE>().As<ITestE>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            #endregion
+
+            #region Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            ////Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            ////containerBuilder.RegisterType<HHController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            //public void ConfigureServices(IServiceCollection services)中添加如下
+            //控制器属性注入，默认ioc容器之创建接口服务，控制器的创建是由IControllerActivator创建的，现在使用ioc容器创建ServiceBasedControllerActivator
+            //services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+
+            //public void ConfigureContainer(ContainerBuilder containerBuilder)中添加如下
+            //var types = this.GetType().Assembly.ExportedTypes.Where(t => typeof(ControllerBase).IsAssignableFrom(t)).ToArray();
+            ////注册所有controller,PropertiesAutowired 属性注入所有的接口服务以及自定义特性CustomPropAttribute区分标记和自定义属性选择器MyPropertySelector
+            //containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector()); 
+            #endregion
+
+            #region 使用方法注入----接口中的实现类中的其他接口服务的属性注入
+            ////使用方法注入----接口中的实现类中的其他接口服务的属性注入
+            //builder.RegisterType<TestG>().OnActivated(t => t.Instance.MethodInject(t.Context.Resolve<ITestB>())).As<ITestG>().InstancePerMatchingLifetimeScope("TEST456").PropertiesAutowired();//指定作用域，指定应用域
+            #endregion
 
 
-            //controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            //builder.RegisterType<TestController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
-
-            //使用方法注入----接口中的实现类中的其他接口服务的属性注入
-            builder.RegisterType<TestG>().OnActivated(t=>t.Instance.MethodInject(t.Context.Resolve<ITestB>())).As<ITestG>().InstancePerMatchingLifetimeScope("TEST456").PropertiesAutowired();//指定作用域，指定应用域
+            #region Autofac 配置文件 配置IOC 依赖注入 属性注入
+            ////Autofac 配置文件 配置IOC 依赖注入 属性注入
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
+            var conmodule = new ConfigurationModule(configurationBuilder.Build());
+            builder.RegisterModule(conmodule); 
+            #endregion
 
             var contaier = builder.Build();
+            var testA = contaier.Resolve<ITestA>();
+            testA.Show();
+            var testA1 = contaier.Resolve<ITestA>();
+            testA1.Show();
+            var testB = contaier.Resolve<ITestB>();
+            testB.Show();
+            var testB1 = contaier.Resolve<ITestB>();
+            testB1.Show();
+            Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
 
             #region 作用域
             #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
-
-            using var scope = contaier.BeginLifetimeScope("TEST456");
-            var testG = scope.Resolve<ITestG>();
-            testG.Show();//测试方法注入
+            //using var scope = contaier.BeginLifetimeScope("TEST456");
+            //var testG = scope.Resolve<ITestG>();
+            //testG.Show();//测试方法注入
             #endregion
 
             #region 属性注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
@@ -229,7 +265,7 @@ namespace EFCOREDB
             //using var scope = contaier.BeginLifetimeScope("TEST123");
             //var testE = scope.Resolve<ITestE>();
             //testE.Show();//测试属性注入
-           
+
             #endregion
 
             #region 属性注入 InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
@@ -344,6 +380,24 @@ namespace EFCOREDB
             #endregion
 
             Console.WriteLine($"测试完成。。。");
+        }
+        /// <summary>
+        /// autofac中自定义属性选择器类
+        /// </summary>
+        public class MyPropertySelector : IPropertySelector
+        {
+            public bool InjectProperty(PropertyInfo propertyInfo, object instance)
+            {
+                return propertyInfo.GetCustomAttributes().Any(att => att.GetType() == typeof(CustomPropAttribute));
+            }
+        }
+
+        /// <summary>
+        /// 标记不同的属性--特性标记
+        /// </summary>
+        [AttributeUsage(AttributeTargets.Property)]
+        public class CustomPropAttribute : Attribute
+        {
         }
         #endregion
 

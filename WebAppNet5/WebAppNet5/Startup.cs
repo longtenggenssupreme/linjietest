@@ -19,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using WebAppNet5.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.Json;
+using Autofac.Configuration;
 
 namespace WebAppNet5
 {
@@ -92,25 +94,54 @@ namespace WebAppNet5
             //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerDependency();
             //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerDependency();
 
-            //默认都是构造函数注入
-            containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();//瞬态
-            containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
-            containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
-            containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域
-            
-            //使用方法注入----接口中的实现类中的其他接口服务的属性注入
-            containerBuilder.RegisterType<TestG>().OnActivated(t => t.Instance.MethodInject(t.Context.Resolve<ITestB>())).As<ITestG>().InstancePerMatchingLifetimeScope("TEST456").PropertiesAutowired();//指定作用域，指定应用域
+            #region Autofac默认都是构造函数注入
+            ////Autofac默认都是构造函数注入
+            //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();//瞬态
+            //containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
+            //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
+            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域 
+            #endregion
 
-            //接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            containerBuilder.RegisterType<TestE>().As<ITestE>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            #region Autofac使用方法注入----接口中的实现类中的其他接口服务的属性注入
+            ////Autofac使用方法注入----接口中的实现类中的其他接口服务的属性注入
+            //containerBuilder.RegisterType<TestG>()
+            //.OnActivated(t => t.Instance.MethodInject(t.Context.Resolve<ITestB>()))
+            //.As<ITestG>().InstancePerMatchingLifetimeScope("TEST456")
+            //.PropertiesAutowired();//指定作用域，指定应用域 
+            #endregion
 
-            //controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            //containerBuilder.RegisterType<HHController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            #region Autofac接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            ////Autofac接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            //containerBuilder.RegisterType<TestE>().As<ITestE>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域 
+            #endregion
 
-            var types = this.GetType().Assembly.ExportedTypes.Where(t => typeof(ControllerBase).IsAssignableFrom(t)).ToArray();
+            #region Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            ////Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            ////containerBuilder.RegisterType<HHController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            //var types = this.GetType().Assembly.ExportedTypes.Where(t => typeof(ControllerBase).IsAssignableFrom(t)).ToArray();
+            ////注册所有controller,PropertiesAutowired 属性注入所有的接口服务以及自定义特性CustomPropAttribute区分标记和自定义属性选择器MyPropertySelector
+            //containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector()); 
+            #endregion
 
-            containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector());//注册所有controller,PropertiesAutowired 属性注入所有的接口服务
+            #region Autofac 配置文件 配置IOC 依赖注入 属性注入 Autofac， Autofac.Configuration， Autofac.Extensions.DependencyInjection autofacconfig.json设置始终复制和内容
+            //Autofac 配置文件 配置IOC 依赖注入 属性注入
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
+            var conmodule = new ConfigurationModule(configurationBuilder.Build());
+            containerBuilder.RegisterModule(conmodule);
+            #endregion
+
             //var contaier = containerBuilder.Build();
+            var contaier = containerBuilder.Build();
+            var testA = contaier.Resolve<ITestA>();
+            testA.Show();
+            var testA1 = contaier.Resolve<ITestA>();
+            testA1.Show();
+            var testB = contaier.Resolve<ITestB>();
+            testB.Show();
+            var testB1 = contaier.Resolve<ITestB>();
+            testB1.Show();
+            Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
 
             #region 作用域
             #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的

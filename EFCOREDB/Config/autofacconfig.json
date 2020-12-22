@@ -1,0 +1,34 @@
+{
+  "components": [
+    {
+      "type": "EFCOREDB.TestA,EFCOREDB",
+      "services": [
+        {
+          "type": "EFCOREDB.ITestA,EFCOREDB"
+        }
+      ],
+      "instanceScope": "per-dependency",//瞬态
+      "injectProperty": true
+    },
+    {
+      "type": "EFCOREDB.TestB,EFCOREDB",
+      "services": [
+        {
+          "type": "EFCOREDB.ITestB,EFCOREDB"
+        }
+      ],
+      "instanceScope": "single-instance",//单例
+      "injectProperty": true
+    },
+    {
+      "type": "EFCOREDB.TestC,EFCOREDB",
+      "services": [
+        {
+          "type": "EFCOREDB.ITestC,EFCOREDB"
+        }
+      ],
+      "instanceScope": "per-lifetime-scope", //作用域，选择项如：'single-instance', 'per-dependency' (the default), 'per-lifetime-scope', and 'per-request'.”
+      "injectProperty": true
+    }
+  ]
+}

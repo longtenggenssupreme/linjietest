@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonTools", "CommonTools"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{40F76D34-9094-46BF-AB97-7807B353FCE0}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		记录.md = 记录.md
 	EndProjectSection
 EndProject

@@ -14,6 +14,20 @@
           "lib/net5.0/Autofac.dll": {}
         }
       },
+      "Autofac.Configuration/6.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Autofac": "6.0.0",
+          "Microsoft.Extensions.Configuration": "2.2.0",
+          "Microsoft.Extensions.Configuration.Binder": "2.2.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Autofac.Configuration.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Autofac.Configuration.dll": {}
+        }
+      },
       "Autofac.Extensions.DependencyInjection/7.1.0": {
         "type": "package",
         "dependencies": {
@@ -322,10 +336,10 @@
           "lib/netstandard2.0/Microsoft.Extensions.Caching.Memory.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration/2.1.1": {
+      "Microsoft.Extensions.Configuration/2.2.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "2.1.1"
+          "Microsoft.Extensions.Configuration.Abstractions": "2.2.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
@@ -346,10 +360,10 @@
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration.Binder/2.1.10": {
+      "Microsoft.Extensions.Configuration.Binder/2.2.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.1.1"
+          "Microsoft.Extensions.Configuration": "2.2.0"
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.Extensions.Configuration.Binder.dll": {}
@@ -1779,6 +1793,24 @@
         "lib/netstandard2.1/Autofac.xml"
       ]
     },
+    "Autofac.Configuration/6.0.0": {
+      "sha512": "ziOpbr0S0ufYv+6LqM8GX9oR7rlP6KICVxZmCAML6PcncvZ9Y/m8tcpuPXLD6vDyfNvfCq1drYxNVzwBT0+gkA==",
+      "type": "package",
+      "path": "autofac.configuration/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "autofac.configuration.6.0.0.nupkg.sha512",
+        "autofac.configuration.nuspec",
+        "icon.png",
+        "lib/netstandard2.0/Autofac.Configuration.dll",
+        "lib/netstandard2.0/Autofac.Configuration.pdb",
+        "lib/netstandard2.0/Autofac.Configuration.xml",
+        "lib/netstandard2.1/Autofac.Configuration.dll",
+        "lib/netstandard2.1/Autofac.Configuration.pdb",
+        "lib/netstandard2.1/Autofac.Configuration.xml"
+      ]
+    },
     "Autofac.Extensions.DependencyInjection/7.1.0": {
       "sha512": "nm6rZREZ9tjdKXu9cmT69zHkZODagjCPlRRCOhiS1VqFFis9LQnMl18L4OYr8yfCW1WAQkFDD2CNaK/kF5Eqeg==",
       "type": "package",
@@ -2248,16 +2280,16 @@
         "version.txt"
       ]
     },
-    "Microsoft.Extensions.Configuration/2.1.1": {
-      "sha512": "LjVKO6P2y52c5ZhTLX/w8zc5H4Y3J/LJsgqTBj49TtFq/hAtVNue/WA0F6/7GMY90xhD7K0MDZ4qpOeWXbLvzg==",
+    "Microsoft.Extensions.Configuration/2.2.0": {
+      "sha512": "nOP8R1mVb/6mZtm2qgAJXn/LFm/2kMjHDAg/QJLFG6CuWYJtaD3p1BwQhufBVvRzL9ceJ/xF0SQ0qsI2GkDQAA==",
       "type": "package",
-      "path": "microsoft.extensions.configuration/2.1.1",
+      "path": "microsoft.extensions.configuration/2.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml",
-        "microsoft.extensions.configuration.2.1.1.nupkg.sha512",
+        "microsoft.extensions.configuration.2.2.0.nupkg.sha512",
         "microsoft.extensions.configuration.nuspec"
       ]
     },
@@ -2281,16 +2313,16 @@
         "version.txt"
       ]
     },
-    "Microsoft.Extensions.Configuration.Binder/2.1.10": {
-      "sha512": "anSrDPFjcz6oBQjrul2vSHCg/wOZ2gJc1ZNzm03LtkA9S17x8xnkLaT599uuFnl6JSZJgQy4hoHVzt2+bIDc9w==",
+    "Microsoft.Extensions.Configuration.Binder/2.2.0": {
+      "sha512": "vJ9xvOZCnUAIHcGC3SU35r3HKmHTVIeHzo6u/qzlHAqD8m6xv92MLin4oJntTvkpKxVX3vI1GFFkIQtU3AdlsQ==",
       "type": "package",
-      "path": "microsoft.extensions.configuration.binder/2.1.10",
+      "path": "microsoft.extensions.configuration.binder/2.2.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.Binder.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.Binder.xml",
-        "microsoft.extensions.configuration.binder.2.1.10.nupkg.sha512",
+        "microsoft.extensions.configuration.binder.2.2.0.nupkg.sha512",
         "microsoft.extensions.configuration.binder.nuspec"
       ]
     },
@@ -6260,6 +6292,7 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "Autofac >= 6.1.0",
+      "Autofac.Configuration >= 6.0.0",
       "Autofac.Extensions.DependencyInjection >= 7.1.0",
       "Bogus >= 32.0.1",
       "Hangfire >= 1.7.18",
@@ -6328,6 +6361,10 @@
           "Autofac": {
             "target": "Package",
             "version": "[6.1.0, )"
+          },
+          "Autofac.Configuration": {
+            "target": "Package",
+            "version": "[6.0.0, )"
           },
           "Autofac.Extensions.DependencyInjection": {
             "target": "Package",
