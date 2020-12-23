@@ -26,6 +26,7 @@ using Autofac.Core.Registration;
 using Autofac.Features.ResolveAnything;
 using Castle.Core;
 using Autofac.Extras.DynamicProxy;
+using AspNetCoreRateLimit;
 
 namespace WebAppNet5
 {
@@ -87,6 +88,15 @@ namespace WebAppNet5
 
             //控制器属性注入，默认ioc容器之创建接口服务，控制器的创建是由IControllerActivator创建的，现在使用ioc容器创建ServiceBasedControllerActivator
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
+
+            #region 添加使用限流服务AspNetCoreRateLimit
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimit"));
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            services.AddHttpContextAccessor();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.
@@ -331,9 +341,8 @@ namespace WebAppNet5
             //testA1.Show();
             #endregion
             #endregion
+
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, ILoggerFactory loggerFactory*/)
@@ -359,6 +368,9 @@ namespace WebAppNet5
             });
 
             app.UseRouting();
+
+            //使用限流中间件
+            app.UseIpRateLimiting();
 
             app.UseAuthorization();
 

@@ -32,3 +32,4 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieW
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\ref\LinjieWebApi.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.pdb
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.genruntimeconfig.cache
+F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.csprojAssemblyReference.cache

@@ -27,3 +27,11 @@
 2020-12-23 14:51:29.7625|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
 2020-12-23 14:51:30.8166|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之前
 2020-12-23 14:51:30.8222|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之后
+2020-12-23 15:41:41.9848|INFO|LinjieWebApi.Program|开启日志服务
+2020-12-23 15:41:44.4352|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-12-23 15:41:44.4352|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-12-23 15:41:44.4605|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-12-23 15:41:44.4674|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-12-23 15:41:44.4674|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
+2020-12-23 15:41:45.6191|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之前
+2020-12-23 15:41:45.6265|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之后
