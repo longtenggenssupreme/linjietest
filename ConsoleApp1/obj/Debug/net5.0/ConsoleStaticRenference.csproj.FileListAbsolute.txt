@@ -1,5 +1,6 @@
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\EFCOREDB.exe
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.exe
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Config\autofacconfig.json
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.deps.json
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.runtimeconfig.json
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.runtimeconfig.dev.json
@@ -7,6 +8,7 @@ F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ref\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\ConsoleStaticRenference.pdb
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.dll
+F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Configuration.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Extensions.DependencyInjection.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Bogus.dll
 F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Hangfire.AspNetCore.dll
@@ -81,5 +83,3 @@ F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ref\ConsoleStaticRenference.dll
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.pdb
 F:\Person\aaa\LJTest\ConsoleApp1\obj\Debug\net5.0\ConsoleStaticRenference.genruntimeconfig.cache
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Config\autofacconfig.json
-F:\Person\aaa\LJTest\ConsoleApp1\bin\Debug\net5.0\Autofac.Configuration.dll

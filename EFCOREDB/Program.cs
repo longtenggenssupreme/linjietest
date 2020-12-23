@@ -51,8 +51,8 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestUdpSocket
-            TestUdpSocket();
+            #region 测试TestDelegate
+            TestDelegate();
             #endregion
 
 
@@ -195,6 +195,94 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region TestDelegate
+        public static void TestDelegate()
+        {
+            TestCustomDelegate testCustom = new TestCustomDelegate();
+            testCustom.Test();
+        }
+
+        public class TestCustomDelegate
+        {
+            //定义委托
+            public delegate void TestVoidDelegate();
+            //定义委托
+            public delegate string TestStringDelegate();
+
+            public void Test1()
+            {
+                Console.WriteLine("这是没有返回值的Delegate--Test1");
+            }
+            public void Test2()
+            {
+                Console.WriteLine("这是没有返回值的Delegate--Test2");
+            }
+
+            public string Test3()
+            {
+                Console.WriteLine("这是有返回值的Delegate---Test3");
+                return "这是有返回值的Delegate";
+            }
+
+            public string Test4()
+            {
+                Console.WriteLine("这是有返回值的Delegate--Test4");
+                return "这是有返回值的Delegate";
+            }
+
+            public void Test()
+            {
+                TestVoidDelegate testVoid = new TestVoidDelegate(Test1);
+                TestVoidDelegate testVoid1 = new TestVoidDelegate(Test2);
+                TestStringDelegate TestString = new TestStringDelegate(Test3);
+                TestStringDelegate TestString1 = new TestStringDelegate(Test4);
+                testVoid();
+                testVoid.Invoke();
+                TestString();
+                TestString.Invoke();
+
+                //多播委托
+                TestVoidDelegate TestCom = testVoid + testVoid1;
+                TestCom();
+                TestCom.Invoke();
+                TestStringDelegate TestStringCom = TestString + TestString1;
+                TestStringCom();
+                TestStringCom.Invoke();
+
+                //多播委托
+                testVoid+= testVoid1;
+                testVoid();
+                testVoid.Invoke();
+                TestString +=  TestString1;
+                TestString();
+                TestString.Invoke();
+
+                //多播委托
+                TestVoidDelegate TestCom1 = (TestVoidDelegate)Delegate.Combine(testVoid, testVoid1);
+                TestCom1();
+                TestCom1.Invoke();
+                TestStringDelegate TestStringCom1 = (TestStringDelegate)Delegate.Combine(TestString, TestString1);
+                TestStringCom1();
+                TestStringCom1.Invoke();
+            }
+
+            /// <summary>
+            /// 如果时立即返回的需要使用 ValueTask<int>，而不使用Task<int>，例如内存操作以及读缓存
+            /// </summary>
+            /// <returns></returns>
+            public Task<int> GetCustomerIdAsync()
+            {
+                return Task.FromResult(1);
+            }
+
+            public ValueTask<int> GetCustomerIdAsync1()
+            {
+                return new ValueTask<int>(1);
+            }
+        }
+
+        #endregion
 
         #region IOC TestIOC
         public static void TestIOC()
