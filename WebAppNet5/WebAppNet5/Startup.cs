@@ -21,6 +21,11 @@ using WebAppNet5.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.Json;
 using Autofac.Configuration;
+using Autofac.Core;
+using Autofac.Core.Registration;
+using Autofac.Features.ResolveAnything;
+using Castle.Core;
+using Autofac.Extras.DynamicProxy;
 
 namespace WebAppNet5
 {
@@ -72,7 +77,7 @@ namespace WebAppNet5
 
             services.Configure<Rootobject>(Configuration);
             services.AddControllersWithViews();
-            services.AddTransient<ITestA, TestA>();
+            //services.AddTransient<ITestA, TestA>();
             services.AddTransient<ITestB, TestB>();
             //NLog.LogManager.GetCurrentClassLogger().Info("测试nlog日志。。。。。");
             //NLog.LogManager.Shutdown();
@@ -87,12 +92,16 @@ namespace WebAppNet5
         // This method gets called by the runtime. Use this method to add services to the Autofac container.
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
+            #region 服务容器
+
+            #region 原生的服务容器
             //原生的服务容器，会自动注册到当前Autofac container容器中去，不需要使用containerBuilder.Populate(services);
 
             ////containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
             ////containerBuilder.RegisterType<TestB>().As<ITestB>().InstancePerDependency();
             //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerDependency();
-            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerDependency();
+            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerDependency(); 
+            #endregion
 
             #region Autofac默认都是构造函数注入
             ////Autofac默认都是构造函数注入
@@ -116,32 +125,34 @@ namespace WebAppNet5
             #endregion
 
             #region Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            ////Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
-            ////containerBuilder.RegisterType<HHController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
-            //var types = this.GetType().Assembly.ExportedTypes.Where(t => typeof(ControllerBase).IsAssignableFrom(t)).ToArray();
-            ////注册所有controller,PropertiesAutowired 属性注入所有的接口服务以及自定义特性CustomPropAttribute区分标记和自定义属性选择器MyPropertySelector
-            //containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector()); 
+            //Autofac Controller控制器中接口服务使用属性注入----PropertiesAutowired属性注入----接口中的实现类中的其他接口服务的属性注入
+            //containerBuilder.RegisterType<HHController>().As<ControllerBase>().InstancePerMatchingLifetimeScope("TEST123").PropertiesAutowired();//指定作用域，指定应用域
+            var types = this.GetType().Assembly.ExportedTypes.Where(t => typeof(ControllerBase).IsAssignableFrom(t)).ToArray();
+            //注册所有controller,PropertiesAutowired 属性注入所有的接口服务以及自定义特性CustomPropAttribute区分标记和自定义属性选择器MyPropertySelector
+            containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector());
             #endregion
 
             #region Autofac 配置文件 配置IOC 依赖注入 属性注入 Autofac， Autofac.Configuration， Autofac.Extensions.DependencyInjection autofacconfig.json设置始终复制和内容
-            //Autofac 配置文件 配置IOC 依赖注入 属性注入
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
-            var conmodule = new ConfigurationModule(configurationBuilder.Build());
-            containerBuilder.RegisterModule(conmodule);
+            ////Autofac 配置文件 配置IOC 依赖注入 属性注入
+            //ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            //configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
+            //var conmodule = new ConfigurationModule(configurationBuilder.Build());
+            //containerBuilder.RegisterModule(conmodule);
+            //测试
+            ////var contaier = containerBuilder.Build();
+            //var contaier = containerBuilder.Build();
+            //var testA = contaier.Resolve<ITestA>();
+            //testA.Show();
+            //var testA1 = contaier.Resolve<ITestA>();
+            //testA1.Show();
+            //var testB = contaier.Resolve<ITestB>();
+            //testB.Show();
+            //var testB1 = contaier.Resolve<ITestB>();
+            //testB1.Show();
+            //Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
             #endregion
 
-            //var contaier = containerBuilder.Build();
-            var contaier = containerBuilder.Build();
-            var testA = contaier.Resolve<ITestA>();
-            testA.Show();
-            var testA1 = contaier.Resolve<ITestA>();
-            testA1.Show();
-            var testB = contaier.Resolve<ITestB>();
-            testB.Show();
-            var testB1 = contaier.Resolve<ITestB>();
-            testB1.Show();
-            Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
+            #region autofac 的Ioc 依赖注入的生命周期
 
             #region 作用域
             #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
@@ -269,7 +280,60 @@ namespace WebAppNet5
             ////testA1.Show();
             //Console.WriteLine($"瞬态：{object.ReferenceEquals(testA,testA1)}"); 
             #endregion
+
+            #endregion
+
+            #region Autofac 一对象多实例问题,例如：一个接口ITestA 2个实现TestA和TestF
+            //containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
+            //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
+            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域 
+            ////例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            //containerBuilder.RegisterType<TestF>().As<ITestA>().InstancePerDependency();
+            //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+
+            ////一个接口ITestA 2个实现TestA和TestF,
+            ////AController中使用测试，可以同时获取接口ITestA的2个实现TestA和TestF的实例，
+            ////然后可以使用TestA和TestF来调用对应的方法,
+            ////使用 public AController(ITestA testA, IEnumerable<ITestA> testAList, TestA testAA, TestF testFF, ITestC testC)
+            ////containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource(t => t.IsAssignableTo(typeof(ITestA))));
+            ////下面是对上面的扩展，其实内容是一样的
+            //containerBuilder.RegisterModule(new CustomModule());
+
+            ////var contaier = containerBuilder.Build();
+            ////var testA = contaier.Resolve<ITestA>();
+            ////testA.Show();
+            ////var testA1 = contaier.Resolve<ITestA>();
+            //testA1.Show();
+            #endregion
+
+            #region Autofac Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截
+            //containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
+            //containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+            //// [Intercept(typeof(CustomInterceptor))],在指定的接口上添加特性，这个有侵入性
+            //containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance().EnableInterfaceInterceptors();//单例
+            ////推荐使用拦截器，这个不具侵入性，推荐使用该方法
+            //containerBuilder.RegisterType<TestC>().AsImplementedInterfaces().InstancePerLifetimeScope().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));//作用域，应用域
+            ////containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));//作用域，应用域
+            //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域 
+            ////例如：Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截,启用EnableInterfaceInterceptors()
+            //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+
+            //添加拦截器的精简写法
+            containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
+            containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+            var typeTests = this.GetType().Assembly.ExportedTypes.Where(t => t.Name.Contains("Test")).ToArray();
+            containerBuilder.RegisterTypes(typeTests).AsImplementedInterfaces().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));
+
+            //var contaier = containerBuilder.Build();
+            //var testA = contaier.Resolve<ITestA>();
+            //testA.Show();
+            //var testA1 = contaier.Resolve<ITestA>();
+            //testA1.Show();
+            #endregion
+            #endregion
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, ILoggerFactory loggerFactory*/)
@@ -356,6 +420,7 @@ namespace WebAppNet5
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+
         #endregion
     }
 }

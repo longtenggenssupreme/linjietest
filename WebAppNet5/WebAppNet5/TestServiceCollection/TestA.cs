@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Castle.Core;
+using System;
 
 namespace WebAppNet5
 {
     /// <summary>
     /// 接口A实现
-    /// </summary>
+    /// <summary>
     public class TestA : ITestA
     {
         public TestA()

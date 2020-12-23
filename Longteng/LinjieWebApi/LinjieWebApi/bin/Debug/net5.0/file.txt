@@ -1,0 +1,29 @@
+2020-12-23 14:14:47.6305|INFO|LinjieWebApi.Program|开启日志服务
+2020-12-23 14:14:49.3774|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-12-23 14:14:49.3849|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-12-23 14:14:49.3957|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-12-23 14:14:49.3957|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-12-23 14:14:49.3957|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
+2020-12-23 14:45:35.3297|INFO|LinjieWebApi.Program|开启日志服务
+2020-12-23 14:45:37.2613|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-12-23 14:45:37.2854|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-12-23 14:45:37.3024|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-12-23 14:45:37.3024|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-12-23 14:45:37.3024|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
+2020-12-23 14:45:58.2509|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-12-23 14:48:01.6946|INFO|LinjieWebApi.Program|开启日志服务
+2020-12-23 14:48:04.0763|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-12-23 14:48:04.0870|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-12-23 14:48:04.1016|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-12-23 14:48:04.1016|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-12-23 14:48:04.1016|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
+2020-12-23 14:48:11.3010|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之前
+2020-12-23 14:48:11.3111|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之后
+2020-12-23 14:51:27.1268|INFO|LinjieWebApi.Program|开启日志服务
+2020-12-23 14:51:29.7089|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-12-23 14:51:29.7269|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-12-23 14:51:29.7269|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-12-23 14:51:29.7453|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-12-23 14:51:29.7625|INFO|Microsoft.Hosting.Lifetime|Content root path: F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi
+2020-12-23 14:51:30.8166|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之前
+2020-12-23 14:51:30.8222|INFO|LinjieWebApi.LoggerAsyncInterceptor|同步拦截---Show方法调用之后

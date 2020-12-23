@@ -5,6 +5,7 @@ namespace WebAppNet5
     /// <summary>
     /// 接口A实现
     /// </summary>
+    /// 
     public class TestB : ITestB
     {
         public TestB()

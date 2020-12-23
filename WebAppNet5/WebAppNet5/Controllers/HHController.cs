@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace WebAppNet5.Controllers
 {
+    /// <summary>
+    /// 测试属性注入
+    /// </summary>
     public class HHController : Controller
     {
         #region Fields 构造函数依赖注入

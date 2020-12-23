@@ -1,8 +1,10 @@
-﻿namespace WebAppNet5
+﻿using Castle.Core;
+
+namespace WebAppNet5
 {
     /// <summary>
     /// 测试接口A
-    /// </summary>
+    /// </summary>    
     public interface ITestA
     {
         /// <summary>
