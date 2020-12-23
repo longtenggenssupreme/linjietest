@@ -317,8 +317,11 @@ namespace WebAppNet5
             #endregion
 
             #region Autofac Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截
-            //containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
-            //containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+            containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
+            containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+
+            //EnableInterfaceInterceptors启用接口
+
             //// [Intercept(typeof(CustomInterceptor))],在指定的接口上添加特性，这个有侵入性
             //containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance().EnableInterfaceInterceptors();//单例
             ////推荐使用拦截器，这个不具侵入性，推荐使用该方法
@@ -327,6 +330,13 @@ namespace WebAppNet5
             //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域 
             ////例如：Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截,启用EnableInterfaceInterceptors()
             //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+
+            //EnableClassInterceptors启用类型
+
+            //使用EnableInterfaceInterceptors的时候，在是实现类上使用[Intercept(typeof(CustomInterceptor))] 特性标记，同时该类的方法必须是virtual
+            //containerBuilder.RegisterType<TestC>().As<ITestC>().SingleInstance().EnableClassInterceptors();//单例
+            //使用EnableInterfaceInterceptors的时候，在是实现类未使用[Intercept(typeof(CustomInterceptor))] 特性标记，同时该类的方法必须是virtual
+            //containerBuilder.RegisterType<TestC>().As<ITestC>().SingleInstance().EnableClassInterceptors().InterceptedBy(typeof(CustomInterceptor));//单例
 
             //添加拦截器的精简写法
             containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
