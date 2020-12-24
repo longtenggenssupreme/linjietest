@@ -297,7 +297,7 @@ namespace WebAppNet5
             //containerBuilder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
             //containerBuilder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
             //containerBuilder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");////指定作用域，指定应用域 
-            ////例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            ////1、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
             //containerBuilder.RegisterType<TestF>().As<ITestA>().InstancePerDependency();
             //containerBuilder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
 
@@ -314,6 +314,15 @@ namespace WebAppNet5
             ////testA.Show();
             ////var testA1 = contaier.Resolve<ITestA>();
             //testA1.Show();
+
+            ////2、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            //containerBuilder.RegisterType<TestF>().Named<ITestA>("TestF").InstancePerDependency();
+            //containerBuilder.RegisterType<TestA>().Named<ITestA>("TestA").InstancePerDependency();
+            //var contaier = containerBuilder.Build();
+            //var testA = contaier.ResolveKeyed<ITestA>("TestA");
+            //testA.Show();
+            //var testF = contaier.ResolveKeyed<ITestA>("TestF");
+            //testF.Show();
             #endregion
 
             #region Autofac Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截

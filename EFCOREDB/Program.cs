@@ -26,6 +26,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Channels;
@@ -51,12 +52,19 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestDelegate
-            TestDelegate();
+            #region 测试TestSpan
+            TestSpan();
             #endregion
 
-
             #region 全部
+            #region 测试TestEnvironment
+            //TestEnvironment();
+            #endregion
+
+            #region 测试TestDelegate
+            //TestDelegate();
+            #endregion
+
             #region IOC TestIOC
             //TestIOC();
             #endregion
@@ -196,6 +204,188 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region TestSpan
+        /// <summary>
+        /// 测试Span
+        /// </summary>
+        public static void TestSpan()
+        {
+            Span<byte> stackMemory = stackalloc byte[256];
+
+            //Span使用时，最简单的，可以把它想象成一个数组，它会做所有的指针运算，同时，内部又可以指向任何类型的内存
+            //例如，我们可以为非托管内存创建Span
+            unsafe
+            {
+                IntPtr unmanagedHandle = Marshal.AllocHGlobal(256);
+                Span<byte> unmanaged = new Span<byte>(unmanagedHandle.ToPointer(), 256);
+                Marshal.FreeHGlobal(unmanagedHandle);
+            }
+
+            //从T[]到Span的隐式转换
+            char[] array = new char[] { 'i', 'm', 'p', 'l', 'i', 'c', 'i', 't' };
+            Span<char> fromArray = array;
+
+            //还有ReadOnlySpan，可以用来处理字符串或其他不可变类型：
+
+            ReadOnlySpan<char> fromString = "Hello world".AsSpan();
+            //Span创建完成后，就跟普通的数组一样，有一个Length属性和一个允许读写的index，因此使用时就和一般的数组一样使用就好。
+            //Console.WriteLine($"{path1}");
+        }
+        #endregion
+
+        #region 密码进行加密及密码验证加密和解密  scrypt 和 bcrypt对密码进行加密及密码验证 
+        public static void TestHashAlgorithm()
+        {
+            // //using CryptSharp.Utility; 使用SCrypt的加密算法
+            //Console.WriteLine("SCrypt");
+            //string pwd = "SCrypt明文信息";
+            ////HashAlgorithm hash = HashAlgorithm.Create("MD5");
+            //HashAlgorithm hash = MD5.Create();
+            //byte[] ms5bytes = hash.ComputeHash(Encoding.UTF8.GetBytes(pwd));
+            //Console.WriteLine($"ms5bytes :{BitConverter.ToString(ms5bytes).Replace("-",string.Empty)}");
+            //byte[] salt = new byte[10];
+            //byte[] salt2 = new byte[4];
+            //RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            //rng.GetBytes(salt);
+            //rng.GetBytes(salt2);
+            //Console.WriteLine(BitConverter.ToString(salt2));
+            //byte[] result = SCrypt.ComputeDerivedKey(Encoding.UTF8.GetBytes(pwd), salt, 4, 8, 2, 2, 5);
+            //Console.WriteLine($"加密以后的密文:{BitConverter.ToString(result).Replace("-","").ToLower()}");
+        }
+
+        //using CryptSharp.Utility;
+        //using System;
+        //using System.Security.Cryptography;
+        //using System.Text;
+        public static void TestScrypt()
+        {
+            //Console.WriteLine("SCrypt.Net.BCrypt");
+            //SCrypt.ScryptEncoder scrypt = new Scrypt.ScryptEncoder();
+            //Scrypt.ScryptEncoder scrypt1 = new Scrypt.ScryptEncoder(4, 8, 1);
+            //Scrypt.ScryptEncoder scrypt2 = new Scrypt.ScryptEncoder(8, 16, 1, RandomNumberGenerator.Create());
+
+            //string pwd = "SCrypt明文信息";
+            //Console.WriteLine($"明文信息:{pwd}");
+            //string result = scrypt.Encode(pwd);
+            //Console.WriteLine($"加密以后的密文:{result}");
+
+            ////string pwd1 = "SCrypt明文信息111";
+            ////Console.WriteLine($"明文信息:{pwd1}");
+            ////string result1 = scrypt1.Encode(pwd1);
+            ////Console.WriteLine($"加密以后的密文:{result1}");
+
+            ////string pwd2 = "SCrypt明文信息222";
+            ////Console.WriteLine($"明文信息:{pwd2}");
+            ////string result2 = scrypt2.Encode(pwd2);
+            ////Console.WriteLine($"加密以后的密文:{result2}");
+
+            //bool isValid = scrypt.IsValid(result);
+            //Console.WriteLine($"加密以后的密文 isvalid:{isValid}");
+            //bool isMatchpasswordAndpwd = scrypt.Compare("SCrypt明文信息", result);
+            //Console.WriteLine($"明文信息与加密以后的密文是否一致:{isMatchpasswordAndpwd}");
+        }
+
+        //using DevOne.Security.Cryptography.BCrypt;
+        //using System;
+        public static void TestBCrypt()
+        {
+            //#region BCrypt对密码进行加密及密码验证
+            //// Console.WriteLine("BCryptHelper");
+            //// string salt = BCryptHelper.GenerateSalt();
+            //// Console.WriteLine($"产生随机盐 salt:{salt}");
+
+            //// string password = "1234567890";
+            ////Console.WriteLine($"明文:{password}");
+            //// string pwd = BCryptHelper.HashPassword(password, salt);
+            //// Console.WriteLine($"加密以后的密文:{pwd}");
+            //// bool isMatchpasswordAndpwd = BCryptHelper.CheckPassword("1234567890", pwd);
+            //// Console.WriteLine($"明文和加密以后的密文是否匹配:{isMatchpasswordAndpwd}"); 
+            //#endregion
+
+            //#region BCrypt.Net.BCrypt
+
+            //Console.WriteLine("BCrypt.Net.BCrypt");
+            //string salt = BCrypt.Net.BCrypt.GenerateSalt(28);
+            //Console.WriteLine($"产生随机盐 salt:{salt}");
+            //salt = BCrypt.Net.BCrypt.GenerateSalt();
+            //Console.WriteLine($"产生随机盐 salt:{salt}");
+            //string password = "1234567890";
+            //Console.WriteLine($"明文:{password}");
+            //string pwd = BCrypt.Net.BCrypt.HashPassword(password);
+            //Console.WriteLine($"加密以后的密文:{pwd}");
+            //pwd = BCrypt.Net.BCrypt.HashPassword(password, 4);
+            //Console.WriteLine($"加密以后的密文:{pwd}");
+            //pwd = BCrypt.Net.BCrypt.HashPassword(password, salt);
+            //Console.WriteLine($"加密以后的密文:{pwd}");
+            //pwd = BCrypt.Net.BCrypt.HashString("密文");
+            //Console.WriteLine($"加密以后的密文:{pwd}");
+            //pwd = BCrypt.Net.BCrypt.HashString("密文", 4);
+            //Console.WriteLine($"加密以后的密文:{pwd}");
+            //bool isMatchpasswordAndpwd = BCrypt.Net.BCrypt.Verify("密文", pwd);
+            //Console.WriteLine($"明文和加密以后的密文是否匹配:{isMatchpasswordAndpwd}");
+            //#endregion
+
+            ////string salt = BCrypt.Net.BCrypt.GenerateSalt
+            ////Console.WriteLine($"产生随机盐 salt:{salt}");
+
+            ////string password = "1234567890";
+            ////Console.WriteLine($"明文:{password}");
+            ////string pwd = BCryptHelper.HashPassword(password, salt);
+            ////Console.WriteLine($"加密以后的密文:{pwd}");
+            ////bool isMatchpasswordAndpwd = BCryptHelper.CheckPassword("1234567890", pwd);
+            ////Console.WriteLine($"明文和加密以后的密文是否匹配:{isMatchpasswordAndpwd}");
+        }
+
+        #endregion
+
+        #region TestEnvironment 特殊文件夹 
+        public static void TestEnvironment()
+        {
+            //判断系统文件的时候会存在32位和64位的差异，普通文件就不存在任何影响了
+            var path1 = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            //系统文件在32位系统中：path1是C:\Windows\system32
+            //系统文件在64位系统中：path1是C:\Windows\SysWoW64，之所以会这样是因为
+            //该SysWoW64文件夹主要是被设计用来处理许多在32位Windows和64位Windows之间的不同的问题，
+            //使得可以在64位Windows中运行32位的程序
+            //所以我们在32位程序的时候判断系统路径其实已经重定向到了: C:\Windows\SysWoW64了，
+            //这是系统自动重定向，这个目录肯定不是我们要找的C:\Windows\system32目录
+            Console.WriteLine($"{path1}");
+            //例如：
+            // 获取系统目录
+            var system = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            var filePath = system + @"\drivers\evserial7.sys";
+            var flag = File.Exists(filePath);
+            Console.WriteLine($"系统路径:{filePath} checkDrives:{flag}");
+            //解决---系统文件的时候会存在32位和64位的差异
+
+            //使用 C:\Windows\SysNative路径,这是个虚拟路径，我们在Windows资源管理器中是无法找到的。
+            //但是他最终还是会指向到system32中。SysNative文件夹目的就是让32位应用程序访问64位系统文件的方法。
+            //现在我将代码改下,前面的 Environment.GetFolderPath(Environment.SpecialFolder.System)是获取system32
+            //这里要改为Environment.SpecialFolder.Windows，获取windows目录，并在下面拼接上Sysnative目录。
+            // 获取windows目录
+            var system1 = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+            var filePath1 = system1 + @"\Sysnative\drivers\evserial7.sys";
+            var flag1 = File.Exists(filePath1);
+            Console.WriteLine($"系统路径:{filePath1} checkDrives:{flag1}");
+        }
+        #endregion
+
+        #region Task<int>  ==》ValueTask<int>
+        /// <summary>
+        /// 如果时立即返回的需要使用 ValueTask<int>，而不使用Task<int>，例如内存操作以及读缓存
+        /// </summary>
+        /// <returns></returns>
+        public Task<int> GetCustomerIdAsync()
+        {
+            return Task.FromResult(1);
+        }
+
+        public ValueTask<int> GetCustomerIdAsync1()
+        {
+            return new ValueTask<int>(1);
+        }
+        #endregion
+
         #region TestDelegate
         public static void TestDelegate()
         {
@@ -251,10 +441,10 @@ namespace EFCOREDB
                 TestStringCom.Invoke();
 
                 //多播委托
-                testVoid+= testVoid1;
+                testVoid += testVoid1;
                 testVoid();
                 testVoid.Invoke();
-                TestString +=  TestString1;
+                TestString += TestString1;
                 TestString();
                 TestString.Invoke();
 
@@ -265,20 +455,6 @@ namespace EFCOREDB
                 TestStringDelegate TestStringCom1 = (TestStringDelegate)Delegate.Combine(TestString, TestString1);
                 TestStringCom1();
                 TestStringCom1.Invoke();
-            }
-
-            /// <summary>
-            /// 如果时立即返回的需要使用 ValueTask<int>，而不使用Task<int>，例如内存操作以及读缓存
-            /// </summary>
-            /// <returns></returns>
-            public Task<int> GetCustomerIdAsync()
-            {
-                return Task.FromResult(1);
-            }
-
-            public ValueTask<int> GetCustomerIdAsync1()
-            {
-                return new ValueTask<int>(1);
             }
         }
 
@@ -323,23 +499,51 @@ namespace EFCOREDB
 
 
             #region Autofac 配置文件 配置IOC 依赖注入 属性注入
-            ////Autofac 配置文件 配置IOC 依赖注入 属性注入
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
-            var conmodule = new ConfigurationModule(configurationBuilder.Build());
-            builder.RegisterModule(conmodule);
+            //////Autofac 配置文件 配置IOC 依赖注入 属性注入
+            //ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            //configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
+            //var conmodule = new ConfigurationModule(configurationBuilder.Build());
+            //builder.RegisterModule(conmodule);
             #endregion
 
-            var contaier = builder.Build();
-            var testA = contaier.Resolve<ITestA>();
-            testA.Show();
-            var testA1 = contaier.Resolve<ITestA>();
-            testA1.Show();
-            var testB = contaier.Resolve<ITestB>();
-            testB.Show();
-            var testB1 = contaier.Resolve<ITestB>();
-            testB1.Show();
-            Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
+
+            #region Autofac 一对象多实例问题,例如：一个接口ITestA 2个实现TestA和TestF
+            builder.RegisterType<TestB>().As<ITestB>().SingleInstance();//单例
+            builder.RegisterType<TestC>().As<ITestC>().InstancePerLifetimeScope();//作用域，应用域
+            builder.RegisterType<TestD>().As<ITestD>().InstancePerMatchingLifetimeScope("TEST");//指定作用域，指定应用域 
+            ////1、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            //builder.RegisterType<TestF>().As<ITestA>().InstancePerDependency();
+            //builder.RegisterType<TestA>().As<ITestA>().InstancePerDependency();
+
+            ////一个接口ITestA 2个实现TestA和TestF,
+            ////AController中使用测试，可以同时获取接口ITestA的2个实现TestA和TestF的实例，
+            ////然后可以使用TestA和TestF来调用对应的方法,
+            ////使用 public AController(ITestA testA, IEnumerable<ITestA> testAList, TestA testAA, TestF testFF, ITestC testC)
+            ////builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource(t => t.IsAssignableTo(typeof(ITestA))));
+            ////下面是对上面的扩展，其实内容是一样的
+            //builder.RegisterModule(new CustomModule());
+
+
+            //2、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            //builder.RegisterType<TestF>().Named<ITestA>("TestF").InstancePerDependency();
+            //builder.RegisterType<TestA>().Named<ITestA>("TestA").InstancePerDependency();
+            //var contaier = builder.Build();
+            //var testA = contaier.ResolveKeyed<ITestA>("TestA");
+            //testA.Show();
+            //var testF = contaier.ResolveKeyed<ITestA>("TestF");
+            //testF.Show();
+            #endregion
+
+            //var contaier = builder.Build();
+            //var testA = contaier.Resolve<ITestA>();
+            //testA.Show();
+            //var testA1 = contaier.Resolve<ITestA>();
+            //testA1.Show();
+            //var testB = contaier.Resolve<ITestB>();
+            //testB.Show();
+            //var testB1 = contaier.Resolve<ITestB>();
+            //testB1.Show();
+            //Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
 
             #region 作用域
             #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
