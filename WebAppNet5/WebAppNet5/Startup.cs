@@ -365,10 +365,10 @@ namespace WebAppNet5
             //containerBuilder.RegisterType<TestC>().As<ITestC>().SingleInstance().EnableClassInterceptors().InterceptedBy(typeof(CustomInterceptor));//µ¥Àý
 
             ////Ìí¼ÓÀ¹½ØÆ÷µÄ¾«¼òÐ´·¨
-            //containerBuilder.RegisterType<CustomInterceptor>();//InterceptorÀ¹½ØÆ÷
-            //containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptorÀ¹½ØÆ÷
-            //var typeTests = this.GetType().Assembly.ExportedTypes.Where(t => t.Name.Contains("Test")).ToArray();
-            //containerBuilder.RegisterTypes(typeTests).AsImplementedInterfaces().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));
+            containerBuilder.RegisterType<CustomInterceptor>();//InterceptorÀ¹½ØÆ÷
+            containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptorÀ¹½ØÆ÷
+            var typeTests = this.GetType().Assembly.ExportedTypes.Where(t => t.Name.Contains("Test")).ToArray();
+            containerBuilder.RegisterTypes(typeTests).AsImplementedInterfaces().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));
 
             //var contaier = containerBuilder.Build();
             //var testA = contaier.Resolve<ITestA>();
