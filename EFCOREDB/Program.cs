@@ -53,7 +53,7 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             #region 测试TestSpan
-            TestSpan();
+            //TestSpan();
             #endregion
 
             #region 全部
@@ -532,18 +532,27 @@ namespace EFCOREDB
             //testA.Show();
             //var testF = contaier.ResolveKeyed<ITestA>("TestF");
             //testF.Show();
-            #endregion
 
+            //3、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试
+            //builder.RegisterType<TestF>().Named<ITestA>("TestF").InstancePerDependency();
+            //builder.RegisterType<TestA>().Named<ITestA>("TestA").InstancePerDependency();
             //var contaier = builder.Build();
-            //var testA = contaier.Resolve<ITestA>();
+            //var testA = contaier.ResolveKeyed<ITestA>("TestA");
             //testA.Show();
-            //var testA1 = contaier.Resolve<ITestA>();
+            //var testF = contaier.ResolveKeyed<ITestA>("TestF");
+            //testF.Show();
+
+            ////IComponentContext 这个对象可以获取对应的接口服务，组件上下文，
+            ////这是一接口多实现的使用，IComponentContext组件上下文，
+            ////用于一接口多实现的使用一个接口ITestA 2个实现TestA和TestF,AController中使用测试 使用Index1测试
+            //var componentCintext = contaier.Resolve<IComponentContext>();
+            //var testA1 = componentCintext.ResolveKeyed<ITestA>("TestA");
+            //testA1 = componentCintext.ResolveNamed<ITestA>("TestA");
             //testA1.Show();
-            //var testB = contaier.Resolve<ITestB>();
-            //testB.Show();
-            //var testB1 = contaier.Resolve<ITestB>();
-            //testB1.Show();
-            //Console.WriteLine($"瞬态：{object.ReferenceEquals(testA, testA1)}");
+            //var testF1 = componentCintext.ResolveKeyed<ITestA>("TestF");
+            //testF1 = componentCintext.ResolveKeyed<ITestA>("TestF");
+            //testF1.Show();
+            #endregion
 
             #region 作用域
             #region 方法注入  InstancePerMatchingLifetimeScope使用作用域及子作用域，匹配作用域，只有一个实例，无论是父子作用域还是父下面的不同子作用域他们的实例都是相同的
@@ -673,6 +682,7 @@ namespace EFCOREDB
 
             Console.WriteLine($"测试完成。。。");
         }
+
         /// <summary>
         /// autofac中自定义属性选择器类
         /// </summary>

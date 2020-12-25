@@ -323,6 +323,23 @@ namespace WebAppNet5
             //testA.Show();
             //var testF = contaier.ResolveKeyed<ITestA>("TestF");
             //testF.Show();
+
+            ////3、例如：一个接口ITestA 2个实现TestA和TestF,AController中使用测试 使用Index1测试
+            //containerBuilder.RegisterType<TestF>().Named<ITestA>("TestF").InstancePerDependency();
+            //containerBuilder.RegisterType<TestA>().Named<ITestA>("TestA").InstancePerDependency();
+            ////var contaier = containerBuilder.Build();
+            ////var testA = contaier.ResolveKeyed<ITestA>("TestA");
+            ////testA.Show();
+            ////var testF = contaier.ResolveKeyed<ITestA>("TestF");
+            ////testF.Show();
+
+            ////var componentCintext = contaier.Resolve<IComponentContext>();
+            ////var testA1 = componentCintext.ResolveKeyed<ITestA>("TestA");
+            ////testA1 = componentCintext.ResolveNamed<ITestA>("TestA");
+            ////testA1.Show();
+            ////var testF1 = componentCintext.ResolveKeyed<ITestA>("TestF");
+            ////testF1 = componentCintext.ResolveKeyed<ITestA>("TestF");
+            ////testF1.Show();
             #endregion
 
             #region Autofac Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截
@@ -347,11 +364,11 @@ namespace WebAppNet5
             //使用EnableInterfaceInterceptors的时候，在是实现类未使用[Intercept(typeof(CustomInterceptor))] 特性标记，同时该类的方法必须是virtual
             //containerBuilder.RegisterType<TestC>().As<ITestC>().SingleInstance().EnableClassInterceptors().InterceptedBy(typeof(CustomInterceptor));//单例
 
-            //添加拦截器的精简写法
-            containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
-            containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
-            var typeTests = this.GetType().Assembly.ExportedTypes.Where(t => t.Name.Contains("Test")).ToArray();
-            containerBuilder.RegisterTypes(typeTests).AsImplementedInterfaces().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));
+            ////添加拦截器的精简写法
+            //containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
+            //containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+            //var typeTests = this.GetType().Assembly.ExportedTypes.Where(t => t.Name.Contains("Test")).ToArray();
+            //containerBuilder.RegisterTypes(typeTests).AsImplementedInterfaces().EnableInterfaceInterceptors().InterceptedBy(typeof(CustomInterceptor));
 
             //var contaier = containerBuilder.Build();
             //var testA = contaier.Resolve<ITestA>();
