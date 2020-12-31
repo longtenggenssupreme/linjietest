@@ -38,7 +38,7 @@ namespace WebAppNet5
                     webBuilder.UseStartup<Startup>();
                 })
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())//添加AutofacServiceProviderFactory依赖注入容器
-             .ConfigureLogging(logging =>
+            .ConfigureLogging(logging =>
              {
                  logging.ClearProviders();//清除其他的文件日志文件提供器
                  logging.SetMinimumLevel(LogLevel.Error);//Logging LogLevel设置 优先级 command > appsettings.json > 硬编码

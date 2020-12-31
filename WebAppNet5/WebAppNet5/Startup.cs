@@ -96,6 +96,9 @@ namespace WebAppNet5
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddHttpContextAccessor();
+
+            //添加全局过滤器
+            services.AddMvc(option => option.Filters.Add<GlobalFilterExecRangeAndOrderAttribute>());
             #endregion
         }
 
@@ -343,8 +346,8 @@ namespace WebAppNet5
             #endregion
 
             #region Autofac Interceptor拦截器,例如：一个接口ITestA 实现TestA拦截
-            containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
-            containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
+            //containerBuilder.RegisterType<CustomInterceptor>();//Interceptor拦截器
+            //containerBuilder.RegisterType<CustomAsyncInterceptor>();//IAsyncInterceptor拦截器
 
             //EnableInterfaceInterceptors启用接口
 
@@ -376,6 +379,14 @@ namespace WebAppNet5
             //var testA1 = contaier.Resolve<ITestA>();
             //testA1.Show();
             #endregion
+            #endregion
+
+            #region MyRegion
+            //未使用构造函数依赖注入时，可以使用该特性[CustomFilter]标记,即自定义的filter过滤器CustomFilter，时必须要有无参构造函数
+            //[TypeFilter(typeof(CustomFilterAttribute))]//可以使用无参构造函数也可以使用有参构造函数依赖注入其他需要的信息
+            //[ServiceFilter(typeof(CustomFilterAttribute))]//可以使用无参构造函数也可以使用有参构造函数依赖注入其他需要的信息
+            //containerBuilder.RegisterType<CustomFilterAttribute>();//注册定义过滤器特性
+            containerBuilder.RegisterType<CustomFilterAttribute>().PropertiesAutowired();//注册定义过滤器特性,属性注入
             #endregion
 
         }

@@ -1,0 +1,9 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    @:这是测试异常处理的
+    Exception exception = ViewData["Error"] as Exception;
+    <h1>@exception.Message</h1>
+}
