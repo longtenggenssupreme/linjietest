@@ -52,11 +52,25 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
+            #region 测试TestForeach
+            TestForeach();
+            #endregion
+
+            #region 全部
+
+            #region 测试NotNull
+            //string ss = "123";
+            //TestNotNull(ss);
+            //string ss1 = null;
+            //TestNotNull(ss1);
+            //string ss2 = string.Empty;
+            //TestNotNull(ss2);
+            #endregion
+
             #region 测试TestSpan
             //TestSpan();
             #endregion
 
-            #region 全部
             #region 测试TestEnvironment
             //TestEnvironment();
             #endregion
@@ -203,6 +217,94 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region TestForeach
+        public static void TestForeach()
+        {
+            Console.WriteLine($"没有继承");
+            var a = 11;
+            foreach (var item in a)
+            {
+                Console.WriteLine($"{item}");
+            }
+        }       
+        #endregion
+
+        #region Null and NotNull
+        /// <summary>
+        /// 测试NotNull
+        /// </summary>
+        public static void TestNotNull(NotNull<string> notNull)
+        {
+            Console.WriteLine($"notNull:{notNull.Value}");
+            var a = new Fraction(5, 4);
+            var b = new Fraction(1, 2);
+            Console.WriteLine(-a);   // output: -5 / 4
+            Console.WriteLine(a + b);  // output: 14 / 8
+            Console.WriteLine(a - b);  // output: 6 / 8
+            Console.WriteLine(a * b);  // output: 5 / 8
+            Console.WriteLine(a / b);  // output: 10 / 4
+            //Console.WriteLine($"{path1}");
+        }
+
+        public class NotNull<T>
+        {
+            public T Value { get; set; }
+            public NotNull(T value)
+            {
+                Value = value;
+            }
+
+            public static implicit operator NotNull<T>(T value)
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException();
+                }
+                return new NotNull<T>(value);
+            }
+        }
+
+        public readonly struct Fraction
+        {
+            private readonly int num;
+            private readonly int den;
+
+            public Fraction(int numerator, int denominator)
+            {
+                if (denominator == 0)
+                {
+                    throw new ArgumentException("Denominator cannot be zero.", nameof(denominator));
+                }
+                num = numerator;
+                den = denominator;
+            }
+
+            public static Fraction operator +(Fraction a) => a;
+            public static Fraction operator -(Fraction a) => new Fraction(-a.num, a.den);
+
+            public static Fraction operator +(Fraction a, Fraction b)
+                => new Fraction(a.num * b.den + b.num * a.den, a.den * b.den);
+
+            public static Fraction operator -(Fraction a, Fraction b)
+                => a + (-b);
+
+            public static Fraction operator *(Fraction a, Fraction b)
+                => new Fraction(a.num * b.num, a.den * b.den);
+
+            public static Fraction operator /(Fraction a, Fraction b)
+            {
+                if (b.num == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+                return new Fraction(a.num * b.den, a.den * b.num);
+            }
+
+            public override string ToString() => $"{num} / {den}";
+        }
+
+        #endregion
 
         #region TestSpan
         /// <summary>
@@ -3883,6 +3985,19 @@ BEGIN
         }
         #endregion
         #endregion
+    }
+
+    /// <summary>
+    /// 测试，不继承 IEnumerable，IEnmuerable<T> 添加 GetEnumerator 方法，方法返回值类型需要有 Current 属性和 MoveNext 方法，可以参考这个
+    /// IEnumerator，返回类型可以直接实现 IEnumerator 或 IEnumerator<T> 那么如果是一个别人封装的类型，能否支持 foreach 呢，
+    /// 从 C# 9 之后就可以了，可以添加一个 GetEnumerator 的扩展方法，类似于下面
+    /// </summary>
+    public static class ForeachExtension
+    {
+        public static IEnumerator<char> GetEnumerator(this int Num)
+        {
+            return Num.ToString().GetEnumerator();
+        }
     }
 
     /// <summary>

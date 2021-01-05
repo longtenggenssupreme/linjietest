@@ -58,8 +58,12 @@ namespace WebAppNet5
                 else
                 {
                     var viewResult = new ViewResult() { ViewName = "~/Views/Shared/Error.cshtml" };
-                    viewResult.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
-                    viewResult.ViewData.Add("Error", context.Exception);
+                    //viewResult.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState);
+                    //viewResult.ViewData.Add("Error", context.Exception);
+                    viewResult.ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState)
+                    {
+                        { "Error", context.Exception }
+                    };
                     context.Result = viewResult;
                 }
             }

@@ -27,6 +27,10 @@ using Autofac.Features.ResolveAnything;
 using Castle.Core;
 using Autofac.Extras.DynamicProxy;
 using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
+using System.IO;
+using System.Text;
 
 namespace WebAppNet5
 {
@@ -98,8 +102,12 @@ namespace WebAppNet5
             services.AddHttpContextAccessor();
 
             //添加全局过滤器
-            services.AddMvc(option => option.Filters.Add<GlobalFilterExecRangeAndOrderAttribute>());
+            services.AddMvc(option => //option.Filters.Add<GlobalFilterExecRangeAndOrderAttribute>()
+            option.Filters.Add<CustomExceptionFilterAttribute>());
             #endregion
+
+            //需要使用 Encoding.RegisterProvider方法进行注册Provider Encoding 支持如：GB2312编码等。
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.
@@ -145,7 +153,7 @@ namespace WebAppNet5
             containerBuilder.RegisterTypes(types).PropertiesAutowired(new MyPropertySelector());
             #endregion
 
-            #region Autofac 配置文件 配置IOC 依赖注入 属性注入 Autofac， Autofac.Configuration， Autofac.Extensions.DependencyInjection autofacconfig.json设置始终复制和内容
+            #region Autofac 配置文件 配置IOC 依赖注入 属性注入 Autofac， Autofac.Configuration，Autofac.Extensions.DependencyInjection autofacconfig.json设置始终复制和内容
             ////Autofac 配置文件 配置IOC 依赖注入 属性注入
             //ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             //configurationBuilder.Add(new JsonConfigurationSource() { Path = "Config/autofacconfig.json", Optional = false, ReloadOnChange = true });
@@ -404,6 +412,32 @@ namespace WebAppNet5
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
+            #region 请求错误路径异常
+            ////请求错误路径异常
+            //app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");//只要不是200，都可以进来
+            //app.UseExceptionHandler(options =>
+            //        options.Run(async context =>
+            //        {
+            //            context.Response.StatusCode = 200;
+            //            //context.Response.ContentType = "text/html";
+            //            //await context.Response.WriteAsync("<html lang=\"en\"><body>\r\n");
+            //            var ss = Encoding.UTF8.GetBytes("错误信息： 未找到对应的页面！！！");
+            //            var ss1 = Encoding.UTF8.GetString(ss);
+            //            await context.Response.WriteAsync(ss1, Encoding.UTF8);
+            //            var excep = context.Features.Get<IExceptionHandlerPathFeature>();
+            //            Console.WriteLine($"{excep?.Error.Message}");
+            //            if (excep?.Error is FileNotFoundException file)
+            //            {
+            //                await context.Response.WriteAsync("File error thrown </br>");
+            //            }
+            //            //await context.Response.WriteAsync("<a href=\"/\">点击返回主页Home</a></br>");
+            //            //await context.Response.WriteAsync("</body></html>");
+            //            await context.Response.WriteAsync(new string(' ',512));//IE Padding
+            //        }));
+            #endregion
+
             //loggerFactory.AddLog4Net("Config/log4net.config");//log4net第二种使用方法
             app.UseHttpsRedirection();
             //app.UseStaticFiles();
