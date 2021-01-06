@@ -52,11 +52,15 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestForeach
-            TestForeach();
+            #region 测试TestLinqWhereIf
+            TestLinqWhereIf();
             #endregion
 
             #region 全部
+
+            #region 测试TestForeach
+            //TestForeach();
+            #endregion
 
             #region 测试NotNull
             //string ss = "123";
@@ -218,6 +222,26 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region TestLinqWhereIf
+        public static void TestLinqWhereIf()
+        {
+            Console.WriteLine($"开始测试 linq where 条件筛选");
+            Console.WriteLine($"开始测试 linq where 条件筛选---IEnumerable<T>");
+            var lsist = Enumerable.Range(1, 20).WhereIf(a => a % 2 == 0, true);
+            foreach (var item in lsist)
+            {
+                Console.WriteLine($"{item}");
+            }
+            Console.WriteLine($"开始测试 linq where 条件筛选--IQueryable<T> 远程枚举"); 
+            Expression<Func<int, bool>> expression = a => a % 2 == 0;
+            var lsist1 = Enumerable.Range(1, 20).AsQueryable<int>().WhereIf(expression, true);
+            foreach (var item in lsist1)
+            {
+                Console.WriteLine($"{item}");
+            }
+        }
+        #endregion
+
         #region TestForeach
         public static void TestForeach()
         {
@@ -227,7 +251,7 @@ namespace EFCOREDB
             {
                 Console.WriteLine($"{item}");
             }
-        }       
+        }
         #endregion
 
         #region Null and NotNull
@@ -3984,6 +4008,48 @@ BEGIN
             return new string[] { decide, sqlRaw };
         }
         #endregion
+        #endregion
+    }
+
+    /// <summary>
+    /// 测试linq 中where条件筛选
+    /// </summary>
+    public static class TestLinqWhereIf
+    {
+        #region TestLinqWhereIf
+        /// <summary>
+        /// IEnumerable<T> 本地枚举
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, bool> predicate, bool condition)
+        {
+            if (condition)//判断条件成立则，执行筛选
+            {
+                source = source.Where(predicate);
+            }
+            return source;
+        }
+
+        /// <summary> 
+        /// IQueryable<T> 远程枚举
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate, bool condition)
+        {
+            if (condition)//判断条件成立则，执行筛选
+            {
+                source = source.Where(predicate);
+            }
+            return source;
+        }
         #endregion
     }
 
