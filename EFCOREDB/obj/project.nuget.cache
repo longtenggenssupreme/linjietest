@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "wCXNeldvVhvPNPdQaJrt1UihIWmu+rlqbahGuMv0CdlKItZsC3/cJCjvPFXSQtKTG3dwUuxMV3usDa1jUN0EQA==",
+  "dgSpecHash": "lzIU/I37j8ZYK4UtSMfYuuDOwxqvNIcfksxJeRZmg9NkJk9PpK/2uzadWZj194mwxgSS535ExtT4PFxFRkxhWQ==",
   "success": true,
   "projectFilePath": "F:\\Person\\aaa\\LJTest\\EFCOREDB\\EFCOREDB.csproj",
   "expectedPackageFiles": [
@@ -13,6 +13,7 @@
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.core\\1.7.18\\hangfire.core.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.sqlserver\\1.7.18\\hangfire.sqlserver.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\longtengdragon\\1.0.0\\longtengdragon.1.0.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",

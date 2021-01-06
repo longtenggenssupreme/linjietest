@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "1fzuLrbXF2DviURJVxiSueya0IDsaVAwUzcXXkQ/1WftEGnbyr4aOdIwSGaOVG8FPLkmy3dV34HfhCdKdl1WTQ==",
+  "success": true,
+  "projectFilePath": "F:\\Person\\aaa\\LJTest\\linjiefirstlib\\linjiefirstlib\\linjiefirstlib.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.build.tasks.git\\1.0.0\\microsoft.build.tasks.git.1.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.sourcelink.common\\1.0.0\\microsoft.sourcelink.common.1.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.sourcelink.github\\1.0.0\\microsoft.sourcelink.github.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

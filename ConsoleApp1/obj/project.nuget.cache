@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Mmm/+2DKB46Yrv6AyYGOd/6gq72bFYEzILYnxbl1JyfFFpia8nkgRq0dvnRc8mQmZ3fqTHAcMjdOPbhej89NcQ==",
+  "dgSpecHash": "wHaFIQdsumfYWDO5NA8yJfni1FLe0qEQXS1WcezZjjTBO/JhBN9/j1jyjoUQG0r5ikMC498i7qu61VhxRo3XuQ==",
   "success": true,
   "projectFilePath": "F:\\Person\\aaa\\LJTest\\ConsoleApp1\\ConsoleStaticRenference.csproj",
   "expectedPackageFiles": [
@@ -12,6 +12,7 @@
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.aspnetcore\\1.7.18\\hangfire.aspnetcore.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.core\\1.7.18\\hangfire.core.1.7.18.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\hangfire.sqlserver\\1.7.18\\hangfire.sqlserver.1.7.18.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\longtengdragon\\1.0.0\\longtengdragon.1.0.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",

@@ -1,0 +1,10 @@
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\bin\Debug\netstandard2.0\linjiefirstlib.deps.json
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\bin\Debug\netstandard2.0\linjiefirstlib.dll
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\bin\Debug\netstandard2.0\linjiefirstlib.pdb
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.AssemblyInfoInputs.cache
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.AssemblyInfo.cs
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.csproj.CoreCompileInputs.cache
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.sourcelink.json
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.dll
+F:\Person\aaa\LJTest\linjiefirstlib\linjiefirstlib\obj\Debug\netstandard2.0\linjiefirstlib.pdb

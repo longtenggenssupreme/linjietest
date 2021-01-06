@@ -325,7 +325,6 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\bin\Debug\net5.0\ru\Micr
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
-F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.GeneratedMSBuildEditorConfig.editorconfig
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.AssemblyInfoInputs.cache
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.AssemblyInfo.cs

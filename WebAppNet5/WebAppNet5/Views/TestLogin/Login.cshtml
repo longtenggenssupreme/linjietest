@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model WebAppNet5.CurrentUserViewModel
+@{
+    ViewBag.Title = "登陆";
+    @:登陆主页
+}
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm(
+       "Login",
+       "TestLogin",
+       new { sid = "123", Account = "haha" },
+       FormMethod.Post,
+       true,
+       new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <hr />
+                @Html.ValidationSummary(true)
+                @*姓名*@
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                    </div>
+                </div>
+                @*密码*@
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+                    </div>
+                </div>
+                @*确认密码*@
+                <div class="form-group">
+                    @Html.Label("VerifyCode", "VerifyCode", new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBox("verify", "", new { @class = "form-control" })
+                    </div>
+                </div>
+                @*图片验证码*@
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <img alt="验证码图片" class="img" onclick="refresh(this)" src="/TestLogin/VerifyCode" title="点击刷新" />
+                    </div>
+                </div>
+
+                @*提交*@
+                <div class="form-group">
+                    <div class="col-md-offset col-10">
+                        <input type="submit" value="登录" class="btn btn-default" />
+                        @ViewBag.Msg
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+<script>
+    function refresh(obj) {
+        $(obj).attr("src", "/TestLogin/VerifyCode?random=" + Math.random());
+    }
+</script>

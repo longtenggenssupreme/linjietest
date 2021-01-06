@@ -139,6 +139,15 @@
           "lib/netstandard2.0/Humanizer.dll": {}
         }
       },
+      "LongTengDragon/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/LongTengDragon.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/LongTengDragon.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
@@ -1989,6 +1998,18 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "LongTengDragon/1.0.0": {
+      "sha512": "QRVpU5g1HbHrurL69oRaUxLRX/DIa2ZHgG5R/Q/9sWFcWYGdxoSNyuYnhqK8pSM//Nwru5pldaMbzB444t0soQ==",
+      "type": "package",
+      "path": "longtengdragon/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/LongTengDragon.dll",
+        "longtengdragon.1.0.0.nupkg.sha512",
+        "longtengdragon.nuspec"
       ]
     },
     "Microsoft.CSharp/4.7.0": {
@@ -6296,6 +6317,7 @@
       "Autofac.Extensions.DependencyInjection >= 7.1.0",
       "Bogus >= 32.0.1",
       "Hangfire >= 1.7.18",
+      "LongTengDragon >= 1.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 5.0.0",
       "Microsoft.EntityFrameworkCore.InMemory >= 5.0.0",
       "Microsoft.EntityFrameworkCore.Relational >= 5.0.0",
@@ -6377,6 +6399,10 @@
           "Hangfire": {
             "target": "Package",
             "version": "[1.7.18, )"
+          },
+          "LongTengDragon": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

@@ -1,0 +1,10 @@
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\bin\Debug\netstandard2.0\LongTengDragon.deps.json
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\bin\Debug\netstandard2.0\LongTengDragon.dll
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\bin\Debug\netstandard2.0\LongTengDragon.pdb
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.AssemblyInfoInputs.cache
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.AssemblyInfo.cs
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.csproj.CoreCompileInputs.cache
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.sourcelink.json
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.dll
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.pdb
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.csprojAssemblyReference.cache

@@ -13,6 +13,7 @@
           "Autofac.Extensions.DependencyInjection": "7.1.0",
           "Bogus": "32.0.1",
           "Hangfire": "1.7.18",
+          "LongTengDragon": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "5.0.0",
           "Microsoft.EntityFrameworkCore.InMemory": "5.0.0",
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0",
@@ -154,6 +155,14 @@
           "lib/netstandard2.0/Humanizer.dll": {
             "assemblyVersion": "2.8.0.0",
             "fileVersion": "2.8.26.1919"
+          }
+        }
+      },
+      "LongTengDragon/1.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/LongTengDragon.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -1275,6 +1284,13 @@
       "sha512": "sha512-OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A==",
       "path": "humanizer.core/2.8.26",
       "hashPath": "humanizer.core.2.8.26.nupkg.sha512"
+    },
+    "LongTengDragon/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QRVpU5g1HbHrurL69oRaUxLRX/DIa2ZHgG5R/Q/9sWFcWYGdxoSNyuYnhqK8pSM//Nwru5pldaMbzB444t0soQ==",
+      "path": "longtengdragon/1.0.0",
+      "hashPath": "longtengdragon.1.0.0.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",

@@ -108,6 +108,14 @@ namespace WebAppNet5
 
             //需要使用 Encoding.RegisterProvider方法进行注册Provider Encoding 支持如：GB2312编码等。
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            services.AddSession();
+            services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/TestLogin/Login"); 
+                //如果授权失败，就跳转到这个路径去中
+                //options.AccessDeniedPath = new PathString("/Home/Privacy");
+            });//用cookie
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.

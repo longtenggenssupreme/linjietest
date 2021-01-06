@@ -53,10 +53,14 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
             #region 测试TestLinqWhereIf
-            TestLinqWhereIf();
+            TestLongteng();
             #endregion
 
             #region 全部
+
+            #region 测试TestLinqWhereIf
+            //TestLinqWhereIf();
+            #endregion
 
             #region 测试TestForeach
             //TestForeach();
@@ -221,6 +225,18 @@ namespace EFCOREDB
 
             Console.Read();
         }
+        #region TestLongteng
+        public static void TestLongteng()
+        {
+            Console.WriteLine($"开始测试 自定义的longteng nuget包的使用");
+
+            LongTengDragon.LongTeng longTeng = new LongTengDragon.LongTeng();
+            var ss = longTeng.GetRandomNumber(100, 200);
+            {
+                Console.WriteLine($"自定义的longteng nuget包使用，输出随机数：{ss}");
+            }
+        }
+        #endregion
 
         #region TestLinqWhereIf
         public static void TestLinqWhereIf()
