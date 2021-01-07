@@ -11,12 +11,12 @@
     <div class="col-md-8">
         <section id="loginForm">
             @using (Html.BeginForm(
-       "Login",
-       "TestLogin",
-       new { sid = "123", Account = "haha" },
-       FormMethod.Post,
-       true,
-       new { @class = "form-horizontal", role = "form" }))
+      "Login",
+      "TestLogin",
+      new { sid = "123", Account = "haha" },
+      FormMethod.Post,
+      true,
+      new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <hr />
@@ -26,6 +26,7 @@
                     @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Name)
                     </div>
                 </div>
                 @*密码*@
@@ -33,6 +34,7 @@
                     @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password)
                     </div>
                 </div>
                 @*确认密码*@
@@ -48,7 +50,7 @@
                         <img alt="验证码图片" class="img" onclick="refresh(this)" src="/TestLogin/VerifyCode" title="点击刷新" />
                     </div>
                 </div>
-
+                @*@Html.EditorForModel()*@
                 @*提交*@
                 <div class="form-group">
                     <div class="col-md-offset col-10">

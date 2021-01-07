@@ -15,16 +15,12 @@ namespace WebAppNet5
         }
         public static void DeleteCookies(this HttpContext httpContext, string key)
         {
-            if (httpContext.Response.Cookies.Equals(key))
-            {
-                httpContext.Response.Cookies.Delete(key);
-            }
+            httpContext.Response.Cookies.Delete(key);            
         }
 
         public static string GetCookies(this HttpContext httpContext, string key)
         {
             httpContext.Request.Cookies.TryGetValue(key, out string result);
-
             return result;
         }
 
@@ -48,7 +44,7 @@ namespace WebAppNet5
 
         public static CurrentUserViewModel GetCurrenUserBySession(this HttpContext httpContext)
         {
-            var result = httpContext.Session.GetString("CurreentUser");
+            var result = httpContext.Session.GetString("CurrentUser");
             return result==null ? null : Newtonsoft.Json.JsonConvert.DeserializeObject<CurrentUserViewModel>(result);
         }
     }

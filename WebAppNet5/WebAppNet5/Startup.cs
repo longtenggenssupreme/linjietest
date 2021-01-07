@@ -31,6 +31,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
 using System.IO;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppNet5
 {
@@ -101,21 +103,45 @@ namespace WebAppNet5
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddHttpContextAccessor();
 
+            //使用cookies session 的actionfilter
+            services.AddSession();
+
             //添加全局过滤器
-            services.AddMvc(option => //option.Filters.Add<GlobalFilterExecRangeAndOrderAttribute>()
-            option.Filters.Add<CustomExceptionFilterAttribute>());
+            services.AddMvc(
+                option =>
+                //option.Filters.Add<GlobalFilterExecRangeAndOrderAttribute>()
+                {
+                    option.Filters.Add<CustomExceptionFilterAttribute>();
+                    //option.Filters.Add<CustomCookiesSessionActionFilterAttribute>();//全局注册CookiesSessionActionFilter
+                });
             #endregion
 
             //需要使用 Encoding.RegisterProvider方法进行注册Provider Encoding 支持如：GB2312编码等。
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            services.AddSession();
-            services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            //添加Authentication 和cookies session 进行权限验证         
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
-                options.LoginPath = new PathString("/TestLogin/Login"); 
+                options.LoginPath = new PathString("/TestLogin/Login");
                 //如果授权失败，就跳转到这个路径去中
                 //options.AccessDeniedPath = new PathString("/Home/Privacy");
             });//用cookie
+
+            //注册自定义权限验证
+            services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
+            services.AddAuthorization(//添加权限验证的策略
+                option => option.AddPolicy(
+                    "custompolicy",
+                    reqirement => reqirement.AddRequirements(new CustomAuthorizationRequirement("policy01"))//添加自定义的权限验证的自定义权限验证需要信息对象
+                    )
+                );
+
+            services.AddAuthorization(
+                option => option.AddPolicy(
+                    "policy11",
+                    reqirement => reqirement.AddRequirements(new CustomAuthorizationRequirement("policy02"))
+                    )
+                );
         }
 
         // This method gets called by the runtime. Use this method to add services to the Autofac container.
@@ -420,7 +446,7 @@ namespace WebAppNet5
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseSession();
 
             #region 请求错误路径异常
             ////请求错误路径异常
@@ -461,7 +487,9 @@ namespace WebAppNet5
             //使用限流中间件
             app.UseIpRateLimiting();
 
-            app.UseAuthorization();
+            //下面的鉴权和授权必须放在 app.UseRouting();之后和app.UseEndpoints之前
+            app.UseAuthentication();//鉴权，就是判断是否登陆
+            app.UseAuthorization();//授权，就是登陆以后可以访问那些页面和信息
 
             app.UseEndpoints(endpoints =>
             {
