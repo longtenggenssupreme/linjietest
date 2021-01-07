@@ -52,11 +52,14 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestLinqWhereIf
-            TestLongteng();
+            #region 测试TestStackTrace
+            TestStackTrace();
             #endregion
 
             #region 全部
+            #region 测试自定义 nuget包 TestLongteng nuget包
+            //TestLongteng();
+            #endregion
 
             #region 测试TestLinqWhereIf
             //TestLinqWhereIf();
@@ -225,7 +228,53 @@ namespace EFCOREDB
 
             Console.Read();
         }
-        #region TestLongteng
+        #region 测试TestStackTrace
+        public static void TestStackTrace()
+        {
+            Console.WriteLine($"开始测试 StackTrace 使用");
+
+            int index = 0;
+            StackTrace stackTrace = new StackTrace(true);
+            var count = stackTrace.FrameCount;
+            while (index < count)
+            {
+                var frame = stackTrace.GetFrame(index++);
+                Console.WriteLine($"frame：{frame}");
+                var lineNumber = frame.GetFileLineNumber();
+                Console.WriteLine($"lineNumber：{lineNumber}");
+                var columnNumber = frame.GetFileColumnNumber();
+                Console.WriteLine($"columnNumber：{columnNumber}");
+                var methodinfo = frame.GetMethod();
+                Console.WriteLine($"methodinfo Name：{methodinfo.Name}");
+                var ss = methodinfo.DeclaringType;
+                Console.WriteLine($"DeclaringType：{ss}");
+                var module = methodinfo.Module;
+                Console.WriteLine($"Module：{module}");
+                var Assembly = methodinfo.Module.Assembly;
+                Console.WriteLine($"Assembly：{Assembly.GetName().Name}");
+                Console.WriteLine($"Assembly：{Assembly.GetName().FullName}");
+                var FileName = frame.GetFileName();
+                Console.WriteLine($"FileName：{FileName}");
+
+                Console.WriteLine($"-------");
+                //Console.WriteLine($"22222222");
+                //var stackFrames = stackTrace.GetFrames();
+                //string callChain = string.Join(" -> ", stackFrames.Select((r, i) =>
+                //{
+                //    if (i == 0) return null;
+                //    var m = r.GetMethod();
+                //    return $"{m.DeclaringType.FullName}.{m.Name}";
+                //})
+                //    .Where(r => !string.IsNullOrWhiteSpace(r))
+                //    //.WhereIf(r=> !string.IsNullOrWhiteSpace(r),true)
+                //    .Reverse());
+                //Console.WriteLine($"callChain：{callChain}");
+                //Console.WriteLine($"22222222");
+            }
+        }
+        #endregion
+
+        #region 测试自定义 nuget包 TestLongteng nuget包
         public static void TestLongteng()
         {
             Console.WriteLine($"开始测试 自定义的longteng nuget包的使用");
@@ -248,7 +297,7 @@ namespace EFCOREDB
             {
                 Console.WriteLine($"{item}");
             }
-            Console.WriteLine($"开始测试 linq where 条件筛选--IQueryable<T> 远程枚举"); 
+            Console.WriteLine($"开始测试 linq where 条件筛选--IQueryable<T> 远程枚举");
             Expression<Func<int, bool>> expression = a => a % 2 == 0;
             var lsist1 = Enumerable.Range(1, 20).AsQueryable<int>().WhereIf(expression, true);
             foreach (var item in lsist1)

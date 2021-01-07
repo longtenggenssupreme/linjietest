@@ -9,7 +9,7 @@ namespace WebAppNet5
     public class Program
     {
         public static void Main(string[] args)
-        {
+       {
             var log = NLogBuilder.ConfigureNLog("Config/nlog.config").GetCurrentClassLogger();
             try
             {
