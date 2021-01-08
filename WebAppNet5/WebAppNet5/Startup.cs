@@ -436,6 +436,83 @@ namespace WebAppNet5
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, ILoggerFactory loggerFactory*/)
         {
+            #region 自定义中间件
+            //一个短路中间件
+            //app.Run(async context => {
+            //    context.Response.Headers.Add("contentType", "text/html;charset=utf-8");
+            //    await context.Response.WriteAsync("<h1>this is terminal middleware</h1>");
+            //});
+
+            Func<RequestDelegate, RequestDelegate> middleware = new Func<RequestDelegate, RequestDelegate>(
+                next =>
+                {
+                    return async context =>
+                    {
+                        await context.Response.WriteAsync("<h1>this is terminal middleware 111 start </h1>");
+                        await next.Invoke(context);
+                        await context.Response.WriteAsync("<h1>this is terminal middleware 1111 end </h1>");
+                    };
+                });
+            app.Use(middleware);
+
+            Func<RequestDelegate, RequestDelegate> middleware2 = new Func<RequestDelegate, RequestDelegate>(
+               next =>
+               {
+                   return async context =>
+                   {
+                       await context.Response.WriteAsync("<h2>this is terminal middleware 2222 start </h2>");
+                       await next.Invoke(context);//注释掉该行，则形成短路
+                       await context.Response.WriteAsync("<h2>this is terminal middleware 2222 end </h2>");
+                   };
+               });
+
+            app.Use(middleware2);
+            Func<RequestDelegate, RequestDelegate> middleware0 = next => async context =>
+            {
+                await context.Response.WriteAsync("<h2>this is terminal middleware 000 start </h2>");
+                await next.Invoke(context);//注释掉该行，则形成短路
+                await context.Response.WriteAsync("<h2>this is terminal middleware 000 end </h2>");
+            };
+            app.Use(middleware0);
+
+            Func<RequestDelegate, RequestDelegate> middleware5 = next => async context =>
+            {
+                await context.Response.WriteAsync("<h2>this is terminal middleware 555 start </h2>");
+                await next.Invoke(context);//注释掉该行，则形成短路
+                await context.Response.WriteAsync("<h2>this is terminal middleware 5555 end </h2>");
+            };
+            app.Use(middleware5);
+
+            //Func<RequestDelegate, RequestDelegate> middleware4 = next => context => context.Response.WriteAsync("this is 44444");
+            //app.Use(middleware4);
+
+            Func<RequestDelegate, RequestDelegate> middleware3 = next => (RequestDelegate)delegate (HttpContext context)
+            {
+                context.Response.WriteAsync("<h3>this is terminal middleware 333 start </h3>");
+                next.Invoke(context);
+                context.Response.WriteAsync("<h2>this is terminal middleware 333 end </h2>");
+                return Task.CompletedTask;
+            };
+            app.Use(middleware3);
+
+            //Func<RequestDelegate, RequestDelegate> middleware3 = next => new RequestDelegate(Taskaa);
+
+            //async Task Taskaa(HttpContext context)
+            //{
+            //    await context.Response.WriteAsync("<h3>this is terminal middleware 333 start </h3>");
+            //}
+            //app.Use(middleware3);
+
+            //Func<RequestDelegate, RequestDelegate> middleware4 = next => context => context.Response.WriteAsync("this is 44444");
+            //app.Use(middleware4);
+
+
+            app.UseMiddleware<CustomMiddleware>();
+            app.UseMiddleware<CustomMiddleware2>();
+            #endregion
+
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
