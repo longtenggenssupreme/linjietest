@@ -131,6 +131,14 @@
           }
         }
       },
+      "LongTengDragon/1.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/LongTengDragon.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Microsoft.CSharp/4.5.0": {},
       "Microsoft.Data.SqlClient/2.0.1": {
         "dependencies": {
@@ -1173,6 +1181,7 @@
           "Autofac.Extensions.DependencyInjection": "7.1.0",
           "Bogus": "32.0.1",
           "Hangfire": "1.7.18",
+          "LongTengDragon": "1.0.0",
           "Microsoft.EntityFrameworkCore.InMemory": "5.0.0",
           "Microsoft.EntityFrameworkCore.Relational": "5.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "5.0.0",
@@ -1254,6 +1263,13 @@
       "sha512": "sha512-KBzQEiRSW3QkakXWOLefHeEdzDUZPKxyPrnhhUpFm2zefpYirtoAnB/91RY5mvEUSCro7H6GGKeGCChxiuDmPQ==",
       "path": "hangfire.sqlserver/1.7.18",
       "hashPath": "hangfire.sqlserver.1.7.18.nupkg.sha512"
+    },
+    "LongTengDragon/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QRVpU5g1HbHrurL69oRaUxLRX/DIa2ZHgG5R/Q/9sWFcWYGdxoSNyuYnhqK8pSM//Nwru5pldaMbzB444t0soQ==",
+      "path": "longtengdragon/1.0.0",
+      "hashPath": "longtengdragon.1.0.0.nupkg.sha512"
     },
     "Microsoft.CSharp/4.5.0": {
       "type": "package",
