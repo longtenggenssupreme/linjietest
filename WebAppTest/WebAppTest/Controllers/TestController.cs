@@ -32,7 +32,7 @@ namespace WebAppTest.Controllers
 
         public IActionResult Index()
         {
-            //_testA.Show();
+            _testA.Show();
             _testB.Show();
             ((ITestA)_testA.AOP(typeof(ITestA))).Show();
             return View();
