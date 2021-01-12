@@ -2,7 +2,6 @@ F:\Person\aaa\LJTest\ComLibs\ComLibs\bin\Debug\ComLibs.dll
 F:\Person\aaa\LJTest\ComLibs\ComLibs\bin\Debug\ComLibs.pdb
 F:\Person\aaa\LJTest\ComLibs\ComLibs\bin\Debug\Newtonsoft.Json.dll
 F:\Person\aaa\LJTest\ComLibs\ComLibs\bin\Debug\Newtonsoft.Json.xml
-F:\Person\aaa\LJTest\ComLibs\ComLibs\obj\Debug\ComLibs.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\ComLibs\ComLibs\obj\Debug\ComLibs.csproj.CoreCompileInputs.cache
 F:\Person\aaa\LJTest\ComLibs\ComLibs\obj\Debug\ComLibs.csproj.CopyComplete
 F:\Person\aaa\LJTest\ComLibs\ComLibs\obj\Debug\ComLibs.dll

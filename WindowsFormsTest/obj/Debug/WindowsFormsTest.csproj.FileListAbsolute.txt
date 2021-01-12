@@ -1,7 +1,6 @@
 F:\Person\aaa\LJTest\WindowsFormsTest\bin\Debug\WindowsFormsTest.exe.config
 F:\Person\aaa\LJTest\WindowsFormsTest\bin\Debug\WindowsFormsTest.exe
 F:\Person\aaa\LJTest\WindowsFormsTest\bin\Debug\WindowsFormsTest.pdb
-F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.Form1.resources
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.Properties.Resources.resources
 F:\Person\aaa\LJTest\WindowsFormsTest\obj\Debug\WindowsFormsTest.csproj.GenerateResource.cache

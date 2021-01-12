@@ -26,7 +26,6 @@ F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\pt-BR\Hangfire.Core.resourc
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\pt-PT\Hangfire.Core.resources.dll
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\zh\Hangfire.Core.resources.dll
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\bin\Debug\zh-TW\Hangfire.Core.resources.dll
-F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csproj.CoreCompileInputs.cache
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleHangfire.csproj.CopyComplete
 F:\Person\aaa\LJTest\ConsoleApp\ConsoleApp\obj\Debug\ConsoleApp.exe

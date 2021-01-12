@@ -354,3 +354,4 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebMVC\LinjieWebMVC\obj\Debug\net5.0\LinjieW
 F:\Person\aaa\LJTest\Longteng\LinjieWebMVC\LinjieWebMVC\obj\Debug\net5.0\ref\LinjieWebMVC.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebMVC\LinjieWebMVC\obj\Debug\net5.0\LinjieWebMVC.pdb
 F:\Person\aaa\LJTest\Longteng\LinjieWebMVC\LinjieWebMVC\obj\Debug\net5.0\LinjieWebMVC.genruntimeconfig.cache
+F:\Person\aaa\LJTest\Longteng\LinjieWebMVC\LinjieWebMVC\obj\Debug\net5.0\LinjieWebMVC.csprojAssemblyReference.cache
