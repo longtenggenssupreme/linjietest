@@ -1,0 +1,9 @@
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\bin\Debug\netcoreapp3.1\Linjie.NET5.DAL.deps.json
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\bin\Debug\netcoreapp3.1\Linjie.NET5.DAL.dll
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\bin\Debug\netcoreapp3.1\Linjie.NET5.DAL.pdb
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.AssemblyInfoInputs.cache
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.AssemblyInfo.cs
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.csproj.CoreCompileInputs.cache
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.dll
+F:\Person\aaa\LJTest\Linjie.NET5.DAL\obj\Debug\netcoreapp3.1\Linjie.NET5.DAL.pdb

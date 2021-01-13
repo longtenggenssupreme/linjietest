@@ -1,5 +1,6 @@
 ﻿using DBDemoCodeFirst.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace DBDemoCodeFirst
         {
         }
 
+        #region DbSet
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<JdCommodity001> JdCommodity001s { get; set; }
@@ -59,7 +61,8 @@ namespace DBDemoCodeFirst
         public virtual DbSet<SysUserMenuMapping> SysUserMenuMappings { get; set; }
         public virtual DbSet<SysUserRoleMapping> SysUserRoleMappings { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Wpfclass> Wpfclasses { get; set; }
+        public virtual DbSet<Wpfclass> Wpfclasses { get; set; } 
+        #endregion
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -67,6 +70,8 @@ namespace DBDemoCodeFirst
             {
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=WIN-CSTBNBVVGSQ;Initial Catalog=ZhaoxiEduDataBaseCodeFirst;User ID=sa;Password=sa123");
+                //控制台和debug的sql脚本执行的抓取
+                optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole().AddDebug()));
             }
         }
 

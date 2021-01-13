@@ -61,3 +61,10 @@ F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCode
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\ref\DBDemoCodeFirst.dll
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCodeFirst.pdb
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCodeFirst.genruntimeconfig.cache
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Configuration.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Configuration.Binder.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Logging.Configuration.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Logging.Console.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Logging.Debug.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCodeFirst.csprojAssemblyReference.cache

@@ -32,6 +32,7 @@ namespace DBDemoCodeFirst
                 //    Url = "url"
                 //});
                 //context.SaveChanges();
+                Console.Read();
             }
             catch (Exception)
             {
