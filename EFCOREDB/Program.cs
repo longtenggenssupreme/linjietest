@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -52,11 +54,20 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试TestStackTrace
-            TestStackTrace();
+            #region 测试验证码authcode
+            AuthCode();
             #endregion
 
             #region 全部
+
+            #region 测试TestStackTrace
+            //SendFile();
+            #endregion
+
+            #region 测试TestStackTrace
+            //TestStackTrace();
+            #endregion
+
             #region 测试自定义 nuget包 TestLongteng nuget包
             //TestLongteng();
             #endregion
@@ -228,6 +239,64 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+
+        #region verificaionCode验证码
+        public static void AuthCode()
+        {
+            Console.WriteLine($"开始测试 verificaionCode验证码");
+            var path = Path.Combine(Environment.CurrentDirectory, "自定义绘制验证码.gif");
+            //byte[] vs1 = BitConverter.GetBytes(true);
+            //bool ss = BitConverter.ToBoolean(vs1);
+            //ss = BitConverter.ToBoolean(vs1, 0);
+            //byte vs = Convert.ToByte('d');
+            //创建图片
+            using Bitmap bitmap = new Bitmap(200, 60);
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, 200, 60);
+            SolidBrush brush = new SolidBrush(Color.Black);
+            Font font = new Font(FontFamily.GenericSansSerif, 50, FontStyle.Bold, GraphicsUnit.Pixel);
+            string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random random = new Random();
+            StringBuilder sb = new StringBuilder();
+            //绘制验证码
+            for (int i = 0; i < 5; i++)
+            {
+                var s = letters.Substring(random.Next(0, letters.Length - 1), 1);
+                sb.Append(s);
+                graphics.DrawString(s, font, brush, i * 36, random.Next(0, 12));
+            }
+            //混淆背景
+            Pen pen = new Pen(new SolidBrush(Color.Black), 2);
+            for (int j = 0; j < 6; j++)
+            {
+                graphics.DrawLine(pen, new Point(random.Next(0, 199), random.Next(0, 59)), new Point(random.Next(0, 199), random.Next(0, 59)));
+            }
+            //保存验证码图片
+            bitmap.Save(path, ImageFormat.Gif);
+        }
+        #endregion
+        #region 测试TestStackTrace
+        public static void SendFile()
+        {
+            Console.WriteLine($"开始测试 StackTrace 使用");
+            var path = @"C:\Users\Administrator\Pictures\图片.jpg";
+            //byte[] fileStream = File.ReadAllBytes(path);
+            using FileStream fileStream = File.OpenRead(path);
+            byte[] vs = new byte[1024];
+            int count = 0;
+            //byte[] vs1 = BitConverter.GetBytes(true);
+
+            //bool ss = BitConverter.ToBoolean(vs1);
+            //ss = BitConverter.ToBoolean(vs1, 0);
+            //vs[0] = Convert.ToByte('d');
+            while ((count = fileStream.Read(vs, 0, vs.Length)) > 0)
+            {
+                //vs实际长度是count，处理读取到的数据
+            }
+        }
+        #endregion
+
         #region 测试TestStackTrace
         public static void TestStackTrace()
         {

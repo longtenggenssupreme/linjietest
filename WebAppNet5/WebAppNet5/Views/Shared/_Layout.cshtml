@@ -31,6 +31,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @*@RenderPage("~/Views/Shared/Header.cshtml")*@
             @RenderBody()
         </main>
     </div>
@@ -44,5 +45,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+    @*使用方法
+            在需要的地方
+            @section Scripts{
+                <script>
+            function a() {
+                console.log("这是展示RenderSection(\"Scripts\", required: false)的用法");
+            }
+        </script>
+            } *@
 </body>
 </html>
