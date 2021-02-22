@@ -11,12 +11,12 @@
     <div class="col-md-8">
         <section id="loginForm">
             @using (Html.BeginForm(
-      "Login",
-      "TestLogin",
-      new { sid = "123", Account = "haha" },
-      FormMethod.Post,
-      true,
-      new { @class = "form-horizontal", role = "form" }))
+   "Login",
+   "TestLogin",
+   new { sid = "123", Account = "haha" },
+   FormMethod.Post,
+   true,
+   new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 <hr />
@@ -25,8 +25,8 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Name)
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })                       
+                        @Html.ValidationMessageFor(m => m.Name,"长度错误")
                     </div>
                 </div>
                 @*密码*@
@@ -62,6 +62,37 @@
         </section>
     </div>
 </div>
+@*<div>
+    <div class="form-group">
+        <label asp-for="Id" class="control-label"></label>
+        <input asp-for="Id" class="form-control" />
+        <span asp-validation-for="Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ReleaseDate" class="control-label"></label>
+        <input asp-for="ReleaseDate" class="form-control" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+    </div>
+</div>*@
+
+@*<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+        asp-fallback-test="window.jQuery"
+        crossorigin="anonymous"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"
+        asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
+        asp-fallback-test="window.jQuery && window.jQuery.validator"
+        crossorigin="anonymous"
+        integrity="sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o+ok+t/SAKlL5mvXLr0OXNi1Hp">
+</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js"
+        asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+        asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive"
+        crossorigin="anonymous"
+        integrity="sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds">
+</script>*@
 <script>
     function refresh(obj) {
         $(obj).attr("src", "/TestLogin/VerifyCode?random=" + Math.random());

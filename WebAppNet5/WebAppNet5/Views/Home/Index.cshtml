@@ -7,6 +7,11 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <p>
         @await Html.PartialAsync("/Views/Haha/Index2.cshtml")
+        //或者下面的方式也可以，下面的没有返回值
+        @*@{
+                Html.RenderPartial("/Views/Haha/Index2.cshtml");
+                await Html.RenderPartialAsync("/Views/Haha/Index2.cshtml");
+            }*@
     </p>
     <p>
         @*自定义视图组件，可以加特性，以特性为准，否则使用类名去掉ViewComponent，即MyCustom，调用的时候使用的名称*@
@@ -15,26 +20,34 @@
     <p>
         @*自定义视图组件，可以加特性，以特性为准，否则使用类名去掉ViewComponent，即MyCustom，调用的时候使用的名称*@
         @await Component.InvokeAsync("CustomView", new { json = "哈哈，这是自定义视图组件2222" })
+        @*@{
+                await Html.RenderComponentAsync(RenderMode.Server);
+            }*@
+        @*视图组件通常从视图中调用，但也可以从控制器方法中直接调用，虽然视图组件不像控制器那样定义终结点。
+            public ActionResult Index()
+            {
+            return ViewComponent("CustomView", new { json = "哈哈，这是自定义视图组件2222" });
+            }*@
     </p>
     <p>
         @*appsettings.json中配置 FeatureFilter<TimeWindowFilter>()过滤器 配置信息 "FeatureManagement": {
-          "CustomeSwitch": {
-            "EnabledFor": [
-              {
-                "Name": "TimeWindow",
-                "Parameters": {
-                  "Start": "12/16/2020 00:00:00 GMT",
-                  "End": "12/30/2020 00:00:00 GMT"
-                }
+              "CustomeSwitch": {
+                "EnabledFor": [
+                  {
+                    "Name": "TimeWindow",
+                    "Parameters": {
+                      "Start": "12/16/2020 00:00:00 GMT",
+                      "End": "12/30/2020 00:00:00 GMT"
+                    }
+                  }
+                ]
               }
-            ]
-          }
-        },
-            其中 CustomeSwitch 是feature标签要绑定的名称，根据该值是否显示标签信息的。
-            如果不想显示feature标签，只需要设置 negate="true"
+            },
+                其中 CustomeSwitch 是feature标签要绑定的名称，根据该值是否显示标签信息的。
+                如果不想显示feature标签，只需要设置 negate="true"
         *@
         <feature name="CustomeSwitch"><font color="red">这是.NET应用实现定时开关,使用addTagHelper标签feature 没有设置 negate="true",显示feature标签  </font></feature>
         @*设置 negate="true",不想显示feature标签 *@
-        <feature name="CustomeSwitch" negate="true" ><font color="red">这是.NET应用实现定时开关,使用addTagHelper标签feature 设置 negate="true",不显示feature标签</font></feature>
+        <feature name="CustomeSwitch" negate="true"><font color="red">这是.NET应用实现定时开关,使用addTagHelper标签feature 设置 negate="true",不显示feature标签</font></feature>
     </p>
 </div>

@@ -71,6 +71,10 @@ namespace WebAppNet5.Controllers
         [AllowAnonymous]//框架Authorization自带的忽略权限验证的特性标记
         public IActionResult Login(string name, string password, string verify) 
         {
+            //if (ModelState.IsValid)
+            //{
+
+            //}
             string verifyCode = HttpContext.Session.GetString("CheckCode");//获取验证码
             if (verifyCode is not null && verifyCode.Equals(verify, StringComparison.OrdinalIgnoreCase))//检查验证码是否一样
             {

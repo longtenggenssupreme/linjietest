@@ -39,7 +39,10 @@
         <br />
         @:Html ViewBag ViewData TempData传值
         <h2>@ViewBag.item</h2>
+        @:ViewBag 对象提供对存储在 ViewData 中的对象的动态访问，这样可以更方便的使用，因为不需要转换
+        <h2>@ViewBag.test</h2>
         <br />
+        @:2222
         <h2>@ViewData["test"]</h2>
         <br />
         <h2>@TempData["test"]</h2>
@@ -66,6 +69,11 @@
         @:定义一个图片的taghelper，razor标记帮助器
     }
     <br />
+    @{
+        @:选择退出个别元素    你可以使用标签助手退出符（“ ！ ”）在元素级别停用标签助手，必须将标签助手退出符应用于开始和结束标记。添加标签助手退出符后，元素和标签助手属性不再以特殊字体显示。
+        @:如下，使用标签助手退出符在
+    }
+    <!ImageCustom image-link="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1188114947,823520637&fm=26&gp=0.jpg" alternative-text="图片加载失败" />@*</ImageCustom>*@
     <ImageCustom image-link="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1188114947,823520637&fm=26&gp=0.jpg" alternative-text="图片加载失败" />@*</ImageCustom>*@
     <ImageCustom image-link="https://note.youdao.com/yws/res/272/WEBRESOURCE9d30a122d186506672c07ccad108b402" alternative-text="图片加载失败" />@*</ImageCustom>*@
 </div>

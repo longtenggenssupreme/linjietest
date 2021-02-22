@@ -77,4 +77,21 @@ namespace WebAppNet5
             base.Process(context, output);
         }
     }
+
+
+    public class EmailTagHelper : TagHelper
+    {
+        private const string EmailDomain = "contoso.com";
+
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        {
+            output.TagName = "a"; //用于将 <email> 替换为 <a>
+            var content = await output.GetChildContentAsync();
+            var target = content.GetContent() + "@" + EmailDomain;
+            output.Attributes.SetAttribute("href", "mailto:" + target);
+            output.Content.SetContent(target);
+        }
+
+        //html中使用 <email>Support</email><br />
+    }
 }
