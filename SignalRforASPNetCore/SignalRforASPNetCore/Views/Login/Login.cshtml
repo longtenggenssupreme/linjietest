@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row">
+    <div class="col-md-10">
+        <section id="loginForm">
+            <form asp-controller="Login" asp-action="Login" method="post">
+                <label class="control-label">用户名</label>
+                <input type="text" class="form-control" name="username" />
+                <label class="control-label">密码</label>
+                <input type="password" class="form-control" name="password" />
+                <label class="control-label">验证码</label>
+                <input type="text" class="form-control" name="verifycode" />
+                <img alt="图片验证码" onclick="VerifyCode(this)" src="/Login/VerifyCode" title="点击刷新" class="img" />
+                <br />
+                <input type="submit" value="登录" class="btn btn-dark" />@ViewBag.Msg
+            </form>
+        </section>
+    </div>
+</div>
+<script>
+    function VerifyCode(obj) {
+        $(obj).attr("src", "/Login/VerifyCode?random=" + Math.random())
+    }
+</script>

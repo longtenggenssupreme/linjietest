@@ -18,6 +18,8 @@ namespace SignalRforASPNetCore.Controllers
             _logger = logger;
         }
 
+        //[Microsoft.AspNetCore.Authorization.Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin,teacher,student")]//角色，区分不同的用户操作不同的内容信息，使用逗号分割，表示只要满足其中一个即可访问
         public IActionResult Index()
         {
             return View();
