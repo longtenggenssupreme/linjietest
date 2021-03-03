@@ -54,11 +54,16 @@ namespace EFCOREDB
 
         static void Main(string[] args)
         {
-            #region 测试验证码authcode
-            AuthCode();
+
+            #region PLINQ是保留序列中的原始顺序
+            PLINQOrder();
             #endregion
 
+
             #region 全部
+            #region 测试验证码authcode
+            //AuthCode();
+            #endregion
 
             #region 测试TestStackTrace
             //SendFile();
@@ -240,6 +245,15 @@ namespace EFCOREDB
             Console.Read();
         }
 
+        #region PLINQ是保留序列中的原始顺序
+        public static void PLINQOrder()
+        {
+            Console.WriteLine($"PLINQ");
+            new List<string> { "a", "b", "c", "d" }.AsParallel().Select(s => s + "a").AsSequential().ToList().ForEach(a => Console.WriteLine(a));
+            Console.WriteLine($"PLINQ是否保留序列中的原始顺序");
+            new List<string> { "a", "b", "c", "d" }.AsParallel().AsOrdered().Select(s => s + "a").AsSequential().ToList().ForEach(a => Console.WriteLine(a));
+        }
+        #endregion
 
         #region verificaionCode验证码
         public static void AuthCode()
