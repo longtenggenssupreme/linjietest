@@ -55,12 +55,17 @@ namespace EFCOREDB
         static void Main(string[] args)
         {
 
-            #region PLINQ是保留序列中的原始顺序
-            PLINQOrder();
+
+            #region RSAji公钥加密，私钥解密以及 私钥签名公钥验签
+            RSATest();
             #endregion
 
-
             #region 全部
+
+            #region PLINQ是保留序列中的原始顺序
+            //PLINQOrder();
+            #endregion
+
             #region 测试验证码authcode
             //AuthCode();
             #endregion
@@ -244,6 +249,110 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region RSA公钥加密，私钥解密以及 私钥签名公钥验签
+        public static void RSATest()
+        {
+            Console.WriteLine($"RSA公钥加密，私钥解密以及 私钥签名公钥验签");
+            using var rsa = new System.Security.Cryptography.RSACryptoServiceProvider();
+
+            #region 导出公钥和私钥（字节数组）
+            var RSAPublicKey = rsa.ExportRSAPublicKey();
+            var RSAPrivateKey = rsa.ExportRSAPrivateKey();
+            var RSAPublicKeyBase64 = Convert.ToBase64String(RSAPublicKey);
+            var RSAPrivateKeyBase64 = Convert.ToBase64String(RSAPrivateKey);
+
+            Console.WriteLine($"导出公钥和私钥（字节数组）,公钥：{RSAPublicKeyBase64}, 私钥：{RSAPrivateKeyBase64}");
+            Console.WriteLine($"");
+            #endregion
+
+            #region 导出公钥和私钥（xml字符串）
+            var RSAXmlStringPublicKey = rsa.ToXmlString(false);
+            var RSAXmlStringPrivateKey = rsa.ToXmlString(true);
+            var RSAXmlStringPublicKeyBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(RSAXmlStringPublicKey));
+            var RSAXmlStringPrivateKeyBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(RSAXmlStringPrivateKey));
+            Console.WriteLine($"导出公钥和私钥（xml字符串）,公钥：{RSAXmlStringPublicKeyBase64}, 私钥：{RSAXmlStringPrivateKeyBase64}");
+            Console.WriteLine($"");
+            #endregion
+
+            #region 导出公钥和私钥（RSAPublicKeyRSAParameters）
+            var RSAPublicKeyRSAParameters = rsa.ExportParameters(false);
+            var RSAPrivateKeyRSAParameters = rsa.ExportParameters(true);
+            Console.WriteLine($"导出公钥和私钥（RSAPublicKeyRSAParameters）,公钥：{RSAPublicKeyRSAParameters}, 私钥：{RSAPrivateKeyRSAParameters}");
+            Console.WriteLine($"");
+            #endregion
+
+            //下面显示公钥加密--私钥解密--私钥加签名--公钥验证签名
+            Console.WriteLine($"下面显示公钥加密--私钥解密--私钥加签名--公钥验证签名");
+            //测试数据---我是哈哈哈--嘿嘿嘿嘿
+            string data = "我是哈哈哈--嘿嘿嘿嘿";
+
+            #region 导出公钥和私钥（字节数组）
+            //rsa.ImportRSAPublicKey(new ReadOnlySpan<byte>(RSAPublicKey), out int bytesRead);
+            ////公钥加密
+            //var encrypto = rsa.Encrypt(Encoding.UTF8.GetBytes(data), false);
+            //var encryptoBase64 = Convert.ToBase64String(encrypto);
+            //Console.WriteLine($"公钥加密,原数据：{data},加密以后的数据：{encryptoBase64}");
+
+            ////私钥解密
+            //var decrpyt = Convert.FromBase64String(encryptoBase64);
+            //rsa.ImportRSAPrivateKey(new ReadOnlySpan<byte>(RSAPrivateKey), out int byteread);
+            //var decrypto = rsa.Decrypt(decrpyt, false);
+            //var decryptoBase64 = Encoding.UTF8.GetString(decrypto);
+            //Console.WriteLine($"私钥解密,加密以后的数据：{encryptoBase64}, 解密以后的数据：{decryptoBase64}"); 
+            #endregion
+
+            #region 导出公钥和私钥（xml字符串）
+            //rsa.FromXmlString(RSAXmlStringPublicKey);
+            ////公钥加密
+            //var encrypto = rsa.Encrypt(Encoding.UTF8.GetBytes(data), false);
+            //var encryptoBase64 = Convert.ToBase64String(encrypto);
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.WriteLine($"公钥加密,原数据：{data},加密以后的数据：{encryptoBase64}");
+            //Console.ForegroundColor = ConsoleColor.Green;
+            ////私钥解密
+            //var decrpyt = Convert.FromBase64String(encryptoBase64);
+            //rsa.FromXmlString(RSAXmlStringPrivateKey);
+            //var decrypto = rsa.Decrypt(decrpyt, false);
+            //var decryptoBase64 = Encoding.UTF8.GetString(decrypto);
+            //Console.WriteLine($"私钥解密,加密以后的数据：{encryptoBase64}, 解密以后的数据：{decryptoBase64}");
+            #endregion
+
+            #region 导出公钥和私钥（xml字符串）
+            //rsa.ImportParameters(RSAPublicKeyRSAParameters);
+            ////公钥加密
+            //var encrypto = rsa.Encrypt(Encoding.UTF8.GetBytes(data), false);
+            //var encryptoBase64 = Convert.ToBase64String(encrypto);
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.WriteLine($"公钥加密,原数据：{data},加密以后的数据：{encryptoBase64}");
+            //Console.ForegroundColor = ConsoleColor.Green;
+            ////私钥解密
+            //var decrpyt = Convert.FromBase64String(encryptoBase64);
+            //rsa.ImportParameters(RSAPrivateKeyRSAParameters);
+            //var decrypto = rsa.Decrypt(decrpyt, false);
+            //var decryptoBase64 = Encoding.UTF8.GetString(decrypto);
+            //Console.WriteLine($"私钥解密,加密以后的数据：{encryptoBase64}, 解密以后的数据：{decryptoBase64}");
+            #endregion
+
+            #region 私钥加签名,公钥验证签名
+            //私钥加签名
+            var secret = System.Security.Cryptography.Aes.Create().Key;//获取对称加密的密钥                   
+            rsa.ImportParameters(RSAPrivateKeyRSAParameters);//导入私钥，使用私钥对获取对称加密的密钥加加签名
+            var signature = rsa.SignData(secret, "MD5");
+            var signcryptoBase64 = Encoding.UTF8.GetString(signature);//base64方便传输
+            Console.WriteLine($"私钥签名,加密对称加密的密钥以后的数据：{signcryptoBase64}");
+
+            rsa.ImportParameters(RSAPublicKeyRSAParameters);
+            //公钥验证签名
+            var issignature = rsa.VerifyData(secret, "MD5", signature);
+            var outstring = issignature == true ? "已签名" : "未签名";
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"公钥验证签名：{outstring}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            #endregion
+        }
+        #endregion
+
 
         #region PLINQ是保留序列中的原始顺序
         public static void PLINQOrder()
