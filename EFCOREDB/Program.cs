@@ -23,6 +23,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Media;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -56,11 +57,15 @@ namespace EFCOREDB
         {
 
 
-            #region RSAji公钥加密，私钥解密以及 私钥签名公钥验签
-            RSATest();
+            #region 语音播报
+            SpeechTest();
             #endregion
 
             #region 全部
+
+            #region RSAji公钥加密，私钥解密以及 私钥签名公钥验签
+            //RSATest();
+            #endregion
 
             #region PLINQ是保留序列中的原始顺序
             //PLINQOrder();
@@ -249,6 +254,26 @@ namespace EFCOREDB
 
             Console.Read();
         }
+
+        #region 语音播报
+        public static void SpeechTest()
+        {
+            using var speech = new System.Speech.Synthesis.SpeechSynthesizer
+            {
+                Rate = 0,//语速
+                Volume = 10//音量
+            };
+            speech.Speak("这是测试的语音");//播放文字
+
+            //SoundPlayer播放本地音频,项目添加引用→COM类型库：Windows Media Player
+
+            SoundPlayer play = new SoundPlayer();
+            play.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "123.wav"; //本地音频位置，这里放在了当前项目bin→debug下
+            play.Load();  //加载声音
+            play.Play(); //播放
+
+        }
+        #endregion
 
         #region RSA公钥加密，私钥解密以及 私钥签名公钥验签
         public static void RSATest()
