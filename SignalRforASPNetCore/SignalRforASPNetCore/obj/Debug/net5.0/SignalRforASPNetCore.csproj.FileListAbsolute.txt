@@ -360,5 +360,5 @@ F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\bin\Debug\net5.0\
 F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
 F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
 F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
-F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\obj\Debug\net5.0\SignalRforASPNetCore.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\obj\Debug\net5.0\SignalRforASPNetCore.MvcApplicationPartsAssemblyInfo.cs
+F:\Person\aaa\LJTest\SignalRforASPNetCore\SignalRforASPNetCore\obj\Debug\net5.0\SignalRforASPNetCore.csproj.AssemblyReference.cache

@@ -14,11 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LongTengDragon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+882bd0205f268c375da3494e87f144f676d03578")]
 [assembly: System.Reflection.AssemblyProductAttribute("LongTengDragon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LongTengDragon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyMetadataAttribute("RepositoryUrl", "")]
+[assembly: System.Reflection.AssemblyMetadataAttribute("RepositoryUrl", "https://github.com/longtenggenssupreme/linjietest.git")]
 
 // 由 MSBuild WriteCodeFragment 类生成。
 

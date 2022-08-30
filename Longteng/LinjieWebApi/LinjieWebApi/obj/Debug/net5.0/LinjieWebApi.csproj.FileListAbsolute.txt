@@ -18,7 +18,6 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\bin\Debug\net5.0\Castle.
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\bin\Debug\net5.0\NLog.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\bin\Debug\net5.0\NLog.Extensions.Logging.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\bin\Debug\net5.0\NLog.Web.AspNetCore.dll
-F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.GeneratedMSBuildEditorConfig.editorconfig
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.AssemblyInfoInputs.cache
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.AssemblyInfo.cs
@@ -33,3 +32,4 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieW
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\ref\LinjieWebApi.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.pdb
 F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.genruntimeconfig.cache
+F:\Person\aaa\LJTest\Longteng\LinjieWebApi\LinjieWebApi\obj\Debug\net5.0\LinjieWebApi.csproj.AssemblyReference.cache

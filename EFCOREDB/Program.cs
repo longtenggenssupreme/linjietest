@@ -271,6 +271,7 @@ namespace EFCOREDB
             play.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "123.wav"; //本地音频位置，这里放在了当前项目bin→debug下
             play.Load();  //加载声音
             play.Play(); //播放
+            Convert.ToString(10, toBase: 2);
 
         }
         #endregion

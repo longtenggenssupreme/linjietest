@@ -67,4 +67,4 @@ F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Logging.Console.dll
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Logging.Debug.dll
 F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\bin\Debug\net5.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
-F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCodeFirst.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\DBDemoCodeFirst\DBDemoCodeFirst\obj\Debug\net5.0\DBDemoCodeFirst.csproj.AssemblyReference.cache

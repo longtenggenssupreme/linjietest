@@ -7,4 +7,5 @@ F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\Lo
 F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.sourcelink.json
 F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.dll
 F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.pdb
-F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.csproj.AssemblyReference.cache
+F:\Person\aaa\LJTest\LongtengStandard\LongTengDragon\obj\Debug\netstandard2.0\LongTengDragon.GeneratedMSBuildEditorConfig.editorconfig

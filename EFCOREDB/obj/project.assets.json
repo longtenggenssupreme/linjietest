@@ -6381,7 +6381,8 @@
   },
   "packageFolders": {
     "C:\\Users\\Administrator\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
@@ -6394,11 +6395,13 @@
       "outputPath": "F:\\Person\\aaa\\LJTest\\EFCOREDB\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
@@ -6527,14 +6530,11 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.411\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -6543,7 +6543,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "检测到的包版本在依赖项约束之外: Oracle.EntityFrameworkCore 3.19.80 需要 Microsoft.EntityFrameworkCore.Relational (>= 3.1.6 && < 4.0.0)，但版本 Microsoft.EntityFrameworkCore.Relational 5.0.0 已解决。",
+      "message": "检测到的包版本在依赖项约束之外: Pomelo.EntityFrameworkCore.MySql 3.2.4 需要 Microsoft.EntityFrameworkCore.Relational (>= 3.1.8 && < 5.0.0)，但版本 Microsoft.EntityFrameworkCore.Relational 5.0.0 已解决。",
       "libraryId": "Microsoft.EntityFrameworkCore.Relational",
       "targetGraphs": [
         "net5.0"
@@ -6553,7 +6553,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "检测到的包版本在依赖项约束之外: Pomelo.EntityFrameworkCore.MySql 3.2.4 需要 Microsoft.EntityFrameworkCore.Relational (>= 3.1.8 && < 5.0.0)，但版本 Microsoft.EntityFrameworkCore.Relational 5.0.0 已解决。",
+      "message": "检测到的包版本在依赖项约束之外: Oracle.EntityFrameworkCore 3.19.80 需要 Microsoft.EntityFrameworkCore.Relational (>= 3.1.6 && < 4.0.0)，但版本 Microsoft.EntityFrameworkCore.Relational 5.0.0 已解决。",
       "libraryId": "Microsoft.EntityFrameworkCore.Relational",
       "targetGraphs": [
         "net5.0"

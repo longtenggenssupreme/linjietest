@@ -59,7 +59,6 @@ F:\Person\aaa\LJTest\Linjie.NET5.WebUI\bin\Debug\netcoreapp3.1\Linjie.NET5.BLL.d
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\bin\Debug\netcoreapp3.1\Linjie.NET5.DAL.dll
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\bin\Debug\netcoreapp3.1\Linjie.NET5.BLL.pdb
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\bin\Debug\netcoreapp3.1\Linjie.NET5.DAL.pdb
-F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.csprojAssemblyReference.cache
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.AssemblyInfoInputs.cache
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.AssemblyInfo.cs
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.csproj.CoreCompileInputs.cache
@@ -86,3 +85,5 @@ F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.dll
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.pdb
 F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.genruntimeconfig.cache
+F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.csproj.AssemblyReference.cache
+F:\Person\aaa\LJTest\Linjie.NET5.WebUI\obj\Debug\netcoreapp3.1\Linjie.NET5.WebUI.GeneratedMSBuildEditorConfig.editorconfig

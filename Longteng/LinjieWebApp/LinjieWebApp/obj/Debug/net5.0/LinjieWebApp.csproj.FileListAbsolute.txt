@@ -354,4 +354,4 @@ F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieW
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\ref\LinjieWebApp.dll
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.pdb
 F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.genruntimeconfig.cache
-F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.csprojAssemblyReference.cache
+F:\Person\aaa\LJTest\Longteng\LinjieWebApp\LinjieWebApp\obj\Debug\net5.0\LinjieWebApp.csproj.AssemblyReference.cache
